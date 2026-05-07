@@ -1,0 +1,26 @@
+{
+  "name": "seblful-claude-plugins",
+  "description": "Curated Claude Code plugins for Python development, code review, and architectural refactoring.",
+  "version": "0.1.0",
+  "owner": {
+    "name": "Aliaksei Chymba",
+    "email": "alesha.chimba@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "python-skills",
+      "description": "Professional Python coding and testing practices — PEP 8, type hints, pytest, fixtures, and the modern uv/ruff/ty stack.",
+      "source": "./python-skills"
+    },
+    {
+      "name": "code-review",
+      "description": "Stress-test plans and designs through relentless interview-style grilling, with an optional terse caveman communication mode.",
+      "source": "./code-review"
+    },
+    {
+      "name": "refactoring",
+      "description": "Find architectural deepening opportunities and zoom out for higher-level context on unfamiliar code areas.",
+      "source": "./refactoring"
+    }
+  ]
+}

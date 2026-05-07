@@ -1,0 +1,13 @@
+{
+  "name": "code-review",
+  "version": "0.1.0",
+  "description": "Interview-style design review skills — grill plans against the codebase and communicate in terse caveman mode.",
+  "author": {
+    "name": "Aliaksei Chymba",
+    "email": "alesha.chimba@gmail.com"
+  },
+  "homepage": "https://github.com/seblful/seblful-claude-plugins",
+  "repository": "https://github.com/seblful/seblful-claude-plugins",
+  "license": "MIT",
+  "keywords": ["code-review", "design-review", "grill", "planning", "adr", "caveman"]
+}

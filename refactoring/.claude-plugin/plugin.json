@@ -1,0 +1,13 @@
+{
+  "name": "refactoring",
+  "version": "0.1.0",
+  "description": "Architectural deepening and zoom-out skills for refactoring and navigating unfamiliar code.",
+  "author": {
+    "name": "Aliaksei Chymba",
+    "email": "alesha.chimba@gmail.com"
+  },
+  "homepage": "https://github.com/seblful/seblful-claude-plugins",
+  "repository": "https://github.com/seblful/seblful-claude-plugins",
+  "license": "MIT",
+  "keywords": ["refactoring", "architecture", "deepening", "code-navigation", "interface-design"]
+}
