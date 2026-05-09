@@ -14,8 +14,13 @@
     },
     {
       "name": "code-review",
-      "description": "Stress-test plans and designs through relentless interview-style grilling, with an optional terse caveman communication mode.",
+      "description": "Senior code reviewer agent and terse caveman communication mode for efficient code review.",
       "source": "./code-review"
+    },
+    {
+      "name": "planning",
+      "description": "Relentless interview-style grilling to stress-test plans and designs against the codebase and domain model.",
+      "source": "./planning"
     },
     {
       "name": "refactoring",

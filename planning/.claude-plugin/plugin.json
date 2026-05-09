@@ -1,7 +1,7 @@
 {
-  "name": "code-review",
+  "name": "planning",
   "version": "0.1.0",
-  "description": "Senior code reviewer agent and terse caveman communication mode for efficient code review.",
+  "description": "Relentless interview-style grilling to stress-test plans and designs against the codebase and domain model.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["code-review", "design-review", "grill", "planning", "adr", "caveman"]
+  "keywords": ["planning", "design-review", "grill", "adr", "domain-model"]
 }
