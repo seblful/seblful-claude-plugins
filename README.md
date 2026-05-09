@@ -7,8 +7,9 @@ A curated marketplace of Claude Code plugins for Python development, design revi
 ## Structure
 
 - **`/python-skills`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
-- **`/code-review`** — Interview-style plan grilling and terse caveman communication mode
-- **`/refactoring`** — Architectural deepening and zoom-out helpers
+- **`/code-review`** — Interview-style plan grilling and senior code reviewer agent
+- **`/refactoring`** — Architectural deepening and Python SOLID/clean-code refactoring
+- **`/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
 
 ## Installation
 
@@ -24,6 +25,7 @@ Then install plugins individually:
 /plugin install python-skills@seblful-claude-plugins
 /plugin install code-review@seblful-claude-plugins
 /plugin install refactoring@seblful-claude-plugins
+/plugin install lenses@seblful-claude-plugins
 ```
 
 Or browse them in `/plugin > Discover`.
@@ -39,12 +41,16 @@ Or browse them in `/plugin > Discover`.
 
 - **grill-me** — Stress-test a plan through relentless one-question-at-a-time interview.
 - **grill-with-docs** — Grilling that updates `CONTEXT.md` and ADRs inline as decisions land.
-- **caveman** — Ultra-compressed terse communication mode (~75% token reduction).
 
 ### refactoring
 
 - **improve-codebase-architecture** — Surface deepening opportunities and reduce shallow modules.
+- **solid-refactore** — Refactor Python code to follow SOLID principles and clean-code practices.
+
+### lenses
+
 - **zoom-out** — Map the surrounding modules and callers when unfamiliar with an area.
+- **caveman** — Ultra-compressed terse communication mode (~75% token reduction).
 
 ## Plugin Structure
 
