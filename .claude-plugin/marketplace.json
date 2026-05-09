@@ -24,7 +24,7 @@
     },
     {
       "name": "refactoring",
-      "description": "Find architectural deepening opportunities and zoom out for higher-level context on unfamiliar code areas.",
+      "description": "Find architectural deepening opportunities, zoom out for higher-level context, and refactor Python toward SOLID and production-ready patterns.",
       "source": "./refactoring"
     }
   ]
