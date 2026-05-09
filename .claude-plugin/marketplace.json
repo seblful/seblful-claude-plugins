@@ -8,9 +8,9 @@
   },
   "plugins": [
     {
-      "name": "python-skills",
+      "name": "python-plugin",
       "description": "Professional Python coding and testing practices — PEP 8, type hints, pytest, fixtures, and the modern uv/ruff/ty stack.",
-      "source": "./python-skills"
+      "source": "./python-plugin"
     },
     {
       "name": "code-review",

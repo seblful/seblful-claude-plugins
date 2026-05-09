@@ -6,7 +6,7 @@ A curated marketplace of Claude Code plugins for Python development, design revi
 
 ## Structure
 
-- **`/python-skills`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
+- **`/python-plugin`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
 - **`/code-review`** — Interview-style plan grilling and senior code reviewer agent
 - **`/refactoring`** — Architectural deepening and Python SOLID/clean-code refactoring
 - **`/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
@@ -22,7 +22,7 @@ Add this marketplace to Claude Code:
 Then install plugins individually:
 
 ```
-/plugin install python-skills@seblful-claude-plugins
+/plugin install python-plugin@seblful-claude-plugins
 /plugin install code-review@seblful-claude-plugins
 /plugin install refactoring@seblful-claude-plugins
 /plugin install lenses@seblful-claude-plugins
@@ -32,7 +32,7 @@ Or browse them in `/plugin > Discover`.
 
 ## Plugins
 
-### python-skills
+### python-plugin
 
 - **python-patterns** — Modern Python idioms, PEP 8, type hints, project tooling.
 - **python-testing** — Pytest, fixtures, parametrization, mocking, async, coverage.
