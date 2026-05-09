@@ -11,7 +11,6 @@ A curated marketplace of Claude Code plugins for Python development, design revi
 - **`/plugins/refactoring`** — Architectural deepening and Python SOLID/clean-code refactoring
 - **`/plugins/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
 - **`/plugins/planning`** — Stress-test plans and designs against the codebase and domain model
-- **`/plugins/project-rules`** — Auto-captures project rules and lessons learned from corrections
 
 ## Installation
 
@@ -27,6 +26,7 @@ Then install plugins individually:
 /plugin install python-plugin@seblful-claude-plugins
 /plugin install code-review@seblful-claude-plugins
 /plugin install refactoring@seblful-claude-plugins
+/plugin install planning@seblful-claude-plugins
 /plugin install lenses@seblful-claude-plugins
 ```
 
