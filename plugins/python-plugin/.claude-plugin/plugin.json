@@ -1,6 +1,6 @@
 {
   "name": "python-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Professional Python coding and testing practices — PEP 8, type hints, pytest, and the modern uv/ruff/ty stack.",
   "author": {
     "name": "Aliaksei Chymba",

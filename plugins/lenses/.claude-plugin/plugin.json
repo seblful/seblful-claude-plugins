@@ -1,6 +1,6 @@
 {
   "name": "lenses",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Perspective and communication lenses — zoom out for a high-level code map or switch to ultra-compressed caveman mode.",
   "author": {
     "name": "Aliaksei Chymba",

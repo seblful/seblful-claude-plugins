@@ -1,6 +1,6 @@
 {
   "name": "code-review",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Senior code reviewer agent and interview-style plan grilling for thorough code and design review.",
   "author": {
     "name": "Aliaksei Chymba",

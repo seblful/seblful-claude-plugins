@@ -1,6 +1,6 @@
 {
   "name": "refactoring",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Architectural deepening and Python SOLID/clean-code refactoring commands for improving codebases.",
   "author": {
     "name": "Aliaksei Chymba",
