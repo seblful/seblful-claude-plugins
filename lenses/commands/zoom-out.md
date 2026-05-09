@@ -1,5 +1,5 @@
 ---
-description: Zoom out from the current code and get a higher-level map of all relevant modules and callers using the project's domain vocabulary
+description: Step up one layer of abstraction from the current code and produce a map of all relevant modules and callers, using the project's domain vocabulary from CONTEXT.md.
 allowed-tools: Read, Glob, Grep, Agent
 ---
 

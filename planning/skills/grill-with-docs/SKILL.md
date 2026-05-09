@@ -1,6 +1,6 @@
 ---
 name: grill-with-docs
-description: Grilling session that challenges your plan against the existing domain model, sharpens terminology, and updates documentation (CONTEXT.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language and documented decisions.
+description: Deep design interview that challenges a plan against the domain model, sharpens terminology, and updates CONTEXT.md and ADRs inline as decisions crystallize. Trigger on "grill with docs", planning sessions where CONTEXT.md or ADRs exist, or design reviews needing domain alignment.
 ---
 
 <what-to-do>

@@ -1,6 +1,6 @@
 ---
 name: python-testing
-description: Professional Python testing with pytest — TDD, fixtures, parametrization, mocking, async, and coverage.
+description: Apply when writing or reviewing Python tests — TDD workflow, pytest fixtures, parametrization, mocking, async tests, and coverage. Trigger on "write tests", "add tests", "fix tests", test failures, or pytest questions.
 ---
 
 # Python Testing

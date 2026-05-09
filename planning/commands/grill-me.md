@@ -1,5 +1,5 @@
 ---
-description: Interview the user relentlessly about their plan or design until reaching shared understanding — ask one question at a time, walk each branch of the decision tree
+description: Interview the user one question at a time about a plan or design until reaching shared understanding, walking each branch of the decision tree. Accepts an optional description of the plan as $ARGUMENTS.
 allowed-tools: Read, Glob, Grep
 ---
 

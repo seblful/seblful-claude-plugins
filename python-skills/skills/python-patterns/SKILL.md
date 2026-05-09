@@ -1,6 +1,6 @@
 ---
 name: python-patterns
-description: Professional Python coding practices — PEP 8, type hints, modern idioms, and the project stack (uv, ruff, ty, structlog, pydantic, typer).
+description: Apply when writing or reviewing Python code — enforces PEP 8, type hints, modern idioms, and the project stack (uv, ruff, ty, structlog, pydantic, typer). Trigger on new Python files, code style questions, tooling setup, or module structure.
 ---
 
 # Python Coding Practices

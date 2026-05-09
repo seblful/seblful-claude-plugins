@@ -1,5 +1,5 @@
 ---
-description: Surface architectural friction and propose deepening opportunities — refactors that turn shallow modules into deep ones for better testability and AI-navigability
+description: Explore the codebase for architectural friction, surface deepening opportunities as a numbered list, then walk chosen candidates through a design grilling loop. No arguments needed — reads CONTEXT.md and ADRs automatically.
 allowed-tools: Read, Glob, Grep, Agent
 ---
 

@@ -1,5 +1,5 @@
 ---
-description: Refactor Python toward SOLID, clean-code, and production-ready patterns — small functions, narrow interfaces, dependency injection, pure cores, and testable seams
+description: Refactor a Python module toward SOLID and clean-code patterns — small functions, narrow interfaces, dependency injection, pure cores, and testable seams. Pass a file path or module name as $ARGUMENTS, or targets the most recently edited Python file.
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash, Agent
 ---
 

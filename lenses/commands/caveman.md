@@ -1,5 +1,5 @@
 ---
-description: Toggle ultra-compressed caveman communication mode — drops filler/articles/pleasantries while keeping full technical accuracy
+description: Activate ultra-compressed caveman mode — strips articles, filler, pleasantries, and hedging from all responses while preserving full technical accuracy. Say "stop caveman" or "normal mode" to deactivate.
 allowed-tools: Read
 ---
 
