@@ -14,7 +14,7 @@
     },
     {
       "name": "code-review",
-      "description": "Senior code reviewer agent and terse caveman communication mode for efficient code review.",
+      "description": "Senior code reviewer agent and interview-style plan grilling for thorough code and design review.",
       "source": "./plugins/code-review"
     },
     {
@@ -24,8 +24,13 @@
     },
     {
       "name": "refactoring",
-      "description": "Find architectural deepening opportunities, zoom out for higher-level context, and refactor Python toward SOLID and production-ready patterns.",
+      "description": "Architectural deepening and Python SOLID/clean-code refactoring commands for improving codebases.",
       "source": "./plugins/refactoring"
+    },
+    {
+      "name": "lenses",
+      "description": "Perspective and communication lenses — zoom out for a high-level code map or switch to ultra-compressed caveman mode.",
+      "source": "./plugins/lenses"
     }
   ]
 }

@@ -47,7 +47,7 @@ Or browse them in `/plugin > Discover`.
 ### refactoring
 
 - **improve-codebase-architecture** — Surface deepening opportunities and reduce shallow modules.
-- **solid-refactore** — Refactor Python code to follow SOLID principles and clean-code practices.
+- **solid-refactor** — Refactor Python code to follow SOLID principles and clean-code practices.
 
 ### lenses
 
