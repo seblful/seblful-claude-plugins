@@ -146,7 +146,7 @@ def main():
 
         for window in found:
             print(
-                f"[insights] Correction detected — update .claude/PROJECT_RULES.md:\n\n"
+                f"[project-rules] Correction detected — update .claude/PROJECT_RULES.md:\n\n"
                 f"{format_window(window)}\n\n"
                 f"Append one imperative rule to the correct section "
                 f"({' / '.join(SECTION_ANCHORS.values())}) with today's date."

@@ -28,9 +28,9 @@
       "source": "./refactoring"
     },
     {
-      "name": "insights",
+      "name": "project-rules",
       "description": "Auto-captures project rules and lessons learned from corrections during Claude Code sessions, with no API key required.",
-      "source": "./insights"
+      "source": "./project-rules"
     }
   ]
 }

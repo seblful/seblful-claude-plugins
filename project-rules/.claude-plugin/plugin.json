@@ -1,5 +1,5 @@
 {
-  "name": "insights",
+  "name": "project-rules",
   "version": "0.1.0",
   "description": "Auto-captures project rules and lessons learned from user corrections during Claude Code sessions. No API key required — Claude reasons over the conversation directly.",
   "author": {
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["insights", "rules", "lessons-learned", "project-memory", "corrections"]
+  "keywords": ["project-rules", "rules", "lessons-learned", "project-memory", "corrections"]
 }
