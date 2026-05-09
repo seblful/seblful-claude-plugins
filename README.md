@@ -6,10 +6,12 @@ A curated marketplace of Claude Code plugins for Python development, design revi
 
 ## Structure
 
-- **`/python-plugin`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
-- **`/code-review`** — Interview-style plan grilling and senior code reviewer agent
-- **`/refactoring`** — Architectural deepening and Python SOLID/clean-code refactoring
-- **`/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
+- **`/plugins/python-plugin`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
+- **`/plugins/code-review`** — Interview-style plan grilling and senior code reviewer agent
+- **`/plugins/refactoring`** — Architectural deepening and Python SOLID/clean-code refactoring
+- **`/plugins/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
+- **`/plugins/planning`** — Stress-test plans and designs against the codebase and domain model
+- **`/plugins/project-rules`** — Auto-captures project rules and lessons learned from corrections
 
 ## Installation
 
@@ -57,12 +59,13 @@ Or browse them in `/plugin > Discover`.
 Each plugin follows the standard Claude Code plugin layout:
 
 ```
-plugin-name/
-├── .claude-plugin/
-│   └── plugin.json      # Plugin metadata (required)
-└── skills/              # Skill definitions
-    └── <skill-name>/
-        └── SKILL.md
+plugins/
+└── plugin-name/
+    ├── .claude-plugin/
+    │   └── plugin.json      # Plugin metadata (required)
+    └── skills/              # Skill definitions
+        └── <skill-name>/
+            └── SKILL.md
 ```
 
 ## Contributing

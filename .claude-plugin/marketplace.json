@@ -10,27 +10,27 @@
     {
       "name": "python-plugin",
       "description": "Professional Python coding and testing practices — PEP 8, type hints, pytest, fixtures, and the modern uv/ruff/ty stack.",
-      "source": "./python-plugin"
+      "source": "./plugins/python-plugin"
     },
     {
       "name": "code-review",
       "description": "Senior code reviewer agent and terse caveman communication mode for efficient code review.",
-      "source": "./code-review"
+      "source": "./plugins/code-review"
     },
     {
       "name": "planning",
       "description": "Relentless interview-style grilling to stress-test plans and designs against the codebase and domain model.",
-      "source": "./planning"
+      "source": "./plugins/planning"
     },
     {
       "name": "refactoring",
       "description": "Find architectural deepening opportunities, zoom out for higher-level context, and refactor Python toward SOLID and production-ready patterns.",
-      "source": "./refactoring"
+      "source": "./plugins/refactoring"
     },
     {
       "name": "project-rules",
       "description": "Auto-captures project rules and lessons learned from corrections during Claude Code sessions, with no API key required.",
-      "source": "./project-rules"
+      "source": "./plugins/project-rules"
     }
   ]
 }
