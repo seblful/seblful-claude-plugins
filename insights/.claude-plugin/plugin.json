@@ -1,0 +1,13 @@
+{
+  "name": "insights",
+  "version": "0.1.0",
+  "description": "Auto-captures project rules and lessons learned from user corrections during Claude Code sessions. No API key required — Claude reasons over the conversation directly.",
+  "author": {
+    "name": "Aliaksei Chymba",
+    "email": "alesha.chimba@gmail.com"
+  },
+  "homepage": "https://github.com/seblful/seblful-claude-plugins",
+  "repository": "https://github.com/seblful/seblful-claude-plugins",
+  "license": "MIT",
+  "keywords": ["insights", "rules", "lessons-learned", "project-memory", "corrections"]
+}

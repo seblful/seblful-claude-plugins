@@ -26,6 +26,11 @@
       "name": "refactoring",
       "description": "Find architectural deepening opportunities, zoom out for higher-level context, and refactor Python toward SOLID and production-ready patterns.",
       "source": "./refactoring"
+    },
+    {
+      "name": "insights",
+      "description": "Auto-captures project rules and lessons learned from corrections during Claude Code sessions, with no API key required.",
+      "source": "./insights"
     }
   ]
 }
