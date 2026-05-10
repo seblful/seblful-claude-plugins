@@ -1,0 +1,13 @@
+{
+  "name": "obsidian-vault",
+  "version": "0.1.0",
+  "description": "Scheduled maintenance routines for Obsidian vaults — formatting, knowledge extraction, structural scanning, archiving, accuracy review, MOC audits, wikilink connectivity, and dead-note cleanup.",
+  "author": {
+    "name": "Aliaksei Chymba",
+    "email": "alesha.chimba@gmail.com"
+  },
+  "homepage": "https://github.com/seblful/seblful-claude-plugins",
+  "repository": "https://github.com/seblful/seblful-claude-plugins",
+  "license": "MIT",
+  "keywords": ["obsidian", "vault", "maintenance", "knowledge-management", "notes"]
+}
