@@ -48,7 +48,7 @@ After successfully harvesting a weekly report, add `harvested: true` to its fron
 
 ### 6. Report
 
-List every piece of knowledge extracted, the source weekly report it came from (for your own audit trail in the chat), and the destination project note it was written to.
+One line per destination project note: `Project Name — N items added (from W{n}, W{n})`. Nothing else.
 
 ## Judgment
 

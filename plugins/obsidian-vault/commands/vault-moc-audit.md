@@ -29,7 +29,7 @@ Keep MOCs and tags working as the vault's navigation system. A healthy MOC is a 
 
 ## Report
 
-MOCs created/updated, tags consolidated, tags added, tags removed.
+One line: `MOCs created: N | updated: N | Tags consolidated: N | added: N | removed: N`. Nothing else.
 
 ## Judgment
 

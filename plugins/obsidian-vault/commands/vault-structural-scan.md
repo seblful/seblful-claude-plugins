@@ -31,11 +31,7 @@ Catch structural problems that accumulated since the last scan and fix them whil
 
 ## Report
 
-After scanning, output a summary:
-- Files fixed (with what was changed)
-- Files flagged for human review (with reason)
-- Stub notes tagged
-- Broken links resolved vs. flagged
+One line per category: `Fixed: N | Flagged: N | Stubs tagged: N | Links resolved/flagged: N/N`. Name only the flagged items (one per line, with reason). Nothing else.
 
 ## Judgment
 
