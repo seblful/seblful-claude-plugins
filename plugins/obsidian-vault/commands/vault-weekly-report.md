@@ -72,11 +72,17 @@ tags: [weekly-report]
 
 **Add wikilinks** from the weekly report to each daily note it was built from (list them at the bottom under `## Sources`).
 
-### 4. Archive the daily notes
+### 4. Archive the daily notes and their attachments
 
-After the report is created and saved, move each daily note that was included in the report to `Archive/{YYYY}/` (where YYYY is the year of that note). Create the folder if it does not exist. Do not modify the content of the daily notes during the move.
+After the report is created and saved, for each daily note included in the report:
 
-Report which notes were moved and where.
+1. **Find attachments.** Scan the daily note for embedded files — images, PDFs, audio, and other non-markdown files referenced via `![[filename]]` or `![](path)` syntax. Also check for any attachment folder that mirrors the note name (e.g. `2024-10-14/` or `attachments/2024-10-14/`).
+
+2. **Move the note** to `Archive/{YYYY}/` (where YYYY is the year of that note). Create the folder if it does not exist.
+
+3. **Move the attachments.** Move each attachment file to `Archive/{YYYY}/attachments/`. Create the folder if it does not exist. After moving, do not update the links inside the archived note — they are archived and no longer need to resolve.
+
+Report which notes and attachments were moved and where.
 
 ## Judgment
 
