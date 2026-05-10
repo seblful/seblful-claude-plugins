@@ -24,6 +24,7 @@ Check every factual claim in each note — not just a subset. This includes:
 ## After verifying each note
 
 - Correct any errors or outdated information in-place
+- When correcting references to other vault notes, use `[[wikilinks]]` instead of plain text — resolve the exact filename before linking
 - Add or update a `reviewed` frontmatter property set to today's date in `YYYY-MM-DD` format — same style as `created` and `modified` properties
 - If a note is fully correct, still update `reviewed` — the verification itself has value
 ## Prioritization

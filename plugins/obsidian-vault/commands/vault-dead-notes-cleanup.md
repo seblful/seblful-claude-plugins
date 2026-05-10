@@ -22,12 +22,12 @@ Find notes with `#TODO` in their tags. Same decision: complete, schedule with a 
 ### Orphan notes
 Find notes with no incoming links and no outgoing links (completely isolated).
 
-For each: either connect it to the graph (add it to a MOC, link to it from a related note) or delete it if it has no place.
+For each: either connect it to the graph (add a `[[wikilink]]` to it from a related note or MOC, or add outgoing `[[wikilinks]]` from it to related notes) or delete it if it has no place.
 
 ### Duplicate content
 Find notes in different folders covering the same topic. Look for notes with very similar titles or overlapping content.
 
-For each duplicate pair: decide the canonical home, then either merge, cross-link with a clear primary, or redirect. Don't let two diverging versions of the same knowledge coexist.
+For each duplicate pair: decide the canonical home, then either merge, cross-link using `[[wikilinks]]` with one clearly marked as primary, or add a redirect note. Don't let two diverging versions of the same knowledge coexist.
 
 ### Empty notes
 Find notes that are completely empty or contain only a title. Decide: populate or delete.
