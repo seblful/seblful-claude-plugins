@@ -1,44 +1,85 @@
 ---
-description: Create a weekly report note by synthesizing this week's daily reports — what was done, decisions made, problems encountered, and what carries over to next week.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__create_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Write, Glob, Grep
+description: Create a weekly report note by synthesizing this week's daily reports — grouped by project, stored in Weekly/YYYY/W{n}, then archive the daily notes.
+allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__create_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, mcp__plugin_obsidian_obsidian__move_vault_file, Read, Write, Glob, Grep
 ---
 
 You are running **Weekly Report Creation**. Today's date: use the system date.
 
 ## Your job
 
-Read this week's daily reports and produce a single weekly report note that summarizes the week clearly and concisely. The weekly report should stand on its own — someone reading it without the daily reports should get the full picture.
+Read this week's daily reports, produce a weekly report note grouped by project, store it under `Weekly/YYYY/`, then archive the daily notes.
 
 ## Steps
 
-1. **Find this week's daily reports.** Locate daily notes dated Monday through today. If fewer than two exist, tell the user and ask whether to proceed.
+### 1. Locate this week's daily reports
 
-2. **Read all of them** before writing anything. Build a complete picture of the week first.
+Find daily notes dated Monday through today. If fewer than two exist, tell the user and ask whether to proceed.
 
-3. **Create the weekly report note.** Place it near the daily reports (e.g. in a `Weekly/` sibling folder or the same folder with a `W` prefix). Name it clearly with the week's date range (e.g. `2024-W42` or `2024-10-14 – 2024-10-18`).
+### 2. Read everything first
 
-4. **Write the report with these sections:**
+Read all daily reports before writing anything. Build a full picture — note which projects appear and what was done per project.
 
-   ### What was accomplished
-   A concise list of meaningful work completed this week. Group related items. Skip trivial or routine tasks — only include things worth remembering.
+### 3. Create the weekly report note
 
-   ### Decisions made
-   Any significant decisions taken this week — what was decided and why. Each entry should be understandable without reading the daily reports.
+**Path:** `Weekly/{YYYY}/W{week_number}.md` — e.g. `Weekly/2024/W42.md`  
+Use ISO week number (Monday-anchored). Create the year folder if it does not exist.
 
-   ### Problems and blockers
-   Issues encountered, their status (resolved / ongoing / escalated), and how they were handled.
+**Structure:**
 
-   ### Carry-over
-   Tasks that were planned this week but not completed, and are being moved to next week.
+```markdown
+---
+week: {YYYY-Wnn}
+date_range: {YYYY-MM-DD} – {YYYY-MM-DD}
+tags: [weekly-report]
+---
 
-   ### Notes and observations
-   Anything worth remembering that doesn't fit the above — patterns noticed, things to try, ideas worth revisiting.
+# W{n} — {YYYY}
 
-5. **Add wikilinks** from the weekly report to each daily report it was built from.
+## {Project Name} [[Project Name]]
+
+### Accomplished
+- …
+
+### Decisions
+- …
+
+### Problems
+- …
+
+### Carry-over
+- …
+
+---
+
+## {Another Project} [[Another Project]]
+
+…
+
+---
+
+## Cross-project / General
+
+### Notes and observations
+- …
+```
+
+**Grouping rules:**
+- One `##` section per project that appeared in the daily reports. Use the exact vault name of the project note as the heading and add a `[[wikilink]]` to it inline.
+- If an entry does not belong to any specific project, place it under `## Cross-project / General`.
+- Within each project section use four sub-sections: Accomplished, Decisions, Problems, Carry-over. Omit a sub-section if it has no entries.
+- Consolidate: if the same work appears across multiple days, write one entry, not five.
+- Skip trivial or purely routine items.
+
+**Add wikilinks** from the weekly report to each daily note it was built from (list them at the bottom under `## Sources`).
+
+### 4. Archive the daily notes
+
+After the report is created and saved, move each daily note that was included in the report to `Archive/{YYYY}/` (where YYYY is the year of that note). Create the folder if it does not exist. Do not modify the content of the daily notes during the move.
+
+Report which notes were moved and where.
 
 ## Judgment
 
-- Consolidate when the same topic appears across multiple days — one entry beats five near-identical ones
-- Skip items that are too minor to be worth remembering in a month
-- Keep the report skimmable — prefer bullet points over prose paragraphs
+- Prefer bullet points over prose
 - Do not invent or infer content beyond what is written in the daily reports
+- If a project note does not exist in the vault, still create the section — use the name from the daily note

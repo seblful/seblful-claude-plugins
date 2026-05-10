@@ -1,7 +1,7 @@
 {
   "name": "obsidian-vault",
-  "version": "0.1.0",
-  "description": "Scheduled maintenance routines for Obsidian vaults — formatting, knowledge extraction, structural scanning, archiving, accuracy review, MOC audits, wikilink connectivity, and dead-note cleanup.",
+  "version": "0.2.0",
+  "description": "Scheduled maintenance routines for Obsidian vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, MOC audits, wikilink connectivity, and dead-note cleanup.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
