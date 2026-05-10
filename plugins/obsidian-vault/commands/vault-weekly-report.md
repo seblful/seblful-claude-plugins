@@ -38,15 +38,19 @@ tags: [weekly-report]
 ## {Project Name} [[Project Name]]
 
 ### Accomplished
+
 - …
 
 ### Decisions
+
 - …
 
 ### Problems
+
 - …
 
 ### Carry-over
+
 - …
 
 ---
@@ -60,15 +64,18 @@ tags: [weekly-report]
 ## Cross-project / General
 
 ### Notes and observations
+
 - …
 ```
 
 **Grouping rules:**
+
 - One `##` section per project that appeared in the daily reports. Use the exact vault name of the project note as the heading and add a `[[wikilink]]` to it inline.
 - If an entry does not belong to any specific project, place it under `## Cross-project / General`.
 - Within each project section use four sub-sections: Accomplished, Decisions, Problems, Carry-over. Omit a sub-section if it has no entries.
 - Consolidate: if the same work appears across multiple days, write one entry, not five.
 - Skip trivial or purely routine items.
+- Accomplished — one bullet per outcome, not per task. Group anything that served the same goal. Daily granularity belongs in notes, not here.
 
 **Add wikilinks** from the weekly report to each daily note it was built from (list them at the bottom under `## Sources`).
 
@@ -82,7 +89,7 @@ After the report is created and saved, for each daily note included in the repor
 
 3. **Move the attachments.** Move each attachment file to `Archive/{YYYY}/attachments/`. Create the folder if it does not exist. After moving, do not update the links inside the archived note — they are archived and no longer need to resolve.
 
-Report one line per note moved: `filename → Archive/YYYY/` (N attachments). Do not add any other sections, commentary, or "nothing found" notices.
+Report which notes and attachments were moved and where.
 
 ## Judgment
 

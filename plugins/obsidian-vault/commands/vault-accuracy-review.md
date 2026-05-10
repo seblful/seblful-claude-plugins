@@ -1,5 +1,5 @@
 ---
-description: Review all notes outside Work/ for factual accuracy — verify every claim in every note, correct errors in-place, and tag each reviewed note with the current month.
+description: Review all notes outside Work/ for factual accuracy — verify every claim in every note, correct errors in-place, and stamp each reviewed note with a reviewed date property.
 allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
 ---
 
@@ -7,7 +7,7 @@ You are running **Factual Accuracy Review**. Scope: all notes in the vault excep
 
 ## Your job
 
-Read every note in scope and verify that its content is factually correct. Fix errors in-place. Tag each note after review so it is not re-reviewed unnecessarily next session.
+Read every note in scope and verify that its content is factually correct. Fix errors in-place. Stamp each note after review so it is not re-reviewed unnecessarily next session.
 
 ## What to verify
 
@@ -24,14 +24,12 @@ Check every factual claim in each note — not just a subset. This includes:
 ## After verifying each note
 
 - Correct any errors or outdated information in-place
-- Add or update a `#reviewed-YYYY-MM` tag in frontmatter (use today's year and month)
-- If a note is fully correct, still update the reviewed tag — the verification itself has value
-- If a claim cannot be verified confidently, add `#needs-verification` to the note rather than leaving it silently uncertain
-
+- Add or update a `reviewed` frontmatter property set to today's date in `YYYY-MM-DD` format — same style as `created` and `modified` properties
+- If a note is fully correct, still update `reviewed` — the verification itself has value
 ## Prioritization
 
-If the vault is large and a full pass is not possible in one session, prioritize notes that lack a `#reviewed-YYYY-MM` tag entirely, then notes whose tag is oldest.
+If the vault is large and a full pass is not possible in one session, prioritize notes that lack a `reviewed` property entirely, then notes whose `reviewed` date is oldest.
 
 ## Report
 
-After the session: total notes reviewed, notes corrected, notes flagged with `#needs-verification`.
+After the session: total notes reviewed, notes corrected.
