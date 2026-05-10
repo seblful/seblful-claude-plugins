@@ -34,4 +34,4 @@ If the vault is large and a full pass is not possible in one session, prioritize
 
 ## Report
 
-One line: `Reviewed: N | Corrected: N | Needs verification: N`. Name only the corrected and flagged notes. Nothing else.
+After the session: total notes reviewed, notes corrected, notes flagged with `#needs-verification`.

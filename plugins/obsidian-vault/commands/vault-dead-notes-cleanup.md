@@ -34,7 +34,7 @@ Find notes that are completely empty or contain only a title. Decide: populate o
 
 ## Report
 
-One line: `Stubs: N resolved, N deleted | TODOs: N resolved | Orphans: N connected, N deleted | Duplicates: N merged | Empty: N populated, N deleted`. Nothing else.
+Stubs resolved/deleted, TODOs resolved, orphans connected/deleted, duplicates merged/redirected, empty notes populated/deleted.
 
 ## Judgment
 

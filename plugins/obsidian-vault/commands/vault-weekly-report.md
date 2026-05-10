@@ -82,7 +82,7 @@ After the report is created and saved, for each daily note included in the repor
 
 3. **Move the attachments.** Move each attachment file to `Archive/{YYYY}/attachments/`. Create the folder if it does not exist. After moving, do not update the links inside the archived note — they are archived and no longer need to resolve.
 
-Report one line per note: `filename → Archive/YYYY/` (N attachments). Nothing else.
+Report which notes and attachments were moved and where.
 
 ## Judgment
 
