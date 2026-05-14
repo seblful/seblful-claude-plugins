@@ -39,7 +39,7 @@ For each piece of extracted knowledge:
 1. Find the right project note. If no project note exists for a referenced project, create a minimal one.
 2. Place the content in the appropriate section of that note. If the section does not exist, add it.
 3. Write the content as a standalone fact — no reference to "this week", "W42", or the source weekly report. It should read as if it was always part of the project note.
-4. Use `[[wikilinks]]` when referencing other vault notes inline — tools, concepts, related projects. Resolve exact filenames before linking; do not guess.
+4. Use `[[wikilinks]]` when referencing other vault notes inline — tools, concepts, related projects. Use heading links `[[Note#Section]]` when pointing at a specific section. Resolve exact filenames before linking; do not guess. For link properties in frontmatter, use single-string form (`related: "[[Note]]"`) for one value and YAML list form for multiple values.
 5. Do not duplicate: if the same information is already in the project note, skip it or merge rather than repeat.
 6. Do not add wikilinks back to the weekly report.
 

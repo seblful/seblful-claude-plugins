@@ -1,5 +1,5 @@
 ---
-description: Clean up dead weight across the vault — complete or delete stubs, resolve TODO-tagged notes, connect or remove orphans, and merge duplicate notes.
+description: Clean up dead weight across the vault — complete or delete stubs, connect or remove orphans, and merge duplicate notes.
 allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__create_vault_file, mcp__plugin_obsidian_obsidian__delete_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Write, Glob, Grep
 ---
 
@@ -16,9 +16,6 @@ Find notes tagged `#stub` or notes that are nearly empty (a title, maybe one sen
 
 For each: decide one of three outcomes — complete it now, leave it with a concrete plan written into the note, or delete it. "I'll add to it later" without a plan is how stubs survive for years.
 
-### TODO-tagged notes
-Find notes with `#TODO` in their tags. Same decision: complete, schedule with a concrete plan, or remove the tag if it no longer applies.
-
 ### Orphan notes
 Find notes with no incoming links and no outgoing links (completely isolated).
 
@@ -34,7 +31,7 @@ Find notes that are completely empty or contain only a title. Decide: populate o
 
 ## Report
 
-Stubs resolved/deleted, TODOs resolved, orphans connected/deleted, duplicates merged/redirected, empty notes populated/deleted.
+Stubs resolved/deleted, orphans connected/deleted, duplicates merged/redirected, empty notes populated/deleted.
 
 ## Judgment
 

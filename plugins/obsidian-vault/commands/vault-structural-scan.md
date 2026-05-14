@@ -12,12 +12,28 @@ Catch structural problems that accumulated since the last scan and fix them whil
 ## What to check
 
 ### Frontmatter problems
-- Missing or empty `tags`, `created`, or `modified` fields — fill them in
-- Link fields (e.g. `project:`, `area:`) written as plain text instead of `[[wikilinks]]` — convert them
-- Date fields that don't match when the file was actually created or last changed — correct them
+
+Validate against the **vault note schema**:
+
+| Note type | Required properties | Notes |
+|---|---|---|
+| Daily (`YYYY-MM-DD.md`) | `tags`, `created`, `modified`, optionally `project`, `area` | `project`/`area` must be list-of-links |
+| Weekly (`Weekly/YYYY/W{n}.md`) | `week`, `date_range`, `tags`, `harvested` | `harvested` is boolean |
+| Project notes | `tags`, `created`, `modified`, optionally `aliases` | |
+| Reviewed notes (outside `Work/`) | adds `reviewed` (date `YYYY-MM-DD`) | |
+| Archived (`Archive/YYYY/...`) | unchanged from original — do not rewrite | |
+
+General rules:
+- Missing or empty required fields — fill them in
+- All date fields in `YYYY-MM-DD` (or `YYYY-MM-DDTHH:mm:ss` for datetime properties)
+- Link fields (e.g. `project:`, `area:`, `related:`) must be wikilinks, not plain text. Use single-string form for one value (`related: "[[Note]]"`) and YAML list form for multiple values
+- `tags:` must be a YAML list; tag names lowercase, kebab-case
+- Obsidian reserved keys (`aliases`, `cssclasses`, `tags`) — preserve if present; `aliases` and `cssclasses` are YAML lists
+- Date fields that don't match the file's real ctime/mtime — correct them
 
 ### Broken links
 - `[[wikilinks]]` that resolve to nothing because a note was renamed or moved — if the target is obvious from context, fix it; if ambiguous, flag it for review
+- Heading links `[[Note#Heading]]` whose target heading no longer exists — flag for review
 - Image or file embeds pointing to deleted or moved attachments — flag for review
 
 ### Misplaced files

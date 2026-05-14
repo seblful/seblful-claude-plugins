@@ -24,9 +24,11 @@ Check every factual claim in each note — not just a subset. This includes:
 ## After verifying each note
 
 - Correct any errors or outdated information in-place
-- When correcting references to other vault notes, use `[[wikilinks]]` instead of plain text — resolve the exact filename before linking
+- When correcting references to other vault notes, use `[[wikilinks]]` instead of plain text — resolve the exact filename before linking. Use heading links (`[[Note#Section]]`) when pointing at a specific section.
+- For link properties in frontmatter, use single-string form (`related: "[[Note]]"`) for one value and YAML list form for multiple values
 - Add or update a `reviewed` frontmatter property set to today's date in `YYYY-MM-DD` format — same style as `created` and `modified` properties
 - If a note is fully correct, still update `reviewed` — the verification itself has value
+- Preserve Obsidian reserved frontmatter keys (`aliases`, `cssclasses`, `tags`) if present; do not strip them
 ## Prioritization
 
 If the vault is large and a full pass is not possible in one session, prioritize notes that lack a `reviewed` property entirely, then notes whose `reviewed` date is oldest.

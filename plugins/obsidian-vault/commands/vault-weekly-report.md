@@ -22,7 +22,7 @@ Read all daily reports before writing anything. Build a full picture — note wh
 ### 3. Create the weekly report note
 
 **Path:** `Weekly/{YYYY}/W{week_number}.md` — e.g. `Weekly/2024/W42.md`  
-Use ISO week number (Monday-anchored). Create the year folder if it does not exist.
+Use ISO 8601 week number (Monday-anchored), equivalent to moment.js `gggg-[W]ww`. Create the year folder if it does not exist.
 
 **Structure:**
 
@@ -30,32 +30,28 @@ Use ISO week number (Monday-anchored). Create the year folder if it does not exi
 ---
 week: {YYYY-Wnn}
 date_range: {YYYY-MM-DD} – {YYYY-MM-DD}
-tags: [weekly-report]
+tags:
+  - weekly-report
+harvested: false
 ---
 
-# W{n} — {YYYY}
+## [[Project Name]]
 
-## {Project Name} [[Project Name]]
+> [!success] Accomplished
+> - …
 
-### Accomplished
+> [!note] Decisions
+> - …
 
-- …
+> [!warning] Problems
+> - …
 
-### Decisions
-
-- …
-
-### Problems
-
-- …
-
-### Carry-over
-
-- …
+> [!todo] Carry-over
+> - …
 
 ---
 
-## {Another Project} [[Another Project]]
+## [[Another Project]]
 
 …
 
@@ -66,18 +62,24 @@ tags: [weekly-report]
 ### Notes and observations
 
 - …
+
+## Sources
+
+- [[YYYY-MM-DD]]
+- [[YYYY-MM-DD]]
 ```
 
 **Grouping rules:**
 
-- One `##` section per project that appeared in the daily reports. Use the exact vault name of the project note as the heading and add a `[[wikilink]]` to it inline.
+- One `##` section per project that appeared in the daily reports. The heading itself is the `[[wikilink]]` to the project note — no separate inline link needed.
 - If an entry does not belong to any specific project, place it under `## Cross-project / General`.
-- Within each project section use four sub-sections: Accomplished, Decisions, Problems, Carry-over. Omit a sub-section if it has no entries.
+- Within each project section use four callouts: `> [!success] Accomplished`, `> [!note] Decisions`, `> [!warning] Problems`, `> [!todo] Carry-over`. Omit a callout if it has no entries.
 - Consolidate: if the same work appears across multiple days, write one entry, not five.
 - Skip trivial or purely routine items.
 - Accomplished — one bullet per outcome, not per task. Group anything that served the same goal. Daily granularity belongs in notes, not here.
+- `harvested: false` marks the report as eligible for knowledge harvesting; the harvest routine flips it to `true` once processed.
 
-**Add wikilinks** from the weekly report to each daily note it was built from (list them at the bottom under `## Sources`).
+**Add wikilinks** from the weekly report to each daily note it was built from under `## Sources`. Use the daily note filename (`[[YYYY-MM-DD]]`).
 
 ### 4. Archive the daily notes and their attachments
 
