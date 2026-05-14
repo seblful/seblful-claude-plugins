@@ -1,5 +1,5 @@
 ---
-description: Add wikilinks to disconnected notes across the vault, starting with the most-referenced hub notes — inline links only, no "See Also" dumps.
+description: Add inline wikilinks between conceptually related notes across the vault, starting with the most-referenced hub notes — prose links only, no "See Also" dumps, no MOC curation.
 allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
 ---
 
@@ -7,7 +7,9 @@ You are running **Wikilink Connectivity Sprint**. Scope: whole vault. Today's da
 
 ## Your job
 
-Systematically build wikilink connections between notes that are conceptually related but currently isolated. Success is measured by whether navigating from a concept to its prerequisites, applications, and related ideas becomes natural — not by the raw count of links added.
+Systematically build **inline prose wikilinks** between notes that are conceptually related but currently isolated. Success is measured by whether navigating from a concept to its prerequisites, applications, and related ideas becomes natural — not by the raw count of links added.
+
+Out of scope: curating MOCs, index notes, or "See Also" sections. MOC freshness (broken entries, missing notes) is handled by `vault-structural-scan`. This command only touches links that sit inside a note's prose.
 
 ## How to prioritize
 
@@ -18,7 +20,7 @@ Good candidates for hub notes:
 - Notes about tools or frameworks that multiple other notes reference
 - Notes that are frequently mentioned by name in prose but not yet linked
 
-Start with the most isolated hubs and work outward.
+Start with the most isolated hubs and work outward. Note: MOCs themselves are not hub notes for this purpose — they're indexes, and their entries are listings rather than prose mentions.
 
 ## Principles for good linking
 

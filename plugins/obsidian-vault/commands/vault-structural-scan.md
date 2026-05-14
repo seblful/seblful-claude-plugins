@@ -1,5 +1,5 @@
 ---
-description: Scan the whole vault for structural problems — broken wikilinks, misplaced files, frontmatter errors, and stub notes — and fix them in-place.
+description: Scan the whole vault for structural problems — broken wikilinks, misplaced files, frontmatter errors, stub notes, and stale MOCs — and fix them in-place.
 allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
 ---
 
@@ -45,6 +45,15 @@ General rules:
 - Files that are essentially empty: just a title, or a title with placeholder headings and no real content
 - Tag these with `#stub` so they can be scheduled for completion
 
+### Stale MOCs
+Treat MOCs (files named `MOC.md`, `Index.md`, or notes that function as folder/domain indexes) as structural assertions about the vault — and check them the same way you check links.
+
+- Entries in a MOC that point to renamed, moved, or deleted notes — fix if the new target is obvious, flag if ambiguous
+- Notes that clearly belong to a MOC's domain (same folder, same tag cluster, same topic) but are missing from it — add them under the appropriate section
+- Empty MOC sections or duplicate entries — clean up
+
+Out of scope here: deciding what a MOC *should* cover, restructuring its sections, or creating new MOCs from scratch — that's editorial work, not structural validation.
+
 ## Report
 
 After scanning, output a summary:
@@ -58,3 +67,4 @@ After scanning, output a summary:
 - A note with a few lines of real content is not a stub; a note with only headings and one sentence is
 - If a broken link's target is obvious from context, fix it; if ambiguous, flag rather than guess
 - Don't restructure notes that are merely different in style — only fix things that are genuinely wrong
+- For MOCs: only do mechanical upkeep (broken entries, obviously-missing notes). If a MOC's structure or scope seems wrong, flag it — don't redesign it
