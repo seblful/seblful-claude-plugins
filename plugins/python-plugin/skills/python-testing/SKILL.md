@@ -5,32 +5,31 @@ description: Apply when writing or reviewing Python tests — TDD workflow, pyte
 
 # Python Testing
 
-## Philosophy
+## Principles
 
-- **TDD cycle**: red → green → refactor.
-- **Test behavior, not implementation.** Refactors should not break tests.
-- **One assertion concern per test.** Names describe the behavior: `test_login_with_invalid_credentials_fails`.
-- **Independent tests.** No shared mutable state; order must not matter.
-- **Coverage**: 80%+ overall, 100% on critical paths.
+- **Test behavior, not implementation.** A refactor that preserves behavior must not break tests.
+- **One concern per test.** Name describes the behavior: `test_login_with_invalid_credentials_fails`.
+- **Independent and order-free.** No shared mutable state. Any test runs in isolation.
+- **TDD where it pays off**: red → green → refactor. Let the test shape the API.
+- **Coverage is a floor, not a goal.** 80%+ overall, 100% on critical paths; chase missing branches, not the percentage.
 
 ## Layout
 
 ```
 tests/
 ├── conftest.py        # shared fixtures
-├── unit/
-├── integration/
+├── unit/              # fast, no I/O, no network
+├── integration/       # real deps, marked
 └── e2e/
 ```
 
-`pyproject.toml`:
-
 ```toml
+# pyproject.toml
 [tool.pytest.ini_options]
 addopts = "-ra --strict-markers"
 testpaths = ["tests"]
 markers = [
-    "slow: long-running tests",
+    "slow: long-running",
     "integration: hits external systems",
     "unit: pure unit tests",
 ]
@@ -38,19 +37,18 @@ markers = [
 
 ## Assertions
 
-Use plain `assert` — pytest rewrites it for rich diffs.
+Plain `assert` — pytest rewrites for rich diffs.
 
 ```python
 assert result == expected
-assert item in collection
-assert value is None              # never `== None`
+assert value is None
 assert isinstance(obj, str)
 
 with pytest.raises(ValueError, match="invalid input"):
     validate(bad)
 
 with pytest.raises(CustomError) as exc_info:
-    raise CustomError("boom", code=400)
+    do_thing()
 assert exc_info.value.code == 400
 ```
 
@@ -71,27 +69,20 @@ def database():
         db.close()
 ```
 
-Scopes: `function` (default), `class`, `module`, `session`. Promote scope only when setup is genuinely expensive — broader scopes invite cross-test pollution.
+- Scopes: `function` (default) → `class` → `module` → `session`. Promote only when setup is genuinely expensive; broader scope invites cross-test pollution.
+- `autouse=True` for unconditional setup (e.g. resetting a global).
+- Share via `conftest.py` at the directory level that needs it.
 
-`autouse=True` for unconditional setup/teardown (e.g. resetting global config).
+### Built-ins worth knowing
 
-Share fixtures via `conftest.py` at the appropriate directory level.
-
-### Built-in fixtures
-
-| Fixture | Use |
-|---------|-----|
-| `tmp_path` | Temp `Path` directory (preferred over `tempfile`) |
-| `monkeypatch` | Patch attrs/env vars for a test |
+| Fixture | Use for |
+|---------|---------|
+| `tmp_path` | Temp directory as `Path` — prefer over `tempfile` |
+| `monkeypatch` | Patch attrs / env vars for the test only |
 | `caplog` | Capture log records |
-| `capsys` | Capture stdout/stderr |
+| `capsys` | Capture stdout / stderr |
 
 ```python
-def test_processes_file(tmp_path: Path):
-    f = tmp_path / "in.txt"
-    f.write_text("hello")
-    assert process(f) == "HELLO"
-
 def test_uses_env(monkeypatch):
     monkeypatch.setenv("APP__DEBUG", "true")
     assert load_settings().debug is True
@@ -123,11 +114,12 @@ def db(request):
 
 ## Mocking
 
-Use `unittest.mock` (or `pytest-mock`'s `mocker`). **Patch where it's looked up, not where it's defined.** Prefer `autospec=True` to catch API drift.
+- **Patch where it's looked up**, not where it's defined.
+- `autospec=True` to catch API drift.
+- **Don't mock what you don't own.** Wrap third-party calls in a thin adapter and mock the adapter.
+- Never mock the system under test.
 
 ```python
-from unittest.mock import patch
-
 @patch("mypkg.service.api_call", autospec=True)
 def test_handles_error(api_call):
     api_call.side_effect = ConnectionError("net")
@@ -136,13 +128,13 @@ def test_handles_error(api_call):
     api_call.assert_called_once()
 ```
 
-Don't mock what you don't own — wrap third-party calls in your own thin adapter and mock the adapter. Don't mock the system under test.
+Over-specifying mocks (every arg, every call order) yields brittle tests. Assert the contract you care about, nothing more.
 
 ## Async
 
-```python
-# pyproject.toml: pytest-asyncio with asyncio_mode = "auto"
+`pytest-asyncio` with `asyncio_mode = "auto"`.
 
+```python
 async def test_fetch():
     result = await fetch("https://api.example.com")
     assert result["status"] == "ok"
@@ -154,7 +146,7 @@ async def test_async_mock(async_call):
     async_call.assert_awaited_once()
 ```
 
-## Logging assertions (structlog)
+## Structured-log assertions
 
 ```python
 def test_logs_user_processed(caplog):
@@ -163,9 +155,9 @@ def test_logs_user_processed(caplog):
     assert any(r.message == "user_processed" for r in caplog.records)
 ```
 
-## Test Organization Patterns
+## Organization patterns
 
-Group cohesive tests in a class when they share setup:
+Group cohesive tests in a class when they share fixtures:
 
 ```python
 class TestCalculator:
@@ -197,46 +189,19 @@ def session():
 
 ## DO / DON'T
 
-**DO**
+**DO** — write the test first; cover edges (empty, None, boundaries, unicode, errors); keep slow/integration tests behind markers so the unit suite stays fast.
 
-- Write the test first; let it drive the API.
-- Use `tmp_path`, `monkeypatch`, `caplog` instead of rolling your own.
-- Cover edge cases: empty, None, boundaries, unicode, errors.
-- Keep slow/integration tests behind markers so the unit suite stays fast.
-
-**DON'T**
-
-- Test private internals — test through the public interface.
-- Use bare `try/except` in tests — use `pytest.raises`.
-- Share mutable state between tests (module-level lists, singletons).
-- Over-specify mocks (every arg, every call order) — tests become brittle.
-- Mock the thing you're trying to test.
+**DON'T** — test private internals; share mutable state across tests; over-specify mocks; use bare `try/except` instead of `pytest.raises`.
 
 ## Running
 
 ```bash
-uv run pytest                          # all tests
-uv run pytest -v                       # verbose
-uv run pytest -x --lf                  # stop at first failure, only last-failed
+uv run pytest                          # all
+uv run pytest -x --lf                  # stop on first fail, only last-failed
 uv run pytest -k "user and not slow"   # filter by name
 uv run pytest -m "not slow"            # filter by marker
-uv run pytest --cov=src --cov-report=term-missing --cov-report=html
+uv run pytest --cov=src --cov-report=term-missing
 uv run pytest --pdb                    # debugger on failure
 ```
 
-## Quick Reference
-
-| Tool | Purpose |
-|------|---------|
-| `assert` | All assertions |
-| `pytest.raises` | Expected exceptions |
-| `@pytest.fixture` | Reusable setup/teardown |
-| `@pytest.mark.parametrize` | Table-driven tests |
-| `tmp_path` | Temp directory |
-| `monkeypatch` | Patch attrs/env |
-| `caplog` / `capsys` | Capture logs/output |
-| `@patch(..., autospec=True)` | Spec-checked mocks |
-| `pytest-asyncio` | Async tests |
-| `--cov` | Coverage report |
-
-**Tests are production code. Keep them clean, fast, and behavior-focused.**
+**Tests are production code. Clean, fast, behavior-focused.**

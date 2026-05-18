@@ -5,133 +5,93 @@ description: Apply when writing or reviewing Python code — enforces PEP 8, typ
 
 # Python Coding Practices
 
-## Core Principles
+## Principles
 
-- **Readability counts.** Clear names over clever tricks.
-- **Explicit over implicit.** No magic, no hidden side effects.
-- **EAFP over LBYL.** Prefer `try/except` over pre-checks.
-- **One obvious way.** Follow PEP 8 and PEP 20.
+- **Readable > clever.** Names carry meaning; structure carries intent.
+- **Explicit > implicit.** No magic, no hidden side effects, no surprise globals.
+- **EAFP > LBYL.** `try/except` over pre-checks.
+- **One obvious way.** PEP 8 + PEP 20. When unsure, write the boring version.
+- **Boundaries validate, internals trust.** Parse external data once; trust your own types after.
 
 ## Tooling
 
-| Tool | Purpose |
-|:-----|:--------|
-| [uv](https://docs.astral.sh/uv/) | Package manager — **never** `pip` or `venv` |
-| [Ruff](https://docs.astral.sh/ruff/) | Lint + format |
-| [ty](https://github.com/astral-sh/ty) | Type checker |
-| [pytest](https://pytest.org/) | Tests |
+| Tool | Role | Notes |
+|:-----|:-----|:------|
+| [uv](https://docs.astral.sh/uv/) | Packages + envs | Never `pip`, `venv`, `poetry` |
+| [Ruff](https://docs.astral.sh/ruff/) | Lint + format | Single source of style truth |
+| [ty](https://github.com/astral-sh/ty) | Type checker | Run in CI |
+| [pytest](https://pytest.org/) | Tests | See [[python-testing]] |
 
 ```bash
-uv add <pkg>                 # prod dep
-uv add --dev <pkg>           # dev dep
+uv add <pkg>              # prod
+uv add --dev <pkg>        # dev
 uv run ruff format .
 uv run ruff check . --fix
 uv run ty check src/ tests/
 uv run pytest
 ```
 
-## Naming & Style
+## Style
 
-- `snake_case` for variables, functions, modules.
-- `CamelCase` for classes.
-- `UPPER_SNAKE` for constants.
-- f-strings for all formatting.
-- Google-style docstrings on public functions/classes.
+- `snake_case` vars/functions/modules · `CamelCase` classes · `UPPER_SNAKE` constants.
+- f-strings for formatting. Google-style docstrings on public API only.
+- Absolute imports. Order: stdlib → third-party → local (ruff-enforced).
 
-```python
-def fetch_user(user_id: str, active: bool = True) -> User | None:
-    """Fetch a user by ID.
+## Types — mandatory on every signature
 
-    Args:
-        user_id: Unique identifier.
-        active: If True, only return active users.
-
-    Returns:
-        The user, or None if not found.
-
-    Raises:
-        DatabaseError: If the query fails.
-    """
-```
-
-## Type Hints (mandatory on all signatures)
-
-Modern syntax, Python 3.10+: built-in generics, `|` unions, no `Optional`/`Union`.
+Python 3.10+ syntax: built-in generics, `|` unions. No `Optional`, `Union`, or `List[...]`.
 
 ```python
-def process(user_id: str, data: dict[str, Any]) -> User | None: ...
+def first(items: list[T]) -> T | None: ...
 
 JSON = dict[str, Any] | list[Any] | str | int | float | bool | None
-
-T = TypeVar("T")
-def first(items: list[T]) -> T | None:
-    return items[0] if items else None
 ```
 
-- `typing.Protocol` for structural (duck) typing.
-- `abc.ABC` only when explicit inheritance is required.
+- `typing.Protocol` for structural typing — prefer it for new abstractions.
+- `abc.ABC` only when you need enforced inheritance.
 
-## File System — `pathlib` only
+## Standard library defaults
 
-Never `os.path.join` or string concatenation.
+| Concern | Use | Never |
+|:--------|:----|:------|
+| Paths | `pathlib.Path` | `os.path.join`, string concat |
+| Datetime | `datetime.now(timezone.utc)` | `datetime.utcnow()`, naive datetimes |
+| Logging | `structlog` | `logging` direct, `print` for diagnostics |
+| HTTP (async) | `httpx.AsyncClient` | `aiohttp`, `urllib`, `requests` in async code |
+| CLI | `typer` | `argparse`, hand-rolled `sys.argv` |
+| Settings | `pydantic_settings.BaseSettings` | scattered `os.getenv` calls |
 
 ```python
-from pathlib import Path
-
 cfg = Path("config") / "settings.toml"
-text = cfg.read_text(encoding="utf-8")
-
 out = Path("output/result.json")
 out.parent.mkdir(parents=True, exist_ok=True)
-out.write_text(json.dumps(data), encoding="utf-8")
 
-for py in Path("src").rglob("*.py"): ...
-```
-
-## Logging — structlog
-
-Never use `logging` directly. Configure once via `setup_logging()`.
-
-```python
-import structlog
 logger = structlog.get_logger()
-
-logger.info("user_processed", user_id=user_id, duration_ms=42)
+logger.info("user_processed", user_id=uid, duration_ms=42)
 ```
 
-Event names: lowercase, snake_case, past-tense verbs. Pass context as kwargs, never f-string the message.
+Log events: lowercase snake_case past-tense (`user_processed`), context as kwargs, never f-string the message.
 
-## Settings — Pydantic
-
-```python
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
-class AppSettings(BaseSettings):
-    app_name: str = "myapp"
-    database_url: str
-
-    model_config = SettingsConfigDict(env_prefix="APP__", env_nested_delimiter="__")
-
-settings = AppSettings()
-```
+## Data modeling
 
 | Use case | Choice |
 |:---------|:-------|
 | Env-var config | `BaseSettings` |
-| External data validation | `BaseModel` |
-| Internal data containers | `@dataclass` or `pydantic.dataclass` |
-| Immutable DTOs | `@dataclass(frozen=True)` |
+| External / untrusted data | `BaseModel` |
+| Internal records | `@dataclass` (or `pydantic.dataclass`) |
+| Immutable DTOs / value objects | `@dataclass(frozen=True)` |
 
-## Error Handling
+Validate at the boundary; pass typed objects within.
 
-- Catch specific exceptions; never bare `except`.
-- Chain with `raise ... from e` to preserve context.
-- Define a project-rooted exception hierarchy.
+## Errors
+
+- Catch specific exceptions. Never bare `except`.
+- Chain with `raise NewError(...) from e`.
+- Define a project-rooted hierarchy so callers can catch broadly or narrowly.
 
 ```python
 class AppError(Exception): ...
-class ValidationError(AppError): ...
-class NotFoundError(AppError): ...
+class ConfigError(AppError): ...
 
 try:
     return Config.from_json(path.read_text())
@@ -139,9 +99,9 @@ except FileNotFoundError as e:
     raise ConfigError(f"missing: {path}") from e
 ```
 
-## Context Managers
+## Resources — always `with`
 
-Use `with` for every resource. Build custom ones with `@contextmanager` or `__enter__/__exit__`.
+Built-ins for files/locks/connections; `@contextmanager` for your own.
 
 ```python
 @contextmanager
@@ -153,33 +113,11 @@ def timer(name: str):
         logger.info("timed", name=name, elapsed=time.perf_counter() - start)
 ```
 
-## Comprehensions & Generators
+## Async
 
-- List/dict/set comprehensions for simple transforms.
-- Generators for streaming or large datasets.
-- If logic spans more than a couple of clauses, write a function.
+I/O-bound only. CPU work belongs in a process pool.
 
-```python
-active = [u.name for u in users if u.is_active]
-total = sum(x * x for x in range(1_000_000))
-
-def read_lines(path: Path) -> Iterator[str]:
-    with path.open() as f:
-        for line in f:
-            yield line.strip()
-```
-
-## Datetime — always timezone-aware
-
-```python
-from datetime import datetime, timezone
-now = datetime.now(timezone.utc)   # never datetime.utcnow() or datetime.now()
-```
-
-## Async/Await (I/O-bound only)
-
-- `httpx.AsyncClient` for HTTP — not `aiohttp` or `urllib`.
-- `asyncio.gather` for concurrency; never block the loop.
+- `asyncio.gather` for concurrency; never block the loop with sync I/O.
 - `asyncio.run` only at entry points.
 
 ```python
@@ -192,87 +130,47 @@ async def fetch(url: str) -> dict:
 results = await asyncio.gather(*(fetch(u) for u in urls))
 ```
 
-## CLI — Typer
+## Functional idioms
 
-```python
-import typer
-app = typer.Typer()
+- Comprehensions for simple transforms; a named function once logic spans multiple clauses.
+- Generators for streaming or large data.
+- Decorators always `@functools.wraps(func)` to preserve metadata.
 
-@app.command()
-def process(input_path: Path, verbose: bool = typer.Option(False, "-v")) -> None:
-    """Process the input file."""
+## Performance — measure first
 
-if __name__ == "__main__":
-    app()
-```
+Reach for tricks only after `cProfile` / `timeit` justifies it:
 
-## Decorators
+- `"".join(...)` over `+=` in hot loops.
+- Generators over materialized lists for large pipelines.
+- `__slots__` on small classes with many instances.
 
-Always `@functools.wraps` to preserve metadata.
-
-```python
-def timed(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
-        try:
-            return func(*args, **kwargs)
-        finally:
-            logger.info("timed", name=func.__name__, elapsed=time.perf_counter() - start)
-    return wrapper
-```
-
-## Performance
-
-- `"".join(...)` over `+=` in loops.
-- Generators over lists for large/streamed data.
-- `__slots__` on classes with many instances.
-- Profile before optimizing — `cProfile`, `timeit`.
-
-## Package Layout
+## Package layout
 
 ```
-src/{package_name}/
-├── __init__.py      # __version__, public exports, __all__
-├── cli.py           # Typer entry point
-├── logging.py       # structlog setup
-├── settings.py      # Pydantic settings
-├── py.typed         # PEP 561 marker
-└── utils/
+src/{package}/
+├── __init__.py        # __version__, public exports, __all__
+├── cli.py             # Typer entry point
+├── logging.py         # structlog setup
+├── settings.py        # Pydantic settings
+├── py.typed           # PEP 561 marker
+└── ...
 tests/
 ├── conftest.py
 └── test_*.py
 ```
 
-Import order (ruff-enforced): stdlib → third-party → local. Absolute imports only.
-
-## Anti-Patterns
+## Anti-patterns
 
 ```python
 def f(items=[]): ...                # mutable default — shared across calls
-if type(x) == list: ...             # use isinstance(x, list)
-if x == None: ...                   # use x is None
+if type(x) == list: ...             # use isinstance
+if x == None: ...                   # use `is None`
 from os.path import *               # no wildcard imports
-try: ...                            # no bare except
-except: pass
+try: ...
+except: pass                        # no bare except, no silent swallow
 datetime.utcnow()                   # naive — use datetime.now(timezone.utc)
-os.path.join(a, b)                  # use Path(a) / b
+os.path.join(a, b)                  # Path(a) / b
+logger.info(f"processed {uid}")     # log events take kwargs, not f-strings
 ```
 
-## Quick Reference
-
-| Use | For |
-|-----|-----|
-| Type hints | Every signature |
-| `pathlib.Path` | All filesystem ops |
-| f-strings | All formatting |
-| `structlog` | All logging |
-| `typer` | All CLIs |
-| `httpx.AsyncClient` | Async HTTP |
-| `BaseSettings` | Env config |
-| `BaseModel` | External data |
-| `@dataclass` | Internal data |
-| `__slots__` | Hot, many-instance classes |
-| EAFP + specific `except` | Error handling |
-
-**Prioritize clarity over cleverness. When in doubt, write the obvious version.**
+**Write the obvious version. Optimize only when measurement demands it.**
