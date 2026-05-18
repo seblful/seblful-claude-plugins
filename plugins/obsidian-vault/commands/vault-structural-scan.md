@@ -18,10 +18,10 @@ Validate against the **vault note schema**:
 | Note type | Required properties | Notes |
 |---|---|---|
 | Daily (`YYYY-MM-DD.md`) | `tags`, `created`, `modified`, optionally `project`, `area` | `project`/`area` must be list-of-links |
-| Weekly (`Weekly/YYYY/W{n}.md`) | `week`, `date_range`, `tags`, `harvested` | `harvested` is boolean |
+| Weekly (`Weekly/W{n}.md`) | `year`, `week`, `tags`, `harvested` | `harvested` is boolean; `Weekly/` sits next to `Daily/` |
 | Project notes | `tags`, `created`, `modified`, optionally `aliases` | |
 | Reviewed notes (outside `Work/`) | adds `reviewed` (date `YYYY-MM-DD`) | |
-| Archived (`Archive/YYYY/...`) | unchanged from original — do not rewrite | |
+| Archived (`Archive/Daily/YYYY/...`, `Archive/Weekly/YYYY/...`) | unchanged from original — do not rewrite | `Archive/` sits next to `Daily/` and `Weekly/` |
 
 General rules:
 - Missing or empty required fields — fill them in

@@ -13,7 +13,7 @@ Read weekly reports that have not yet been harvested, identify project-relevant 
 
 ### 1. Find unprocessed weekly reports
 
-Look in `Weekly/` (all year subfolders) for weekly report notes — files named `W{n}.md`. A report is **unprocessed** if its frontmatter does NOT contain `harvested: true`. Read all unprocessed reports before writing anything.
+Look in the `Weekly/` folder (located next to where the daily reports live) for weekly report notes — files named `W{nn}.md`. A report is **unprocessed** if its frontmatter does NOT contain `harvested: true`. Read all unprocessed reports before writing anything.
 
 ### 2. Map the vault's project structure
 
@@ -47,7 +47,13 @@ For each piece of extracted knowledge:
 
 After successfully harvesting a weekly report, add `harvested: true` to its frontmatter. This prevents it from being processed again in future runs.
 
-### 6. Report
+### 6. Keep `Weekly/` scoped to the current year
+
+`Weekly/` is a flat folder of `W{nn}.md` files, so it can only hold one year's reports at a time without filename collisions. Once harvesting is done, sweep out anything that belongs to a previous year: read the `year:` property of each report and, for any whose `year` is earlier than the current year, archive it under a mirrored path — a report in `Weekly/` moves to `Archive/Weekly/{that_year}/`. `Archive/` sits next to `Daily/` and `Weekly/`. Because this happens after step 5, every prior-year report being archived is already marked `harvested: true`.
+
+This makes the rule self-healing: if a year boundary is crossed without the sweep running, the next invocation cleans up.
+
+### 7. Report
 
 List every piece of knowledge extracted, the source weekly report it came from (for your own audit trail in the chat), and the destination project note it was written to.
 
