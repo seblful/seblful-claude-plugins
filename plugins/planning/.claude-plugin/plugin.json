@@ -1,6 +1,6 @@
 {
   "name": "planning",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Relentless interview-style grilling to stress-test plans and designs against the codebase and domain model.",
   "author": {
     "name": "Aliaksei Chymba",
