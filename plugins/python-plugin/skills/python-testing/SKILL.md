@@ -5,10 +5,12 @@ description: Apply when writing or reviewing Python tests — TDD workflow, pyte
 
 # Python Testing
 
+Tests are production code. Clean, fast, behavior-focused.
+
 ## Principles
 
 - **Test behavior, not implementation.** A refactor that preserves behavior must not break tests.
-- **One concern per test.** Name describes the behavior: `test_login_with_invalid_credentials_fails`.
+- **One concern per test.** Name describes the behavior under verification.
 - **Independent and order-free.** No shared mutable state. Any test runs in isolation.
 - **TDD where it pays off**: red → green → refactor. Let the test shape the API.
 - **Coverage is a floor, not a goal.** 80%+ overall, 100% on critical paths; chase missing branches, not the percentage.
@@ -23,93 +25,25 @@ tests/
 └── e2e/
 ```
 
-```toml
-# pyproject.toml
-[tool.pytest.ini_options]
-addopts = "-ra --strict-markers"
-testpaths = ["tests"]
-markers = [
-    "slow: long-running",
-    "integration: hits external systems",
-    "unit: pure unit tests",
-]
-```
+Configure `addopts = "-ra --strict-markers"` and declare every marker (`slow`, `integration`, `unit`) in `pyproject.toml`. Unknown markers should fail loudly.
 
 ## Arrange–Act–Assert
 
-Default layout for every test. Keep the three phases visually distinct.
-
-```python
-def test_calorie_calculation_with_substitution(test_database):
-    # Arrange
-    test_database.add_ingredient("Turkey Bacon", calories_per_pound=1700)
-    setup_bacon_cheeseburger(bacon="Turkey Bacon")
-
-    # Act
-    calories = get_calories("Bacon Cheeseburger w/ Fries")
-
-    # Assert
-    assert calories == 1100
-```
+Default layout for every test, with the three phases visually distinct. One logical assertion per test. The test name carries the contract.
 
 A large Arrange block is a design smell — the code under test has too many dependencies. Extract setup into helpers, then fixtures; if that doesn't shrink it, the design itself wants changing.
 
-One logical assertion per test. The test name describes the behavior being verified.
-
 ## Assertions
 
-Plain `assert` — pytest rewrites for rich diffs.
+Plain `assert` — pytest rewrites for rich diffs. Use `pytest.raises(..., match=...)` for expected exceptions and inspect `exc_info.value` when the exception itself carries state worth checking.
 
-```python
-assert result == expected
-assert value is None
-assert isinstance(obj, str)
-
-with pytest.raises(ValueError, match="invalid input"):
-    validate(bad)
-
-with pytest.raises(CustomError) as exc_info:
-    do_thing()
-assert exc_info.value.code == 400
-```
-
-### Invariant assertions via context managers
-
-Classes that maintain invariants are easy to break silently. Wrap construction in a context manager that re-asserts the invariants on exit — every test using the wrapper guards the contract, even tests not written for it.
-
-```python
-@contextmanager
-def pizza_under_test(**kwargs):
-    pizza = PizzaSpecification(**kwargs)
-    try:
-        yield pizza
-    finally:
-        assert 6 <= pizza._radius <= 12
-        assert sum(1 for t in pizza._toppings if is_sauce(t)) <= 1
-```
+**Invariant assertions via context managers.** Classes that maintain invariants are easy to break silently. Wrap construction in a context manager that re-asserts the invariants on exit — every test using the wrapper guards the contract, even tests not written for it.
 
 ## Fixtures
 
-```python
-@pytest.fixture
-def user() -> User:
-    return User(id=1, name="Alice")
+Scopes: `function` (default) → `class` → `module` → `session`. Promote only when setup is genuinely expensive; broader scope invites cross-test pollution. `autouse=True` for unconditional setup. Share via `conftest.py` at the directory level that needs it. Yield-based fixtures for anything with teardown.
 
-@pytest.fixture
-def database():
-    db = Database(":memory:")
-    db.create_tables()
-    try:
-        yield db
-    finally:
-        db.close()
-```
-
-- Scopes: `function` (default) → `class` → `module` → `session`. Promote only when setup is genuinely expensive; broader scope invites cross-test pollution.
-- `autouse=True` for unconditional setup (e.g. resetting a global).
-- Share via `conftest.py` at the directory level that needs it.
-
-### Built-ins worth knowing
+Built-ins worth defaulting to:
 
 | Fixture | Use for |
 |---------|---------|
@@ -118,35 +52,9 @@ def database():
 | `caplog` | Capture log records |
 | `capsys` | Capture stdout / stderr |
 
-```python
-def test_uses_env(monkeypatch):
-    monkeypatch.setenv("APP__DEBUG", "true")
-    assert load_settings().debug is True
-```
-
 ## Parametrization
 
-```python
-@pytest.mark.parametrize(
-    "email,expected",
-    [
-        ("a@b.com", True),
-        ("invalid", False),
-        ("@no-domain.com", False),
-    ],
-    ids=["valid", "missing-at", "missing-domain"],
-)
-def test_email_validation(email: str, expected: bool):
-    assert is_valid_email(email) is expected
-```
-
-Parametrize fixtures to run a suite across backends:
-
-```python
-@pytest.fixture(params=["sqlite", "postgres"])
-def db(request):
-    return Database(URLS[request.param])
-```
+Use `@pytest.mark.parametrize` with explicit `ids` so failure output names the case, not the values. Parametrize *fixtures* to run a whole suite across backends (sqlite vs postgres, sync vs async client) without duplicating tests.
 
 ## Mocking
 
@@ -155,107 +63,27 @@ def db(request):
 - **Don't mock what you don't own.** Wrap third-party calls in a thin adapter and mock the adapter.
 - Never mock the system under test.
 
-```python
-@patch("mypkg.service.api_call", autospec=True)
-def test_handles_error(api_call):
-    api_call.side_effect = ConnectionError("net")
-    with pytest.raises(ConnectionError):
-        run()
-    api_call.assert_called_once()
-```
-
 Over-specifying mocks (every arg, every call order) yields brittle tests. Assert the contract you care about, nothing more.
 
 ## Async
 
-`pytest-asyncio` with `asyncio_mode = "auto"`.
-
-```python
-async def test_fetch():
-    result = await fetch("https://api.example.com")
-    assert result["status"] == "ok"
-
-@patch("mypkg.async_call", autospec=True)
-async def test_async_mock(async_call):
-    async_call.return_value = {"ok": True}
-    assert (await run())["ok"] is True
-    async_call.assert_awaited_once()
-```
+`pytest-asyncio` with `asyncio_mode = "auto"`. Use `assert_awaited_once()` rather than `assert_called_once()` for awaited mocks — the awaited-form catches the missing `await`.
 
 ## Property-based testing with Hypothesis
 
-For pure functions, parsers, serializers, and anything with an interesting input space, describe the *property* and let Hypothesis generate hundreds of cases — it shrinks failures to the minimal counterexample.
-
-```python
-from hypothesis import given
-from hypothesis.strategies import integers, lists
-
-@given(lists(integers()))
-def test_sort_is_idempotent(xs: list[int]) -> None:
-    assert sorted(sorted(xs)) == sorted(xs)
-
-@given(...)
-def test_roundtrip(record: Record) -> None:
-    assert deserialize(serialize(record)) == record
-```
-
-Reach for it whenever you write a pure transform, parser, or serializer/deserializer pair. Property tests catch nondeterminism and edge cases that example-based tests miss.
+For pure functions, parsers, serializers, and anything with an interesting input space, describe the *property* and let Hypothesis generate hundreds of cases. It shrinks failures to a minimal counterexample. Reach for it whenever you write a pure transform or a serialize/deserialize pair — property tests catch nondeterminism and edge cases that example-based tests miss.
 
 ## Mutation testing — occasional sanity check
 
-Once a project has a meaningful test suite, run `mutmut` before a release or when coverage looks suspiciously high. It mutates the code (flipping operators, swapping `break`/`continue`, perturbing literals) and re-runs the tests; surviving mutants reveal tests that weren't actually checking what they looked like they were checking.
+Once a project has a meaningful suite, run `mutmut` before a release or when coverage looks suspiciously high. It mutates the code and re-runs the tests; surviving mutants reveal tests that weren't actually checking what they looked like they were checking. Don't wire it into every commit — it's slow. Run it deliberately.
 
-```bash
-uv run mutmut run
-uv run mutmut results
-```
+## Organization
 
-Don't wire it into every commit — it's slow. Run it deliberately.
-
-## Structured-log assertions
-
-```python
-def test_logs_user_processed(caplog):
-    with caplog.at_level("INFO"):
-        process_user("u1")
-    assert any(r.message == "user_processed" for r in caplog.records)
-```
-
-## Organization patterns
-
-Group cohesive tests in a class when they share fixtures:
-
-```python
-class TestCalculator:
-    @pytest.fixture
-    def calc(self) -> Calculator:
-        return Calculator()
-
-    def test_add(self, calc):
-        assert calc.add(2, 3) == 5
-
-    def test_divide_by_zero(self, calc):
-        with pytest.raises(ZeroDivisionError):
-            calc.divide(10, 0)
-```
-
-Database tests: roll back per test for isolation.
-
-```python
-@pytest.fixture
-def session():
-    s = Session(bind=engine)
-    s.begin_nested()
-    try:
-        yield s
-    finally:
-        s.rollback()
-        s.close()
-```
+Group cohesive tests in a class when they share fixtures. Database tests: roll back per test via a nested transaction for isolation.
 
 ## DO / DON'T
 
-**DO** — write the test first; cover edges (empty, None, boundaries, unicode, errors); keep slow/integration tests behind markers so the unit suite stays fast.
+**DO** — write the test first; cover edges (empty, `None`, boundaries, unicode, errors); keep slow and integration tests behind markers so the unit suite stays fast; assert on structured log events by record, not by formatted string.
 
 **DON'T** — test private internals; share mutable state across tests; over-specify mocks; use bare `try/except` instead of `pytest.raises`.
 
@@ -269,5 +97,3 @@ uv run pytest -m "not slow"            # filter by marker
 uv run pytest --cov=src --cov-report=term-missing
 uv run pytest --pdb                    # debugger on failure
 ```
-
-**Tests are production code. Clean, fast, behavior-focused.**

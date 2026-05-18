@@ -1,6 +1,6 @@
 {
   "name": "python-plugin",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Robust Python coding and testing practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, on top of the uv/ruff/ty/pytest stack.",
   "author": {
     "name": "Aliaksei Chymba",
