@@ -35,6 +35,27 @@ markers = [
 ]
 ```
 
+## Arrange–Act–Assert
+
+Default layout for every test. Keep the three phases visually distinct.
+
+```python
+def test_calorie_calculation_with_substitution(test_database):
+    # Arrange
+    test_database.add_ingredient("Turkey Bacon", calories_per_pound=1700)
+    setup_bacon_cheeseburger(bacon="Turkey Bacon")
+
+    # Act
+    calories = get_calories("Bacon Cheeseburger w/ Fries")
+
+    # Assert
+    assert calories == 1100
+```
+
+A large Arrange block is a design smell — the code under test has too many dependencies. Extract setup into helpers, then fixtures; if that doesn't shrink it, the design itself wants changing.
+
+One logical assertion per test. The test name describes the behavior being verified.
+
 ## Assertions
 
 Plain `assert` — pytest rewrites for rich diffs.
@@ -50,6 +71,21 @@ with pytest.raises(ValueError, match="invalid input"):
 with pytest.raises(CustomError) as exc_info:
     do_thing()
 assert exc_info.value.code == 400
+```
+
+### Invariant assertions via context managers
+
+Classes that maintain invariants are easy to break silently. Wrap construction in a context manager that re-asserts the invariants on exit — every test using the wrapper guards the contract, even tests not written for it.
+
+```python
+@contextmanager
+def pizza_under_test(**kwargs):
+    pizza = PizzaSpecification(**kwargs)
+    try:
+        yield pizza
+    finally:
+        assert 6 <= pizza._radius <= 12
+        assert sum(1 for t in pizza._toppings if is_sauce(t)) <= 1
 ```
 
 ## Fixtures
@@ -145,6 +181,36 @@ async def test_async_mock(async_call):
     assert (await run())["ok"] is True
     async_call.assert_awaited_once()
 ```
+
+## Property-based testing with Hypothesis
+
+For pure functions, parsers, serializers, and anything with an interesting input space, describe the *property* and let Hypothesis generate hundreds of cases — it shrinks failures to the minimal counterexample.
+
+```python
+from hypothesis import given
+from hypothesis.strategies import integers, lists
+
+@given(lists(integers()))
+def test_sort_is_idempotent(xs: list[int]) -> None:
+    assert sorted(sorted(xs)) == sorted(xs)
+
+@given(...)
+def test_roundtrip(record: Record) -> None:
+    assert deserialize(serialize(record)) == record
+```
+
+Reach for it whenever you write a pure transform, parser, or serializer/deserializer pair. Property tests catch nondeterminism and edge cases that example-based tests miss.
+
+## Mutation testing — occasional sanity check
+
+Once a project has a meaningful test suite, run `mutmut` before a release or when coverage looks suspiciously high. It mutates the code (flipping operators, swapping `break`/`continue`, perturbing literals) and re-runs the tests; surviving mutants reveal tests that weren't actually checking what they looked like they were checking.
+
+```bash
+uv run mutmut run
+uv run mutmut results
+```
+
+Don't wire it into every commit — it's slow. Run it deliberately.
 
 ## Structured-log assertions
 

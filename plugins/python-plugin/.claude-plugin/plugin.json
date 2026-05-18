@@ -1,7 +1,7 @@
 {
   "name": "python-plugin",
-  "version": "0.3.0",
-  "description": "Professional Python coding and testing practices — PEP 8, type hints, pytest, and the modern uv/ruff/ty stack.",
+  "version": "0.4.0",
+  "description": "Robust Python coding and testing practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, on top of the uv/ruff/ty/pytest stack.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
