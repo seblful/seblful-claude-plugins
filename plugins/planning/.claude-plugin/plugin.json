@@ -1,6 +1,6 @@
 {
   "name": "planning",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Relentless interview-style grilling to stress-test plans and designs against the codebase and domain model.",
   "author": {
     "name": "Aliaksei Chymba",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["planning", "design-review", "grill", "adr", "domain-model"]
+  "keywords": ["planning", "design-review", "grill"]
 }

@@ -1,16 +1,17 @@
 # Seblful Claude Plugins Marketplace
 
-A curated marketplace of Claude Code plugins for Python development, design review, and architectural refactoring.
+A curated marketplace of Claude Code plugins for Python development, design review, architectural refactoring, and Obsidian vault maintenance.
 
 > **⚠️ Important:** Make sure you trust a plugin before installing, updating, or using it. Anthropic does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended or that they won't change. See each plugin's source for more information.
 
 ## Structure
 
 - **`/plugins/python-plugin`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
-- **`/plugins/code-review`** — Interview-style plan grilling and senior code reviewer agent
-- **`/plugins/refactoring`** — Architectural deepening and Python SOLID/clean-code refactoring
+- **`/plugins/code-review`** — Senior code reviewer agent for diff and design review
+- **`/plugins/refactoring`** — Architectural deepening: surface friction and reduce shallow modules
 - **`/plugins/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
-- **`/plugins/planning`** — Stress-test plans and designs against the codebase and domain model
+- **`/plugins/planning`** — Stress-test plans and designs through relentless interview-style grilling
+- **`/plugins/obsidian-vault`** — Scheduled maintenance routines for Obsidian vaults (formatting, weekly reports, structural scans, accuracy review)
 
 ## Installation
 
@@ -28,6 +29,7 @@ Then install plugins individually:
 /plugin install refactoring@seblful-claude-plugins
 /plugin install planning@seblful-claude-plugins
 /plugin install lenses@seblful-claude-plugins
+/plugin install obsidian-vault@seblful-claude-plugins
 ```
 
 Or browse them in `/plugin > Discover`.
@@ -41,17 +43,30 @@ Or browse them in `/plugin > Discover`.
 
 ### code-review
 
-- **grill-me** — Stress-test a plan through relentless one-question-at-a-time interview.
-- **grill-with-docs** — Grilling that updates `CONTEXT.md` and ADRs inline as decisions land.
+- **code-reviewer** (agent) — Senior code reviewer that evaluates diffs across correctness, readability, architecture, security, and performance, with severity-labeled line-level suggestions.
 
 ### refactoring
 
 - **improve-codebase-architecture** — Surface deepening opportunities and reduce shallow modules.
 
+### planning
+
+- **grill-me** — Stress-test a plan through relentless one-question-at-a-time interview.
+
 ### lenses
 
 - **zoom-out** — Map the surrounding modules and callers when unfamiliar with an area.
 - **caveman** — Ultra-compressed terse communication mode (~75% token reduction).
+
+### obsidian-vault
+
+- **vault-accuracy-review** — Verify every claim in every non-Work note and stamp reviewed dates.
+- **vault-daily-format** — Normalize today's daily report (frontmatter, atomic tasks, titled links).
+- **vault-dead-notes-cleanup** — Complete or delete stubs, connect or remove orphans, merge duplicates.
+- **vault-knowledge-harvest** — Extract project-relevant knowledge from weekly reports into project notes.
+- **vault-structural-scan** — Fix broken wikilinks, misplaced files, frontmatter errors, stub notes, stale MOCs.
+- **vault-weekly-report** — Synthesize this week's daily reports grouped by project and archive the dailies.
+- **vault-wikilink-sprint** — Add inline wikilinks between conceptually related notes, starting at hub notes.
 
 ## Plugin Structure
 
@@ -62,9 +77,14 @@ plugins/
 └── plugin-name/
     ├── .claude-plugin/
     │   └── plugin.json      # Plugin metadata (required)
-    └── skills/              # Skill definitions
-        └── <skill-name>/
-            └── SKILL.md
+    ├── skills/              # Skill definitions (optional)
+    │   └── <skill-name>/
+    │       └── SKILL.md
+    ├── commands/            # Slash commands (optional)
+    │   └── <command>.md
+    ├── agents/              # Subagents (optional)
+    │   └── <agent>.md
+    └── hooks/               # Lifecycle hooks (optional)
 ```
 
 ## Contributing
