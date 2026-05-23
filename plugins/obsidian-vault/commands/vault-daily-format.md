@@ -34,7 +34,7 @@ Find today's daily report and clean it up so it reads well as a future reference
 
 6. **Fix links.** Convert bare URLs to titled links (`[Title](url)`). Convert vault note references to `[[wikilinks]]`. Use heading links (`[[Note#Section]]`) when referring to a specific section of another note.
 
-7. **Fix formatting.** Consistent heading levels, spacing, and indentation throughout.
+7. **Fix formatting.** Consistent heading levels, spacing, and indentation throughout. The first line after the frontmatter must be a single `# {filename without .md}` — insert it if missing, correct it if the filename has drifted. Sections below the title start at `##`.
 
 ## Hard constraints
 

@@ -40,6 +40,8 @@ tags:
 harvested: false
 ---
 
+# W{nn}
+
 ## [[Project Name]]
 
 > [!success] Accomplished

@@ -31,6 +31,12 @@ General rules:
 - Obsidian reserved keys (`aliases`, `cssclasses`, `tags`) — preserve if present; `aliases` and `cssclasses` are YAML lists
 - Date fields that don't match the file's real ctime/mtime — correct them
 
+### Heading structure
+
+- Every note's body must start with a single level-1 heading (`# ...`) whose text is the filename without the `.md` extension. If missing, insert it as the first line after the frontmatter. If present but mismatched (rename drift), correct it to match the current filename.
+- Exactly one H1 per note. Demote any additional `#` headings to `##`.
+- Top-level sections below the title start at `##`. Heading levels must not skip (e.g. `##` followed by `####`) — fix by promoting the deeper heading.
+
 ### Broken links
 - `[[wikilinks]]` that resolve to nothing because a note was renamed or moved — if the target is obvious from context, fix it; if ambiguous, flag it for review
 - Heading links `[[Note#Heading]]` whose target heading no longer exists — flag for review
