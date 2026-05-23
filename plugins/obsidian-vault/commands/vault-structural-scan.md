@@ -33,9 +33,9 @@ General rules:
 
 ### Heading structure
 
-- Every note's body must start with a single level-1 heading (`# ...`) whose text is the filename without the `.md` extension. If missing, insert it as the first line after the frontmatter. If present but mismatched (rename drift), correct it to match the current filename.
-- Exactly one H1 per note. Demote any additional `#` headings to `##`.
-- Top-level sections below the title start at `##`. Heading levels must not skip (e.g. `##` followed by `####`) — fix by promoting the deeper heading.
+- Notes must not contain any level-1 heading (`# ...`) in the body — the filename plays that role, and Obsidian renders it as the page title. A body-level H1 duplicates that.
+- Top-level sections start at `##`. Demote any `#` heading to `##`, or delete it if it merely repeats the filename.
+- Heading levels must not skip (e.g. `##` followed by `####`) — fix by promoting the deeper heading.
 
 ### Broken links
 - `[[wikilinks]]` that resolve to nothing because a note was renamed or moved — if the target is obvious from context, fix it; if ambiguous, flag it for review
