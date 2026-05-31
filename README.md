@@ -63,8 +63,8 @@ Or browse them in `/plugin > Discover`.
 - **vault-accuracy-review** — Verify every claim in every non-Work note and stamp reviewed dates.
 - **vault-daily-format** — Normalize today's daily report (frontmatter, atomic tasks, titled links).
 - **vault-inbox-ingest** — Empty the Inbox: merge each raw capture into the right note (or create one), relocate its images, wire into a MOC, delete the consumed capture.
-- **vault-knowledge-harvest** — Extract project-relevant knowledge from weekly reports into project notes.
 - **vault-structural-scan** — Fix broken wikilinks, misplaced files, frontmatter errors, stale MOCs, plus dead weight (stubs, orphans, duplicates, empty notes).
+- **vault-weekly-harvest** — Extract project-relevant knowledge from weekly reports into project notes, marking each report harvested.
 - **vault-weekly-report** — Synthesize this week's daily reports grouped by project and archive the dailies.
 - **vault-wikilink-sprint** — Add inline wikilinks between conceptually related notes, starting at hub notes.
 
