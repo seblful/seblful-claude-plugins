@@ -1,5 +1,5 @@
 ---
-description: Scan the whole vault for structural problems — broken wikilinks, misplaced files, frontmatter errors, stub notes, and stale MOCs — and fix them in-place.
+description: Scan the whole vault for structural problems and dead weight — broken wikilinks, misplaced files, frontmatter errors, stale MOCs, plus stubs, orphans, duplicates, and empty notes — and fix them in-place.
 allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
 ---
 
@@ -7,7 +7,7 @@ You are running **Structural Scan**. Scope: whole vault. Today's date: use the s
 
 ## Your job
 
-Catch structural problems that accumulated since the last scan and fix them while they are still recent. Every note should be self-consistent, locatable, and connected.
+Catch structural problems and dead weight that accumulated since the last scan and fix them while they are still recent. Every note should be self-consistent, locatable, connected, and worth keeping — either it contains knowledge worth having or it's a useful navigation point. Fix what you safely can in-place (frontmatter, headings, links, connecting orphans); **never delete a note** — flag deletion candidates for the user to decide.
 
 ## What to check
 
@@ -47,9 +47,14 @@ General rules:
 - Identify any notes that clearly don't match their folder's purpose
 - Flag misplaced files for the user rather than moving them unilaterally
 
-### Stub notes
-- Files that are essentially empty: just a title, or a title with placeholder headings and no real content
-- Tag these with `#stub` so they can be scheduled for completion
+### Dead weight
+
+Find notes that are neither knowledge worth having nor useful navigation points. Resolve what you can in-place; flag the rest — **never delete anything**.
+
+- **Stubs** (`#stub` or near-empty) — complete now, or leave a concrete plan and tag `#stub`; flag if pointless.
+- **Orphans** (no incoming or outgoing links) — connect via a `[[wikilink]]` from a related note or MOC; flag if it has no place.
+- **Duplicates** (same topic, different notes) — consolidate into the canonical note, cross-link with one marked primary, flag the redundant copy.
+- **Empty notes** (title only) — populate or flag.
 
 ### Stale MOCs
 Treat MOCs (files named `MOC.md`, `Index.md`, or notes that function as folder/domain indexes) as structural assertions about the vault — and check them the same way you check links.
@@ -65,12 +70,14 @@ Out of scope here: deciding what a MOC *should* cover, restructuring its section
 After scanning, output a summary:
 - Files fixed (with what was changed)
 - Files flagged for human review (with reason)
-- Stub notes tagged
 - Broken links resolved vs. flagged
+- Dead weight: stubs completed/planned, orphans connected, duplicates consolidated/cross-linked, empty notes populated — and everything flagged as a deletion candidate (with reason)
 
 ## Judgment
 
-- A note with a few lines of real content is not a stub; a note with only headings and one sentence is
+- A note with a few lines of real, accurate content is not a stub or a deletion candidate — short is fine, empty is not
 - If a broken link's target is obvious from context, fix it; if ambiguous, flag rather than guess
-- Don't restructure notes that are merely different in style — only fix things that are genuinely wrong
+- Don't restructure or delete notes that are merely different in style — only fix things that are genuinely wrong
+- When merging duplicates, keep the version that is more accurate, complete, or better formatted — not necessarily the older one
+- Standalone task lists, plan notes, and log notes are fine as orphans; isolated concept or reference notes are a problem
 - For MOCs: only do mechanical upkeep (broken entries, obviously-missing notes). If a MOC's structure or scope seems wrong, flag it — don't redesign it
