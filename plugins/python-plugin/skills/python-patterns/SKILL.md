@@ -38,6 +38,8 @@ Strict type-check config, complexity limit (≤10), and `bandit` security scans 
 
 `snake_case` for vars/functions/modules, `CamelCase` for classes, `UPPER_SNAKE` for constants. f-strings for formatting (exception: structured log events — see logging below). Google-style docstrings on public API only — document non-obvious invariants and exceptions that escape. Absolute imports, ordered stdlib → third-party → local. Functions stay short enough that one sentence describes what they do.
 
+**Don't pile comments onto slightly-changed code.** When editing existing code, match the surrounding comment density — a small change doesn't warrant a block of explanatory comments. Comments explain *why* something non-obvious is done, never narrate *what* the code does or mark what changed (no `# changed this`, `# new`, `# updated`). Let the diff and the code speak; if a change needs prose to be understood, the code itself probably wants rewriting.
+
 ## Types — mandatory on every public signature
 
 Python 3.10+ syntax: built-in generics, `|` unions. No `Optional`, `Union`, or `List[...]`.

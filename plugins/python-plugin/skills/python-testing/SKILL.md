@@ -1,6 +1,6 @@
 ---
 name: python-testing
-description: Apply when writing or reviewing Python tests — TDD workflow, pytest fixtures, parametrization, mocking, async tests, and coverage. Trigger on "write tests", "add tests", "fix tests", test failures, or pytest questions.
+description: Apply when writing or reviewing Python tests — pytest fixtures, parametrization, mocking, async tests, and coverage. Trigger on "write tests", "add tests", "fix tests", test failures, or pytest questions.
 ---
 
 # Python Testing
@@ -12,7 +12,6 @@ Tests are production code. Clean, fast, behavior-focused.
 - **Test behavior, not implementation.** A refactor that preserves behavior must not break tests.
 - **One concern per test.** Name describes the behavior under verification.
 - **Independent and order-free.** No shared mutable state. Any test runs in isolation.
-- **TDD where it pays off**: red → green → refactor. Let the test shape the API.
 - **Coverage is a floor, not a goal.** 80%+ overall, 100% on critical paths; chase missing branches, not the percentage.
 
 ## Layout
@@ -83,7 +82,7 @@ Group cohesive tests in a class when they share fixtures. Database tests: roll b
 
 ## DO / DON'T
 
-**DO** — write the test first; cover edges (empty, `None`, boundaries, unicode, errors); keep slow and integration tests behind markers so the unit suite stays fast; assert on structured log events by record, not by formatted string.
+**DO** — cover edges (empty, `None`, boundaries, unicode, errors); keep slow and integration tests behind markers so the unit suite stays fast; assert on structured log events by record, not by formatted string.
 
 **DON'T** — test private internals; share mutable state across tests; over-specify mocks; use bare `try/except` instead of `pytest.raises`.
 
