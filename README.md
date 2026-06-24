@@ -47,7 +47,8 @@ Or browse them in `/plugin > Discover`.
 
 ### refactoring
 
-- **improve-codebase-architecture** — Surface deepening opportunities and reduce shallow modules.
+- **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
+- **improve-codebase-architecture** — Surface deepening opportunities and reduce shallow modules, presented as a visual HTML report.
 
 ### planning
 

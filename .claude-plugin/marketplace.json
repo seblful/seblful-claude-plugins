@@ -24,7 +24,7 @@
     },
     {
       "name": "refactoring",
-      "description": "Architectural deepening and Python SOLID/clean-code refactoring commands for improving codebases.",
+      "description": "Deep-module design: a shared codebase-design vocabulary skill plus an architecture-review command that surfaces deepening opportunities as a visual HTML report.",
       "source": "./plugins/refactoring"
     },
     {
