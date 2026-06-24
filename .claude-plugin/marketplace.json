@@ -1,46 +1,31 @@
 {
   "name": "seblful-claude-plugins",
-  "description": "Curated Claude Code plugins for Python development, code review, and architectural refactoring.",
-  "version": "0.1.0",
+  "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
+  "version": "0.3.0",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
   },
   "plugins": [
     {
-      "name": "python-plugin",
-      "description": "Professional Python coding and testing practices — PEP 8, type hints, pytest, fixtures, and the modern uv/ruff/ty stack.",
-      "source": "./plugins/python-plugin"
+      "name": "python",
+      "description": "Robust Python coding and testing practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, on top of the uv/ruff/ty/pytest stack.",
+      "source": "./plugins/python"
     },
     {
-      "name": "code-review",
-      "description": "Senior code reviewer agent plus a diagnosing-bugs skill — a feedback-loop-first methodology for hard bugs and performance regressions.",
-      "source": "./plugins/code-review"
-    },
-    {
-      "name": "planning",
-      "description": "Relentless interview-style grilling to stress-test plans and designs against the codebase and domain model.",
-      "source": "./plugins/planning"
-    },
-    {
-      "name": "refactoring",
-      "description": "Deep-module design: a shared codebase-design vocabulary skill plus an architecture-review command that surfaces deepening opportunities as a visual HTML report.",
-      "source": "./plugins/refactoring"
-    },
-    {
-      "name": "lenses",
-      "description": "Perspective and communication lenses — zoom out for a high-level code map or switch to ultra-compressed caveman mode.",
-      "source": "./plugins/lenses"
+      "name": "code",
+      "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, the codebase-design vocabulary, and an architecture-review command that surfaces deepening opportunities as a visual HTML report.",
+      "source": "./plugins/code"
     },
     {
       "name": "obsidian-vault",
-      "description": "Scheduled maintenance routines for Obsidian vaults — formatting, knowledge extraction, structural scanning, archiving, accuracy review, MOC audits, wikilink connectivity, and dead-note cleanup.",
+      "description": "Maintenance routines for Obsidian vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, and inbox ingestion.",
       "source": "./plugins/obsidian-vault"
     },
     {
-      "name": "productivity",
-      "description": "Productivity skills — teach: a stateful, multi-session teaching workspace that builds knowledge, skills, and wisdom through beautiful, mission-grounded interactive lessons.",
-      "source": "./plugins/productivity"
+      "name": "lenses",
+      "description": "Tools that act on you and the conversation rather than the code — a high-level code map (zoom-out), ultra-compressed caveman mode, one-question-at-a-time plan grilling, and a stateful multi-session teaching workspace.",
+      "source": "./plugins/lenses"
     }
   ]
 }

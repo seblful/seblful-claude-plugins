@@ -1,7 +1,7 @@
 {
   "name": "lenses",
-  "version": "0.2.1",
-  "description": "Perspective and communication lenses — zoom out for a high-level code map or switch to ultra-compressed caveman mode.",
+  "version": "0.3.0",
+  "description": "Tools that act on you and the conversation rather than the code — zoom out for a high-level code map, switch to ultra-compressed caveman mode, grill a plan one question at a time, or run a stateful multi-session teaching workspace.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["lenses", "zoom-out", "caveman", "communication", "perspective", "code-navigation"]
+  "keywords": ["lenses", "zoom-out", "caveman", "communication", "perspective", "code-navigation", "grill", "planning", "design-review", "teach", "learning", "education"]
 }
