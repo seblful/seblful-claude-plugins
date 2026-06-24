@@ -1,7 +1,7 @@
 {
   "name": "code-review",
-  "version": "0.2.0",
-  "description": "Senior code reviewer agent and interview-style plan grilling for thorough code and design review.",
+  "version": "0.3.0",
+  "description": "Senior code reviewer agent plus a diagnosing-bugs skill — a feedback-loop-first methodology for hard bugs and performance regressions.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["code-review", "design-review", "grill", "planning", "adr"]
+  "keywords": ["code-review", "design-review", "debugging", "bug-diagnosis", "feedback-loop", "regression-test", "performance"]
 }

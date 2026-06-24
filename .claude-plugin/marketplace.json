@@ -14,7 +14,7 @@
     },
     {
       "name": "code-review",
-      "description": "Senior code reviewer agent and interview-style plan grilling for thorough code and design review.",
+      "description": "Senior code reviewer agent plus a diagnosing-bugs skill — a feedback-loop-first methodology for hard bugs and performance regressions.",
       "source": "./plugins/code-review"
     },
     {
@@ -36,6 +36,11 @@
       "name": "obsidian-vault",
       "description": "Scheduled maintenance routines for Obsidian vaults — formatting, knowledge extraction, structural scanning, archiving, accuracy review, MOC audits, wikilink connectivity, and dead-note cleanup.",
       "source": "./plugins/obsidian-vault"
+    },
+    {
+      "name": "productivity",
+      "description": "Productivity skills — teach: a stateful, multi-session teaching workspace that builds knowledge, skills, and wisdom through beautiful, mission-grounded interactive lessons.",
+      "source": "./plugins/productivity"
     }
   ]
 }

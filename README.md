@@ -7,11 +7,12 @@ A curated marketplace of Claude Code plugins for Python development, design revi
 ## Structure
 
 - **`/plugins/python-plugin`** — Python coding and testing practices (PEP 8, type hints, pytest, uv/ruff/ty stack)
-- **`/plugins/code-review`** — Senior code reviewer agent for diff and design review
+- **`/plugins/code-review`** — Senior code reviewer agent plus a feedback-loop-first debugging methodology
 - **`/plugins/refactoring`** — Architectural deepening: surface friction and reduce shallow modules
 - **`/plugins/lenses`** — Perspective and communication lenses (zoom-out map, caveman terse mode)
 - **`/plugins/planning`** — Stress-test plans and designs through relentless interview-style grilling
 - **`/plugins/obsidian-vault`** — Scheduled maintenance routines for Obsidian vaults (formatting, weekly reports, structural scans, accuracy review)
+- **`/plugins/productivity`** — Productivity skills (teach: a stateful, multi-session learning workspace)
 
 ## Installation
 
@@ -30,6 +31,7 @@ Then install plugins individually:
 /plugin install planning@seblful-claude-plugins
 /plugin install lenses@seblful-claude-plugins
 /plugin install obsidian-vault@seblful-claude-plugins
+/plugin install productivity@seblful-claude-plugins
 ```
 
 Or browse them in `/plugin > Discover`.
@@ -44,6 +46,7 @@ Or browse them in `/plugin > Discover`.
 ### code-review
 
 - **code-reviewer** (agent) — Senior code reviewer that evaluates diffs across correctness, readability, architecture, security, and performance, with severity-labeled line-level suggestions.
+- **diagnosing-bugs** (skill) — A feedback-loop-first discipline for hard bugs and performance regressions: build a tight red-capable repro, minimise it, generate falsifiable hypotheses, instrument, fix with a regression test, then clean up. Triggers on "diagnose"/"debug this" or reports of something broken/throwing/failing/slow.
 
 ### refactoring
 
@@ -68,6 +71,10 @@ Or browse them in `/plugin > Discover`.
 - **vault-weekly-harvest** — Extract project-relevant knowledge from weekly reports into project notes, marking each report harvested.
 - **vault-weekly-report** — Synthesize this week's daily reports grouped by project and archive the dailies.
 - **vault-wikilink-sprint** — Add inline wikilinks between conceptually related notes, starting at hub notes.
+
+### productivity
+
+- **teach** (skill) — Stateful, multi-session teaching workspace: grounds every lesson in a mission, gathers high-trust resources, and builds storage strength through beautiful interactive HTML lessons, glossaries, and learning records.
 
 ## Plugin Structure
 
