@@ -1,6 +1,6 @@
 {
   "name": "code",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, the codebase-design vocabulary, and an architecture-review command that surfaces deepening opportunities as a visual HTML report.",
   "author": {
     "name": "Aliaksei Chymba",

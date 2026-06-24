@@ -1,5 +1,5 @@
 ---
-description: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
+description: Scan a codebase for deepening opportunities, present them as a visual HTML report, then work through whichever one you pick.
 allowed-tools: Read, Glob, Grep, Agent, Write, Bash
 ---
 
@@ -49,8 +49,8 @@ See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram pattern
 
 Do NOT propose interfaces yet. After the file is written, ask the user: "Which of these would you like to explore?"
 
-### 3. Grilling loop
+### 3. Work through the chosen candidate
 
-Once the user picks a candidate, run the `lenses:grill-me` command to walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
+Once the user picks a candidate, walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive. Choose whatever approach fits the candidate and the conversation: a one-question-at-a-time interview, a written design sketch, or a direct proposal you refine together.
 
 **Want to explore alternative interfaces for the deepened module?** Run the `/codebase-design` skill and use its design-it-twice parallel sub-agent pattern.
