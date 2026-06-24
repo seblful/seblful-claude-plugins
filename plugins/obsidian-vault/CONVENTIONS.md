@@ -1,6 +1,6 @@
 # Vault Conventions
 
-Shared reference for every `obsidian-vault` maintenance routine. Each command states its own job; the rules that *all* of them must obey live here, once, so they cannot drift apart.
+Shared reference for every `obsidian-vault` maintenance routine. Each routine states its own job; the rules that *all* of them must obey live here, once, so they cannot drift apart.
 
 ## Discovering a vault's conventions
 
@@ -11,6 +11,17 @@ These routines run inside a live Obsidian vault, not a code repo. Before applyin
 3. The structures described below are the **defaults** to fall back on, and the shape these routines assume when they create or reorganize content.
 
 When a vault's real convention and a default here disagree, follow the vault and do not "correct" it toward the default.
+
+## Accessing the vault
+
+These routines reach the vault through the **`obsidian` CLI** (the `obsidian-cli` skill from `kepano/obsidian-skills`), not an MCP server — Obsidian must be open. Run `obsidian help` for the authoritative, always-current command list. Essentials:
+
+- **Read / search:** `obsidian read file="Note"`, `obsidian search query="…" limit=N`, `obsidian backlinks file="Note"`, `obsidian daily:read`.
+- **Create / edit:** `obsidian create name="Note" content="…"`, `obsidian append file="Note" content="…"`, `obsidian property:set name="key" value="…" file="Note"`, `obsidian daily:append content="…"`.
+- **Target a file** with `file="Name"` (wikilink-style — no path or extension) or `path="folder/note.md"` (exact from vault root). Add the `silent` flag so edits don't pop notes open; lead with `vault="Name"` to pick a specific vault.
+- **Structural moves and deletes** the CLI doesn't cover — archiving notes, relocating attachments, removing a consumed capture — operate on the vault folder directly with `Read`/`Edit`/`Write` and `Bash` (`mv`, `rm`).
+
+Prefer the CLI for content operations so the live index, daily-note configuration, and wikilink resolution stay correct; drop to direct file edits only for what the CLI can't do.
 
 ## Frontmatter
 

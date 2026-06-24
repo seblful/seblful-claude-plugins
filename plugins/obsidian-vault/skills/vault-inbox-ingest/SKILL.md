@@ -1,11 +1,12 @@
 ---
+name: vault-inbox-ingest
 description: Empty the Inbox — merge each raw capture into the right destination note (or create one), relocate its images into the destination's attachments, wire the result into the relevant MOC, then delete the consumed capture.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__create_vault_file, mcp__plugin_obsidian_obsidian__delete_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Write, Glob, Grep, Bash
+allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
 # Inbox Ingest
 
-The inbox holds raw captures dropped in without a home. File each into the place it belongs and leave the inbox empty: read it, decide where its knowledge goes, merge it there, relocate its images, wire the result into a MOC, then delete the consumed capture. Today's date: use the system date. Frontmatter, link, MOC-detection, and note-creation rules live in [CONVENTIONS.md](CONVENTIONS.md).
+The inbox holds raw captures dropped in without a home. File each into the place it belongs and leave the inbox empty: read it, decide where its knowledge goes, merge it there, relocate its images, wire the result into a MOC, then delete the consumed capture. Today's date: use the system date. Frontmatter, link, MOC-detection, and note-creation rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
 
 **Process only the inbox.** Don't touch folders holding work the user is actively authoring (drafts, texts) — those are owned documents, not material to dissolve. If unsure whether a folder is an inbox or a drafts area, ask.
 

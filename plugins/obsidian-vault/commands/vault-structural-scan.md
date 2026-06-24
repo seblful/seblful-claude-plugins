@@ -1,11 +1,11 @@
 ---
 description: Scan the whole vault for structural problems and dead weight — broken wikilinks, misplaced files, frontmatter errors, stale MOCs, plus stubs, orphans, duplicates, and empty notes — and fix them in-place.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
+allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
 # Structural Scan
 
-Catch structural problems and dead weight that accumulated since the last scan and fix them while they're still recent. Every note should be self-consistent, locatable, connected, and worth keeping — either it holds knowledge worth having or it's a useful navigation point. Fix what you safely can in-place; **never delete a note** — flag deletion candidates for the user. Scope: whole vault. The canonical schema, link rules, heading rules, MOC detection, and folder/archive model live in [CONVENTIONS.md](CONVENTIONS.md); this command validates notes *against* them.
+Catch structural problems and dead weight that accumulated since the last scan and fix them while they're still recent. Every note should be self-consistent, locatable, connected, and worth keeping — either it holds knowledge worth having or it's a useful navigation point. Fix what you safely can in-place; **never delete a note** — flag deletion candidates for the user. Scope: whole vault. The canonical schema, link rules, heading rules, MOC detection, and folder/archive model live in [CONVENTIONS.md](../CONVENTIONS.md); this command validates notes *against* them.
 
 ## What to check
 

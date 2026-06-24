@@ -1,11 +1,12 @@
 ---
+name: vault-weekly-harvest
 description: Extract project-relevant knowledge from unprocessed weekly reports and merge it into the right project notes — no back-links, no archiving, just clean knowledge transfer.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__create_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Write, Glob, Grep
+allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
 # Weekly Harvest
 
-Read weekly reports that haven't been harvested, lift the project-relevant knowledge out of them, write it into the appropriate project notes, then mark each report processed. Do not add wikilinks back to the source reports. Do not archive or move anything. Today's date: use the system date. Folder layout, frontmatter, link, language, and note-creation rules live in [CONVENTIONS.md](CONVENTIONS.md).
+Read weekly reports that haven't been harvested, lift the project-relevant knowledge out of them, write it into the appropriate project notes, then mark each report processed. Do not add wikilinks back to the source reports. Do not archive or move anything. Today's date: use the system date. Folder layout, frontmatter, link, language, and note-creation rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
 
 ## Steps
 

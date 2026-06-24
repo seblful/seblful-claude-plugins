@@ -1,11 +1,12 @@
 ---
+name: vault-weekly-report
 description: Create a weekly report note by synthesizing this week's daily reports — grouped by project, stored in a Weekly/ folder next to the daily reports, then archive the daily notes.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__create_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, mcp__plugin_obsidian_obsidian__move_vault_file, Read, Write, Glob, Grep
+allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
 # Weekly Report Creation
 
-Read this week's daily reports, produce a weekly report grouped by project, store it in `Weekly/`, then archive the daily notes. Today's date: use the system date. Folder layout, the archive model, frontmatter, link, and language rules live in [CONVENTIONS.md](CONVENTIONS.md).
+Read this week's daily reports, produce a weekly report grouped by project, store it in `Weekly/`, then archive the daily notes. Today's date: use the system date. Folder layout, the archive model, frontmatter, link, and language rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
 
 ## Steps
 

@@ -1,11 +1,11 @@
 ---
 description: Review all notes outside the work-log folder for factual accuracy — verify every claim in every note, correct errors in-place, and stamp each reviewed note with a reviewed date property.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
+allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
 # Factual Accuracy Review
 
-Read every note in scope and verify its content is factually correct. Fix errors in-place, then stamp each note so it isn't needlessly re-reviewed next session. Today's date: use the system date. Frontmatter, link, and language rules live in [CONVENTIONS.md](CONVENTIONS.md).
+Read every note in scope and verify its content is factually correct. Fix errors in-place, then stamp each note so it isn't needlessly re-reviewed next session. Today's date: use the system date. Frontmatter, link, and language rules live in [CONVENTIONS.md](../CONVENTIONS.md).
 
 **Scope:** every note in the vault except the work-log folder (work logs are records, not knowledge to fact-check).
 

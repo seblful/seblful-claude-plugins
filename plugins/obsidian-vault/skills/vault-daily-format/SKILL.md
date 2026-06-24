@@ -1,11 +1,12 @@
 ---
+name: vault-daily-format
 description: Format and normalize today's daily report — fix frontmatter, make tasks atomic, make completed items self-explanatory, and convert bare URLs to titled links. Never changes substance or language.
-allowed-tools: mcp__plugin_obsidian_obsidian__read_vault_file, mcp__plugin_obsidian_obsidian__update_vault_file, mcp__plugin_obsidian_obsidian__list_vault_directory, mcp__plugin_obsidian_obsidian__search_vault, Read, Edit, Glob, Grep
+allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
 # Daily Report Format
 
-Clean up today's daily report so it reads well as a future reference — without changing what was actually written. Today's date: use the system date. Shared frontmatter, link, heading, and language rules live in [CONVENTIONS.md](CONVENTIONS.md); this command only adds what's specific to daily reports.
+Clean up today's daily report so it reads well as a future reference — without changing what was actually written. Today's date: use the system date. Shared frontmatter, link, heading, and language rules live in [CONVENTIONS.md](../../CONVENTIONS.md); this skill only adds what's specific to daily reports.
 
 ## Steps
 
