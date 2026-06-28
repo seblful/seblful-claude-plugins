@@ -1,8 +1,8 @@
 # obsidian-vault
 
-Maintenance routines for [Obsidian](https://obsidian.md) vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, and inbox ingestion.
+Maintenance and authoring routines for [Obsidian](https://obsidian.md) vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, inbox ingestion, and authoring or rewriting source-of-truth reference notes.
 
-Every routine defers to [`CONVENTIONS.md`](CONVENTIONS.md) for the shared schema, link rules, heading rules, MOC detection, and the folder/archive model. The routines validate and edit notes *against* those conventions — and discover the vault's own conventions first when they differ from the defaults.
+Every routine defers to [`CONVENTIONS.md`](CONVENTIONS.md) for the shared schema, link rules, heading rules, MOC detection, and the folder/archive model. The two authoring routines additionally share [`AUTHORING.md`](AUTHORING.md) for voice, technical standards, diagrams, document shape, and the plan-then-write workflow. The routines validate and edit notes *against* those conventions — and discover the vault's own conventions first when they differ from the defaults.
 
 ## Prerequisites
 
@@ -23,6 +23,8 @@ Lighter, everyday operations are **skills** (auto-trigger on natural language); 
 - **vault-inbox-ingest** — Empty the Inbox: merge each raw capture into the right note (or create one), relocate its images, wire into a MOC, delete the consumed capture.
 - **vault-weekly-harvest** — Extract project-relevant knowledge from unprocessed weekly reports into project notes, marking each report harvested.
 - **vault-weekly-report** — Synthesize this week's daily reports grouped by project, store in `Weekly/`, and archive the dailies.
+- **vault-note-create** — Author a new source-of-truth reference note on a subject: plan scope and table of contents first, then on approval write a deep, modern engineering-handbook note.
+- **vault-note-rewrite** — Refactor and expand informal or fragmented notes into a source-of-truth reference note: audit and plan first, then on approval rewrite.
 
 ### Commands
 

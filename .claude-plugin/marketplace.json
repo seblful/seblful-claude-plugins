@@ -19,7 +19,7 @@
     },
     {
       "name": "obsidian-vault",
-      "description": "Maintenance routines for Obsidian vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, and inbox ingestion.",
+      "description": "Maintenance and authoring routines for Obsidian vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, inbox ingestion, and authoring or rewriting source-of-truth reference notes.",
       "source": "./plugins/obsidian-vault"
     },
     {
