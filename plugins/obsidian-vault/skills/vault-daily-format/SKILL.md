@@ -27,3 +27,7 @@ Clean up today's daily report so it reads well as a future reference — without
 - Do not change the meaning of anything written, and do not change the note's language (see CONVENTIONS.md → Language and substance).
 - Do not reorder items — the user's ordering is intentional.
 - Do not add content that wasn't in the original.
+
+## Report
+
+The report formatted (path); what changed — frontmatter fixes, tasks made atomic, completed items clarified, links/headings normalized. If no report existed for today, say so.

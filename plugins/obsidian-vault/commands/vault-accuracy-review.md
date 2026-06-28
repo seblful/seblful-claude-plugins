@@ -7,7 +7,12 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 
 Read every note in scope and verify its content is factually correct. Fix errors in-place, then stamp each note so it isn't needlessly re-reviewed next session. Today's date: use the system date. Frontmatter, link, and language rules live in [CONVENTIONS.md](../CONVENTIONS.md).
 
-**Scope:** every note in the vault except the work-log folder (work logs are records, not knowledge to fact-check).
+**Scope:** every note in the vault **except** Logs and the archive:
+
+- **Logs** — daily and weekly reports (see CONVENTIONS.md → Folder roles). They're records of what happened, not knowledge to fact-check.
+- **`Archive/`** — archived notes are frozen (CONVENTIONS.md → archive model); never read-stamp or rewrite them.
+
+Everything else is in scope.
 
 ## What to verify
 

@@ -5,7 +5,7 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 
 # Wikilink Connectivity Sprint
 
-Systematically build **inline prose wikilinks** between notes that are conceptually related but currently isolated. Success is whether navigating from a concept to its prerequisites, applications, and related ideas becomes natural — not the raw count of links added. Scope: whole vault. Link mechanics live in [CONVENTIONS.md](../CONVENTIONS.md).
+Systematically build **inline prose wikilinks** between notes that are conceptually related but currently isolated. Success is whether navigating from a concept to its prerequisites, applications, and related ideas becomes natural — not the raw count of links added. Scope: the whole vault except `Archive/` — archived notes are frozen, so never add links inside them (CONVENTIONS.md → archive model). Link mechanics live in [CONVENTIONS.md](../CONVENTIONS.md).
 
 **Out of scope:** curating MOCs, index notes, or "See Also" sections. MOC freshness (broken entries, missing notes) belongs to `vault-structural-scan`. This command only touches links inside a note's prose.
 
