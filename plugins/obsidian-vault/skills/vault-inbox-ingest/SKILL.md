@@ -6,7 +6,7 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 
 # Inbox Ingest
 
-The inbox holds raw captures dropped in without a home. File each into the place it belongs and leave the inbox empty: read it, decide where its knowledge goes, merge it there, relocate its images, wire the result into a MOC, then delete the consumed capture. Today's date: use the system date. Frontmatter, link, MOC-detection, and note-creation rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
+The inbox holds raw captures dropped in without a home. File each into the place it belongs and leave the inbox empty: read it, decide where its knowledge goes, merge it there, relocate its images, wire the result into a MOC, then delete the consumed capture. Today's date: use the system date. Frontmatter, link, MOC-detection, and note-creation rules live in [CONVENTIONS.md](../../CONVENTIONS.md). Filing is triage, not deep authoring: when a capture becomes or substantially grows a knowledge note, hold it to the [AUTHORING.md](../../AUTHORING.md) standard, and hand the heavy jobs off to `vault-note-create` / `vault-note-rewrite` rather than doing them inline.
 
 **Process only the inbox.** Don't touch folders holding work the user is actively authoring (drafts, texts) — those are owned documents, not material to dissolve. If unsure whether a folder is an inbox or a drafts area, ask.
 
@@ -17,16 +17,16 @@ The inbox holds raw captures dropped in without a home. File each into the place
 2. **Read every capture first** — content, frontmatter, embedded images — so you can spot duplicates and group related ones.
 
 3. **Decide each destination.** Map the vault's folders and search the topic before assuming no home exists.
-   - A note already covers it → **enrich that note in place**.
-   - Genuinely new concept with lasting value → **create a standalone note** in the right folder (per CONVENTIONS.md → Creating notes).
+   - A note already covers it → **enrich that note in place**. If the capture calls for restructuring or substantially expanding that note, that's a rewrite — hand off to `vault-note-rewrite` instead of forcing it inline.
+   - Genuinely new concept with lasting value → **create a standalone note** in the right folder (per CONVENTIONS.md → Creating notes), written to the AUTHORING standard for a knowledge note (voice, shape, connection). If it deserves the full researched, comprehensive treatment, create a solid note now and flag it for `vault-note-create` to deepen — don't half-write a reference note during triage.
    - Duplicate → merge into the single destination; don't create twice.
    - No lasting value → discard, and report what and why.
 
-4. **Merge cleanly.** Write the knowledge as a standalone fact — strip capture-context ("note to self", timestamps) so it reads as if it always belonged, in the capture's language. Don't duplicate what's already there. Use `[[wikilinks]]` for inline references (resolve exact filenames per CONVENTIONS.md).
+4. **Merge cleanly.** Write the knowledge as a standalone fact — strip capture-context ("note to self", timestamps) so it reads as if it always belonged, in the capture's language and the authoritative, timeless voice of a reference note (AUTHORING → Audience and voice). Don't duplicate what's already there. Use `[[wikilinks]]` for inline references (resolve exact filenames per CONVENTIONS.md).
 
 5. **Relocate referenced images** into the destination's attachments folder (mirror the vault's convention). **Rename on collision** rather than overwrite; update the embed to the new path; move the binary on disk with Bash and leave nothing in the inbox.
 
-6. **Wire into a MOC.** New notes go under the right section of the relevant MOC (detected by role — see CONVENTIONS.md → MOCs); if none fits, add at least one incoming `[[wikilink]]` so the note isn't orphaned. Enriched notes need this only if they were missing from their MOC.
+6. **Wire into a MOC.** New notes go under the right section of the relevant MOC (detected by role — see CONVENTIONS.md → MOCs); if none fits, add at least one incoming `[[wikilink]]` so the note isn't orphaned. Prefer bidirectional connection over the bare minimum — link the new note out to related notes and add a link back in from the most relevant one (AUTHORING → Connecting the note). Enriched notes need this only if they were missing from their MOC.
 
 7. **Delete the consumed capture** — only after its content is merged, images relocated, and it's wired in. If any destination is uncertain, leave the capture and flag it. Never delete an unplaced capture.
 

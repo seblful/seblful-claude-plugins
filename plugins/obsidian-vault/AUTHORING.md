@@ -1,6 +1,6 @@
 # Authoring Reference Notes
 
-Shared spec for the routines that author durable **source-of-truth** reference notes — `vault-note-create` and `vault-note-rewrite`. Each skill states its own job and its own plan; the standards both obey live here once, so they can't drift apart.
+Shared spec for authoring durable **source-of-truth** reference notes. `vault-note-create` and `vault-note-rewrite` follow it end to end; other routines apply the relevant parts whenever they create or substantially expand a knowledge note — e.g. `vault-inbox-ingest` when it promotes a capture into one. Each authoring skill states its own job and its own plan; the standards they share live here once, so they can't drift apart.
 
 Vault mechanics are **not** repeated here. Frontmatter schema, `[[wikilinks]]`, footnote citations, heading rules, math and variable-key formatting, image alt text, MOC wiring, note creation, and CLI access all live in [CONVENTIONS.md](CONVENTIONS.md) — follow it. This file adds only what's specific to writing deep reference documents.
 
