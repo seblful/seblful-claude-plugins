@@ -22,7 +22,7 @@ The inbox holds raw captures dropped in without a home. File each into the place
    - Duplicate → merge into the single destination; don't create twice.
    - No lasting value → discard, and report what and why.
 
-4. **Merge cleanly.** Write the knowledge as a standalone fact — strip capture-context ("note to self", timestamps) so it reads as if it always belonged, in the capture's language and the authoritative, timeless voice of a reference note (AUTHORING → Audience and voice). Don't duplicate what's already there. Use `[[wikilinks]]` for inline references (resolve exact filenames per CONVENTIONS.md).
+4. **Merge cleanly.** Write the knowledge into the destination per CONVENTIONS.md → Merging knowledge into a note, in the authoritative, timeless voice of a reference note (AUTHORING → Audience and voice). Use `[[wikilinks]]` for inline references (CONVENTIONS.md → Links).
 
 5. **Relocate referenced images** into the destination's attachments folder (mirror the vault's convention). **Rename on collision** rather than overwrite; update the embed to the new path; move the binary on disk with Bash and leave nothing in the inbox.
 

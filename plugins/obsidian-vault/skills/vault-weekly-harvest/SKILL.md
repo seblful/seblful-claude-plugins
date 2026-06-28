@@ -34,10 +34,8 @@ Extract only items with lasting value — skip routine entries.
 ### 4. Write to project notes
 
 1. Find the right project note; if none exists for a referenced project, create a minimal one (per CONVENTIONS.md → Creating notes).
-2. Place content in the appropriate section, adding the section if it doesn't exist.
-3. Write each item as a **standalone fact** — no "this week", "W42", or reference to the source report. It should read as if it was always part of the project note, and in the source report's language.
-4. Don't duplicate: merge or skip if the information is already there.
-5. Don't add wikilinks back to the weekly report.
+2. Write each item into the section it belongs to per CONVENTIONS.md → Merging knowledge into a note (standalone fact, no reference to the source report, source's language, no duplication).
+3. Don't add wikilinks back to the weekly report.
 
 ### 5. Mark each report processed
 
@@ -45,7 +43,7 @@ After harvesting a report, add `harvested: true` to its frontmatter so it isn't 
 
 ### 6. Year sweep
 
-After step 5, run the year sweep on `Weekly/` (see CONVENTIONS.md → Folder roles and the archive model): archive any report whose `year` is earlier than the current year to `Archive/Weekly/{that_year}/`. Everything swept is already `harvested: true`.
+After step 5, run the year sweep on `Weekly/` (see CONVENTIONS.md → Folder roles and the archive model). Everything swept is already `harvested: true`.
 
 ### 7. Report
 

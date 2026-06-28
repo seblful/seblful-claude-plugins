@@ -88,6 +88,15 @@ Mechanical upkeep of MOCs (fixing broken entries, adding obviously-missing notes
 - **Preserve meaning.** Format, clarify, link, and tidy — never silently change what the user wrote. This is load-bearing in work logs and daily reports.
 - Don't reorder items the user wrote; their ordering is intentional.
 
+## Merging knowledge into a note
+
+Several routines lift knowledge out of a source (a capture, a report) and write it into a destination note. When they do:
+
+- Write each piece as a **standalone fact** — strip all source-context ("note to self", timestamps, "this week", week numbers) so it reads as if it had always belonged to the destination note.
+- Write it in the **source's language** (see Language and substance).
+- **Don't duplicate** what the destination already says — merge into the existing statement, or skip it.
+- Place it under the section it belongs to, adding the section if it doesn't exist.
+
 ## Creating notes
 
 When a routine creates a note:

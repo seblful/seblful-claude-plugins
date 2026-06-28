@@ -20,7 +20,7 @@ Read all daily reports before writing — build a full picture of which projects
 
 ### 3. Year sweep
 
-Before writing, run the year sweep on `Weekly/` (CONVENTIONS.md → archive model): archive any existing report whose `year` is earlier than the current year to `Archive/Weekly/{that_year}/`.
+Before writing, run the year sweep on `Weekly/` (CONVENTIONS.md → Folder roles and the archive model).
 
 ### 4. Create the weekly report note
 
