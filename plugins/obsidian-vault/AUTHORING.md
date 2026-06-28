@@ -16,7 +16,7 @@ A reference note is the vault's single source of truth on its subject: a durable
 
 ## Technical standards
 
-- **Modern by default** — examples and logic assume current industry standards (e.g. PyTorch 2.x, the Transformers ecosystem, contemporary MLOps). Treat legacy approaches as legacy: cover one only when the note is explicitly about a legacy system; otherwise upgrade it silently.
+- **Modern by default** — examples and logic assume current industry standards. Treat legacy approaches as legacy: cover one only when the note is explicitly about a legacy system; otherwise upgrade it silently.
 - **Engineering bias** — prioritize scalability, robustness, and efficiency in every recommendation, and explain the design rationale behind a choice, not just the mechanism.
 - **Code sparingly** — include a snippet only when it's essential for architectural clarity. Prefer high-level logic descriptions and diagrams. Any code that stays follows CONVENTIONS → Body formatting.
 
