@@ -49,7 +49,9 @@ Rules:
 
 - Internal references are `[[wikilinks]]`, never `[markdown](links)`. Use `[[Note|display text]]` for custom text and `[[Note#Section]]` to point at a heading.
 - **Resolve the exact filename before linking — never guess or approximate.** A wikilink to a note that doesn't exist yet is fine *only* when deliberately marking a planned note; an accidental misspelling is a broken link.
-- Bare external URLs become titled markdown links: `[Title](https://…)`.
+- **External URLs depend on note type:**
+  - *Knowledge notes* (general/concept, reviewed, project) — move bare URLs to **footnotes**. Reference them with a superscript marker at the end of the sentence (`…as the docs explain.[^1]`) and put the definitions at the bottom of the note as `[^1]: https://…`, with no heading above them. Every reference must have a matching definition and vice versa. Markdown links already written as `[Title](https://…)` may stay inline.
+  - *Logs* (daily, weekly) — bare URLs become titled inline links `[Title](https://…)`; don't footnote logs.
 - Link inline, in prose, where a concept is naturally mentioned — not in a "See Also" dump. A short `See also:` footer is acceptable only on index/leaf notes.
 
 ## Headings
@@ -57,6 +59,13 @@ Rules:
 - No level-1 heading (`#`) in a note body — the filename is the title and Obsidian renders it as the page heading. Top-level sections start at `##`.
 - Demote any stray `#` to `##`, or drop it if it merely repeats the filename.
 - Don't skip levels (`##` → `####`); promote the deeper heading.
+
+## Body formatting
+
+- **Math.** Inline math and any math symbol mentioned in prose use `$…$`; display equations use `$$…$$` on their own lines. Never leave bare Unicode math symbols in text.
+- **Variable keys.** When an equation needs its variables explained, start the block with `where:`, then list each variable on its own line as `- **var** — explanation starting in lower case` (a dash before the explanation, not a colon).
+- **Code.** Preserve fenced code blocks, their language tags, and their exact contents — never reformat code so it stops running or loses syntax.
+- **Images.** Fold a caption into the embed's alt text (`![[image|descriptive alt]]`) and delete the standalone caption line; infer brief, descriptive alt text when none is given.
 
 ## MOCs and index notes
 
