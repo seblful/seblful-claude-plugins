@@ -25,6 +25,7 @@ Lighter, everyday operations are **skills** (auto-trigger on natural language); 
 - **vault-weekly-report** — Synthesize this week's daily reports grouped by project, store in `Weekly/`, and archive the dailies.
 - **vault-note-create** — Author a new source-of-truth reference note on a subject: plan scope and table of contents first, then on approval write a deep, modern engineering-handbook note.
 - **vault-note-rewrite** — Refactor and expand informal or fragmented notes into a source-of-truth reference note: audit and plan first, then on approval rewrite.
+- **vault-moc-create** — Build a Map of Content (MOC) for a domain — or restructure one — grouping its notes into sections of wikilinks. The canonical MOC routine the authoring and inbox skills defer to.
 
 ### Commands
 

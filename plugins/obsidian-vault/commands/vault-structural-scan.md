@@ -51,7 +51,7 @@ Treat MOCs (detected by role — see CONVENTIONS.md → MOCs) as structural asse
 - Notes that clearly belong to a MOC's domain (same folder, tag cluster, topic) but are missing from it — add them under the appropriate section.
 - Empty MOC sections or duplicate entries — clean up.
 
-Out of scope here: deciding what a MOC *should* cover, restructuring its sections, or creating new MOCs — that's editorial work, not structural validation.
+Out of scope here: deciding what a MOC *should* cover, restructuring its sections, or creating new MOCs — that's editorial work for `vault-moc-create`, not structural validation. Flag the need; don't build it here.
 
 ## Report
 

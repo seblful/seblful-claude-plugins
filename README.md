@@ -56,6 +56,7 @@ Or browse them in `/plugin > Discover`.
 - **vault-weekly-report** (skill) — Synthesize this week's daily reports grouped by project and archive the dailies.
 - **vault-note-create** (skill) — Author a new source-of-truth reference note from a subject: plan scope and table of contents, then write a deep, modern note on approval.
 - **vault-note-rewrite** (skill) — Refactor and expand fragmented notes into a source-of-truth reference note: audit and plan, then rewrite on approval.
+- **vault-moc-create** (skill) — Build or restructure a Map of Content (MOC) for a domain; the canonical hub-building routine the other skills defer to.
 - **vault-accuracy-review** (command) — Verify every claim in every note (excluding Logs and the archive) and stamp reviewed dates.
 - **vault-structural-scan** (command) — Fix broken wikilinks, misplaced files, frontmatter errors, stale MOCs, plus dead weight (stubs, orphans, duplicates, empty notes).
 - **vault-wikilink-sprint** (command) — Add inline wikilinks between conceptually related notes, starting at hub notes.

@@ -71,7 +71,7 @@ Rules:
 
 A MOC (Map of Content) is any note that functions as a domain or folder index. Detect one by **role**, not just filename: a note is a MOC if it lists/links the notes of a domain. Common naming patterns — a name ending in ` MOC` (`Programming MOC.md`), or named `MOC.md` / `Index.md`, or carrying a `moc` tag — but treat the role as decisive.
 
-Mechanical upkeep of MOCs (fixing broken entries, adding obviously-missing notes) belongs to `vault-structural-scan`. Deciding what a MOC *should* cover or redesigning its sections is editorial work — flag it, don't do it unprompted.
+Mechanical upkeep of MOCs (fixing broken entries, adding obviously-missing notes) belongs to `vault-structural-scan`. Creating a MOC or restructuring what it covers is editorial work — the job of `vault-moc-create`; other routines defer there when they need a hub, and `vault-structural-scan` flags the need rather than doing it unprompted.
 
 ## Folder roles and the archive model
 

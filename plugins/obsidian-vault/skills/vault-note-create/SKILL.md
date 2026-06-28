@@ -28,7 +28,7 @@ Output only the plan, then ask: *"Do you approve this plan? Type 'Yes' to procee
 
 ## Step 2 — Write the note (after approval)
 
-Write the note(s) into the right folder following the approved table of contents and the AUTHORING standard throughout — grounded and cited, depth over breadth, modern and timeless, diagrams where they clarify structure. Connect it per CONVENTIONS → Creating notes and AUTHORING → Connecting the note (frontmatter, footnote citations, links out, and links in from related notes). Then verify before reporting (AUTHORING → Verify before done).
+Write the note(s) into the right folder following the approved table of contents and the AUTHORING standard throughout — grounded and cited, depth over breadth, modern and timeless, diagrams where they clarify structure. If the approved shape is a cluster, build its hub with `vault-moc-create`. Connect it per CONVENTIONS → Creating notes and AUTHORING → Connecting the note (frontmatter, footnote citations, links out, and links in from related notes). Then verify before reporting (AUTHORING → Verify before done).
 
 ## Report
 

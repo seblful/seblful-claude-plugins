@@ -26,7 +26,7 @@ The inbox holds raw captures dropped in without a home. File each into the place
 
 5. **Relocate referenced images** into the destination's attachments folder (mirror the vault's convention). **Rename on collision** rather than overwrite; update the embed to the new path; move the binary on disk with Bash and leave nothing in the inbox.
 
-6. **Wire into a MOC.** New notes go under the right section of the relevant MOC (detected by role — see CONVENTIONS.md → MOCs); if none fits, add at least one incoming `[[wikilink]]` so the note isn't orphaned. Prefer bidirectional connection over the bare minimum — link the new note out to related notes and add a link back in from the most relevant one (AUTHORING → Connecting the note). Enriched notes need this only if they were missing from their MOC.
+6. **Wire into a MOC.** New notes go under the right section of the relevant MOC (detected by role — see CONVENTIONS.md → MOCs); if none fits but the domain clearly needs an index, build one with `vault-moc-create`; otherwise add at least one incoming `[[wikilink]]` so the note isn't orphaned. Prefer bidirectional connection over the bare minimum — link the new note out to related notes and add a link back in from the most relevant one (AUTHORING → Connecting the note). Enriched notes need this only if they were missing from their MOC.
 
 7. **Delete the consumed capture** — only after its content is merged, images relocated, and it's wired in. If any destination is uncertain, leave the capture and flag it. Never delete an unplaced capture.
 

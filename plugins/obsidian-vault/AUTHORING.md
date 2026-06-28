@@ -13,7 +13,7 @@ A reference note is the vault's single source of truth on its subject: a durable
 A reference note holds one subject, but a subject can be larger than one note. Decide the shape before outlining:
 
 - **One note** — a single coherent concept whose depth fits one readable note.
-- **A cluster** — a domain ("Transformers", "Distributed training") whose sub-topics are each note-worthy. Plan a short hub/MOC note plus a small set of linked sub-notes, one concept each, rather than one sprawling note. The hub follows CONVENTIONS → MOCs.
+- **A cluster** — a domain ("Transformers", "Distributed training") whose sub-topics are each note-worthy. Plan a small set of linked sub-notes, one concept each, plus a hub that indexes them, rather than one sprawling note. The hub is a MOC — build it with `vault-moc-create` (CONVENTIONS → MOCs).
 
 Bias toward depth over size: if a section of the outline is itself note-worthy, split it into its own note and link it rather than bury it. Never pad to feel comprehensive.
 
