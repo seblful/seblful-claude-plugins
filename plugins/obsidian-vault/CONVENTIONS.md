@@ -63,7 +63,7 @@ Rules:
 ## Body formatting
 
 - **Math.** Inline math and any math symbol mentioned in prose use `$…$`; display equations use `$$…$$` on their own lines. Never leave bare Unicode math symbols in text.
-- **Variable keys.** When an equation needs its variables explained, start the block with `where:`, then list each variable on its own line as `- **var** — explanation starting in lower case` (a dash before the explanation, not a colon).
+- **Variable keys.** When an equation needs its variables explained, start the block with `where:`, then list each variable on its own line as `- $variable$ - **name** explanation starting in lower case` — the symbol in inline math, a hyphen, the bold readable name, then the explanation.
 - **Code.** Preserve fenced code blocks, their language tags, and their exact contents — never reformat code so it stops running or loses syntax.
 - **Images.** Fold a caption into the embed's alt text (`![[image|descriptive alt]]`) and delete the standalone caption line; infer brief, descriptive alt text when none is given.
 
