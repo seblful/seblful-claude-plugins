@@ -6,13 +6,13 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 
 # Weekly Harvest
 
-Read weekly reports that haven't been harvested, lift the project-relevant knowledge out of them, write it into the appropriate project notes, then mark each report processed. Do not add wikilinks back to the source reports. Do not archive or move anything. Today's date: use the system date. Folder layout, frontmatter, link, language, and note-creation rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
+Read weekly reports that haven't been harvested, lift the project-relevant knowledge out of them, write it into the appropriate project notes, then mark each report processed. Do not add wikilinks back to the source reports. Do not archive or move anything except the year sweep at the end. Folder layout, frontmatter, link, language, note-creation, date, and script rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
 
 ## Steps
 
 ### 1. Find unprocessed weekly reports
 
-In the `Weekly/` folder (see CONVENTIONS.md → Folder roles), a `W{nn}.md` report is **unprocessed** if its frontmatter lacks `harvested: true`. Read all unprocessed reports before writing anything.
+In the `Weekly/` folder (CONVENTIONS → Folder roles), a `W{nn}.md` report is **unprocessed** if its frontmatter lacks `harvested: true`. Read all unprocessed reports before writing anything.
 
 ### 2. Map the vault's project structure
 
@@ -33,17 +33,17 @@ Extract only items with lasting value — skip routine entries.
 
 ### 4. Write to project notes
 
-1. Find the right project note; if none exists for a referenced project, create a minimal one (per CONVENTIONS.md → Creating notes).
-2. Write each item into the section it belongs to per CONVENTIONS.md → Merging knowledge into a note (standalone fact, no reference to the source report, source's language, no duplication).
+1. Find the right project note; if none exists for a referenced project, create a minimal one (CONVENTIONS → Creating notes).
+2. Write each item into the section it belongs to per CONVENTIONS → Merging knowledge into a note (standalone fact, no reference to the source report, source's language, no duplication).
 3. Don't add wikilinks back to the weekly report.
 
 ### 5. Mark each report processed
 
-After harvesting a report, add `harvested: true` to its frontmatter so it isn't processed again.
+After harvesting a report, set `harvested: true` in its frontmatter so it isn't processed again.
 
 ### 6. Year sweep
 
-After step 5, run the year sweep on `Weekly/` (see CONVENTIONS.md → Folder roles and the archive model). Everything swept is already `harvested: true`.
+After step 5, run the year sweep on `Weekly/`: `python "$CLAUDE_PLUGIN_ROOT/scripts/year_sweep.py" --vault VAULT --apply` (CONVENTIONS → Deterministic checks, Folder roles and the archive model). Everything swept is already `harvested: true`.
 
 ### 7. Report
 

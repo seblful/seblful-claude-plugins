@@ -6,25 +6,25 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 
 # Weekly Report Creation
 
-Read this week's daily reports, produce a weekly report grouped by project, store it in `Weekly/`, then archive the daily notes. Today's date: use the system date. Folder layout, the archive model, frontmatter, link, and language rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
+Read this week's daily reports, produce a weekly report grouped by project, store it in `Weekly/`, then archive the daily notes. Folder layout, the archive model, frontmatter, link, language, date, and script rules live in [CONVENTIONS.md](../../CONVENTIONS.md).
 
 ## Steps
 
 ### 1. Locate this week's daily reports
 
-Find daily notes dated Monday through today (see CONVENTIONS.md → Folder roles). If fewer than two exist, tell the user and ask whether to proceed.
+Get the week's bounds and label deterministically: `python "$CLAUDE_PLUGIN_ROOT/scripts/iso_week.py"` (CONVENTIONS → Deterministic checks) returns the ISO week label and every date Monday→today. Find the daily notes for those dates (CONVENTIONS → Folder roles). If fewer than two exist, tell the user and ask whether to proceed.
 
 ### 2. Read everything first
 
-Read all daily reports before writing — build a full picture of which projects appear and what was done per project. Write the report in the **same language as the dailies** (see CONVENTIONS.md → Language and substance); never translate.
+Read all daily reports before writing — build a full picture of which projects appear and what was done per project. Write the report in the **same language as the dailies** (CONVENTIONS → Language and substance); never translate.
 
 ### 3. Year sweep
 
-Before writing, run the year sweep on `Weekly/` (CONVENTIONS.md → Folder roles and the archive model).
+Before writing, run the year sweep on `Weekly/`: `python "$CLAUDE_PLUGIN_ROOT/scripts/year_sweep.py" --vault VAULT --apply` (CONVENTIONS → Folder roles and the archive model).
 
 ### 4. Create the weekly report note
 
-**Path:** `Weekly/W{nn}.md` (a sibling of the daily folder, created if needed) — e.g. `W42.md`, ISO 8601 Monday-anchored week number (moment.js `gggg-[W]ww`).
+**Path:** `Weekly/W{nn}.md` (a sibling of the daily folder, created if needed) — use the `label` from `iso_week.py` (e.g. `W26.md`).
 
 **Structure:**
 
@@ -73,6 +73,7 @@ harvested: false
 
 **Grouping rules:**
 
+- Use `year` and `week` from `iso_week.py` (`iso_year` and `iso_week`) for the frontmatter.
 - One `##` section per project that appeared; the heading itself is the `[[wikilink]]` to the project note.
 - Entries belonging to no specific project go under `## Cross-project / General`.
 - Within each project use the four callouts above; omit any with no entries.
@@ -83,7 +84,7 @@ harvested: false
 
 ### 5. Archive the daily notes and their attachments
 
-Per CONVENTIONS.md → archive model: after the report is saved, for each included daily note, move the note to `Archive/Daily/{YYYY}/` and its attachments to `Archive/Daily/{YYYY}/attachments/`, creating folders as needed. Don't rewrite links inside archived notes — archived content is frozen.
+Per CONVENTIONS → archive model: after the report is saved, for each included daily note, move the note to `Archive/Daily/{YYYY}/` and its attachments to `Archive/Daily/{YYYY}/attachments/`, creating folders as needed. Don't rewrite links inside archived notes — archived content is frozen.
 
 Report which notes and attachments were moved and where.
 

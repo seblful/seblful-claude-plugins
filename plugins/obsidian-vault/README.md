@@ -2,7 +2,9 @@
 
 Maintenance and authoring routines for [Obsidian](https://obsidian.md) vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, inbox ingestion, and authoring or rewriting source-of-truth reference notes.
 
-Every routine defers to [`CONVENTIONS.md`](CONVENTIONS.md) for the shared schema, link rules, heading rules, MOC detection, and the folder/archive model. The two authoring routines additionally share [`AUTHORING.md`](AUTHORING.md) for voice, technical standards, diagrams, document shape, and the plan-then-write workflow. The routines validate and edit notes *against* those conventions — and discover the vault's own conventions first when they differ from the defaults.
+Every routine defers to [`CONVENTIONS.md`](CONVENTIONS.md) for the shared schema, link rules, heading rules, MOC detection, the folder/archive model, and the deterministic [`scripts/`](scripts). The two authoring routines additionally share [`AUTHORING.md`](AUTHORING.md) for audience, voice, technical standards, diagrams, document shape, and the plan-then-write workflow. The routines validate and edit notes *against* those conventions — and discover the vault's own conventions first when they differ from the defaults.
+
+Deterministic, repeatable checks — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number — are handled by small stdlib-only Python scripts in [`scripts/`](scripts) rather than re-reasoned each run. The routines read each script's JSON and apply judgment and fixes through the CLI.
 
 ## Prerequisites
 
@@ -10,6 +12,7 @@ These routines run inside a **live Obsidian vault**, not a code repo, and reach 
 
 1. **Obsidian must be open** on the target vault while a routine runs (the CLI talks to the running app so the live index, daily-note config, and wikilink resolution stay correct).
 2. **The `obsidian` CLI must be installed.** It ships as the `obsidian-cli` skill from [`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills). Run `obsidian help` to confirm it's available and to see the authoritative command list.
+3. **Python 3.9+** must be on `PATH` for the deterministic [`scripts/`](scripts). They use the standard library only — nothing to `pip install`.
 
 Structural moves the CLI doesn't cover (archiving notes, relocating attachments, deleting consumed captures) operate on the vault folder directly with the filesystem tools.
 
@@ -32,6 +35,18 @@ Lighter, everyday operations are **skills** (auto-trigger on natural language); 
 - **/vault-accuracy-review** — Verify every claim in every note (excluding Logs and the archive) and stamp each with a `reviewed` date.
 - **/vault-structural-scan** — Fix broken wikilinks, misplaced files, frontmatter errors, stale MOCs, plus dead weight (stubs, orphans, duplicates, empty notes).
 - **/vault-wikilink-sprint** — Add inline prose wikilinks between conceptually related notes, starting at the most-referenced hub notes.
+
+## Scripts
+
+The deterministic helpers in [`scripts/`](scripts) (stdlib-only Python, JSON output) back the routines' repeatable checks:
+
+- **`iso_week.py`** — ISO-8601 Monday-anchored week label and the week's dates.
+- **`year_sweep.py`** — plan or `--apply` the Weekly→Archive year sweep.
+- **`check_links.py`** — broken wikilinks, and `--orphans`.
+- **`validate_frontmatter.py`** — schema violations per note.
+- **`check_footnotes.py`** — footnote reference/definition mismatches.
+
+They **report** (the routine decides and fixes), except `year_sweep --apply`. Invoke from the plugin root with `--vault` pointing at the vault, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault /path/to/vault --orphans`.
 
 ## Conventions
 

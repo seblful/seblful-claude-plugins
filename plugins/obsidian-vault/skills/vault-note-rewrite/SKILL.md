@@ -6,7 +6,7 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep, WebSearch, WebFetch
 
 # Rewrite Into Reference Note
 
-Refactor, correct, and expand fragmented engineering notes into the vault's authoritative reference on the subject: audit and plan before touching anything, get approval, then rewrite. The authoring standard — voice, technical standards, diagrams, document shape, and the two-step workflow — lives in [AUTHORING.md](../../AUTHORING.md); vault mechanics live in [CONVENTIONS.md](../../CONVENTIONS.md). Read both before planning.
+Refactor, correct, and expand fragmented notes into the vault's authoritative reference on the subject: audit and plan before touching anything, get approval, then rewrite. The authoring standard — audience, voice, technical standards, diagrams, document shape, and the two-step workflow — lives in [AUTHORING.md](../../AUTHORING.md); vault mechanics and the deterministic scripts live in [CONVENTIONS.md](../../CONVENTIONS.md). Read both before planning.
 
 ## Input
 
@@ -14,13 +14,14 @@ The note(s) to rewrite — a vault note name/path, or pasted text. Read the sour
 
 ## Step 1 — Audit, research, and plan
 
-Audit the source, verify its claims and your proposed corrections against real sources, and survey the graph (AUTHORING → Research and grounding, Connecting the note). Then produce the plan:
+Resolve the audience and domain (AUTHORING → Audience and domain), audit the source, verify its claims and your proposed corrections against real sources, and survey the graph (AUTHORING → Research and grounding, Connecting the note). Then produce the plan:
 
+- **Audience** — who the rewritten note is for and its domain (AUTHORING → Audience and domain).
 - **Proposed changes** — the key structural and thematic restructuring, each with its rationale.
 - **Shape** — keep as one note, or split into a hub plus linked sub-notes if the source covers several note-worthy concepts (AUTHORING → Scoping).
 - **Corrections** — inaccuracies, deprecated logic, and errors found in the source, each with its fix and the source confirming it.
 - **Exclusions** — content to cut (irrelevant tangents, duplication), each with justification.
-- **Technology updates** — specific legacy libraries or methods to replace with modern standards (AUTHORING → Technical standards).
+- **Technology / approach updates** — specific legacy libraries or methods to replace with modern standards (AUTHORING → Technical standards).
 - **Connections** — existing notes to link out to, and the notes that should link back in (AUTHORING → Connecting the note).
 - **Table of contents** — the full `##`/`###`/`####` outline of the rewritten note(s), following AUTHORING → Document shape.
 

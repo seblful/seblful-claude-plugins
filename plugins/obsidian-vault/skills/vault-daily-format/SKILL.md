@@ -6,13 +6,13 @@ allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 
 # Daily Report Format
 
-Clean up today's daily report so it reads well as a future reference — without changing what was actually written. Today's date: use the system date. Shared frontmatter, link, heading, and language rules live in [CONVENTIONS.md](../../CONVENTIONS.md); this skill only adds what's specific to daily reports.
+Clean up today's daily report so it reads well as a future reference — without changing what was actually written. Shared frontmatter, link, heading, date, and language rules live in [CONVENTIONS.md](../../CONVENTIONS.md); this skill adds only what's specific to daily reports.
 
 ## Steps
 
-1. **Locate today's report.** Find `YYYY-MM-DD.md` matching today's date in the vault's daily folder (see CONVENTIONS.md → Folder roles). If none exists, tell the user and stop.
+1. **Locate today's report.** Find `YYYY-MM-DD.md` matching today's date (CONVENTIONS → Today's date) in the vault's daily folder (CONVENTIONS → Folder roles). If none exists, tell the user and stop.
 
-2. **Fix frontmatter** per the daily schema in CONVENTIONS.md — link-valued fields as wikilinks, `tags` as a lowercase kebab-case list reflecting the note's actual content, dates matching the file's real ctime/mtime.
+2. **Fix frontmatter.** Run `validate_frontmatter.py --vault VAULT` (CONVENTIONS → Deterministic checks) and apply its findings for today's note against the daily schema — link-valued fields as wikilinks, `tags` as a lowercase kebab-case list reflecting the note's actual content, dates matching the file's real ctime/mtime.
 
 3. **Make planned tasks atomic.** Each item in the "planned" / "todo" section describes exactly one concrete action and uses Obsidian task syntax (`- [ ]` open, `- [x]` done). Split compound or vague items; keep the user's ordering.
 
@@ -20,11 +20,11 @@ Clean up today's daily report so it reads well as a future reference — without
 
 5. **Make status unambiguous.** It must be clear which planned items were done and which came up during the day. Use the task markers consistently.
 
-6. **Fix links and headings** per CONVENTIONS.md — bare URLs → titled links, vault references → wikilinks, no body H1.
+6. **Fix links and headings** per CONVENTIONS — bare URLs → titled links, vault references → wikilinks, no body H1.
 
 ## Hard constraints
 
-- Do not change the meaning of anything written, and do not change the note's language (see CONVENTIONS.md → Language and substance).
+- Do not change the meaning of anything written, and do not change the note's language (CONVENTIONS → Language and substance).
 - Do not reorder items — the user's ordering is intentional.
 - Do not add content that wasn't in the original.
 

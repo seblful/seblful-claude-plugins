@@ -21,6 +21,7 @@ Build the navigational index for a domain: gather its notes, group them into a r
 3. **Group into sections.** Organize members into `##` sections by subtopic, ordered foundational → advanced (or by the vault's existing MOC style). Each entry is a `[[wikilink]]`; add a short annotation only where the title isn't self-explanatory.
 4. **Write the note.** Name and place it per the vault's MOC convention (CONVENTIONS → MOCs; mirror existing MOCs — `X MOC`, a `moc` tag, etc.). Frontmatter and headings per CONVENTIONS, a one-line intro stating what the map covers, then the sections.
 5. **Connect it.** Link the new MOC from its parent/home MOC or index so it's reachable, and — for a cluster hub — add links from the member notes back to it (AUTHORING → Connecting the note). A MOC nothing links to is itself an orphan.
+6. **Verify.** Run `check_links.py --vault VAULT` (CONVENTIONS → Deterministic checks) so every entry and back-link resolves.
 
 ## Boundary
 

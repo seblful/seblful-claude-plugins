@@ -48,7 +48,7 @@ Or browse them in `/plugin > Discover`.
 
 ### obsidian-vault
 
-> Requires a **running Obsidian** instance and the **`obsidian` CLI** ([`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills)). See the [plugin README](plugins/obsidian-vault/README.md).
+> Requires a **running Obsidian** instance, the **`obsidian` CLI** ([`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills)), and **Python 3.9+** for the deterministic scripts (stdlib only). See the [plugin README](plugins/obsidian-vault/README.md).
 
 - **vault-daily-format** (skill) — Normalize today's daily report (frontmatter, atomic tasks, titled links).
 - **vault-inbox-ingest** (skill) — Empty the Inbox: merge each raw capture into the right note (or create one), relocate its images, wire into a MOC, delete the consumed capture.
@@ -84,6 +84,7 @@ plugins/
     │   └── <command>.md
     ├── agents/              # Subagents (optional)
     │   └── <agent>.md
+    ├── scripts/             # Deterministic helpers shared by routines (optional)
     └── hooks/               # Lifecycle hooks (optional)
 ```
 

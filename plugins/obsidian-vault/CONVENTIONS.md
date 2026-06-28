@@ -1,6 +1,6 @@
 # Vault Conventions
 
-Shared reference for every `obsidian-vault` maintenance routine. Each routine states its own job; the rules that *all* of them must obey live here, once, so they cannot drift apart.
+Shared reference for every `obsidian-vault` routine. Each routine states its own job; the rules that *all* of them obey live here, once, so they cannot drift apart. A routine that contradicts this file is wrong — fix the routine.
 
 ## Discovering a vault's conventions
 
@@ -8,13 +8,17 @@ These routines run inside a live Obsidian vault, not a code repo. Before applyin
 
 1. If the vault documents its own conventions (a `CLAUDE.md`, a `README`, a `System/`-style meta folder), that documentation wins over anything here.
 2. Otherwise, infer conventions from existing notes — open a few representative notes and mirror their frontmatter shape, link style, and folder layout.
-3. The structures described below are the **defaults** to fall back on, and the shape these routines assume when they create or reorganize content.
+3. The structures below are the **defaults** to fall back on, and the shape these routines assume when they create or reorganize content.
 
 When a vault's real convention and a default here disagree, follow the vault and do not "correct" it toward the default.
 
+## Today's date
+
+Anywhere a routine needs the current date, take it from the system clock — never assume or hardcode one. Dates written into the vault are always real and ISO-formatted (see Frontmatter).
+
 ## Accessing the vault
 
-These routines reach the vault through the **`obsidian` CLI** (the `obsidian-cli` skill from `kepano/obsidian-skills`), not an MCP server — Obsidian must be open. Run `obsidian help` for the authoritative, always-current command list. Essentials:
+Reach the vault through the **`obsidian` CLI** (the `obsidian-cli` skill from `kepano/obsidian-skills`), not an MCP server — Obsidian must be open. Run `obsidian help` for the authoritative, always-current command list. Essentials:
 
 - **Read / search:** `obsidian read file="Note"`, `obsidian search query="…" limit=N`, `obsidian backlinks file="Note"`, `obsidian daily:read`.
 - **Create / edit:** `obsidian create name="Note" content="…"`, `obsidian append file="Note" content="…"`, `obsidian property:set name="key" value="…" file="Note"`, `obsidian daily:append content="…"`.
@@ -22,6 +26,22 @@ These routines reach the vault through the **`obsidian` CLI** (the `obsidian-cli
 - **Structural moves and deletes** the CLI doesn't cover — archiving notes, relocating attachments, removing a consumed capture — operate on the vault folder directly with `Read`/`Edit`/`Write` and `Bash` (`mv`, `rm`).
 
 Prefer the CLI for content operations so the live index, daily-note configuration, and wikilink resolution stay correct; drop to direct file edits only for what the CLI can't do.
+
+## Deterministic checks: use the scripts
+
+Whole-vault checks that are pure logic — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number — are done by the scripts in `scripts/`, not re-derived by reasoning each run. They are stdlib-only Python 3.9+, emit JSON, and **report rather than fix** (except `year_sweep --apply`): the routine reads the JSON and applies fixes through the CLI so the live index stays correct.
+
+Invoke them from the plugin root, pointing `--vault` at the vault folder:
+
+| Script | Purpose | Invocation |
+|---|---|---|
+| `iso_week.py` | ISO-8601 Monday-anchored week label and the week's dates | `python "$CLAUDE_PLUGIN_ROOT/scripts/iso_week.py" [--date YYYY-MM-DD]` |
+| `year_sweep.py` | Plan (or `--apply`) the Weekly→Archive year sweep | `python "$CLAUDE_PLUGIN_ROOT/scripts/year_sweep.py" --vault VAULT [--apply]` |
+| `check_links.py` | Broken wikilinks, and `--orphans` | `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault VAULT [--orphans]` |
+| `validate_frontmatter.py` | Schema violations per note | `python "$CLAUDE_PLUGIN_ROOT/scripts/validate_frontmatter.py" --vault VAULT` |
+| `check_footnotes.py` | Footnote reference/definition mismatches | `python "$CLAUDE_PLUGIN_ROOT/scripts/check_footnotes.py" (--file NOTE \| --vault VAULT)` |
+
+`$CLAUDE_PLUGIN_ROOT` is the installed plugin directory; if it's unset, use the plugin folder's real path. The scripts are advisory — they flag candidates, and the routine applies judgment (a flagged orphan that's a standalone log is fine; see each routine's Judgment).
 
 ## Frontmatter
 
@@ -50,7 +70,7 @@ Rules:
 - Internal references are `[[wikilinks]]`, never `[markdown](links)`. Use `[[Note|display text]]` for custom text and `[[Note#Section]]` to point at a heading.
 - **Resolve the exact filename before linking — never guess or approximate.** A wikilink to a note that doesn't exist yet is fine *only* when deliberately marking a planned note; an accidental misspelling is a broken link.
 - **External URLs depend on note type:**
-  - *Knowledge notes* (general/concept, reviewed, project) — move bare URLs to **footnotes**. Reference them with a superscript marker at the end of the sentence (`…as the docs explain.[^1]`) and put the definitions at the bottom of the note as `[^1]: https://…`, with no heading above them. Every reference must have a matching definition and vice versa. Markdown links already written as `[Title](https://…)` may stay inline.
+  - *Knowledge notes* (general/concept, reviewed, project) — move bare URLs to **footnotes**. Reference them with a superscript marker at the end of the sentence (`…as the docs explain.[^1]`) and put the definitions at the bottom of the note as `[^1]: https://…`, with no heading above them. Every reference must have a matching definition and vice versa (verify with `check_footnotes.py`). Markdown links already written as `[Title](https://…)` may stay inline.
   - *Logs* (daily, weekly) — bare URLs become titled inline links `[Title](https://…)`; don't footnote logs.
 - Link inline, in prose, where a concept is naturally mentioned — not in a "See Also" dump. A short `See also:` footer is acceptable only on index/leaf notes.
 
@@ -78,7 +98,7 @@ Mechanical upkeep of MOCs (fixing broken entries, adding obviously-missing notes
 - The **daily folder** holds `YYYY-MM-DD.md` notes (Obsidian Daily Notes default). It may be the vault root or a configured folder.
 - **`Weekly/`** is a flat folder of `W{nn}.md` reports, a sibling of the daily folder. Being flat, it holds one year at a time without filename collisions.
 - **`Archive/`** is a sibling of the daily and weekly folders. Archive paths **mirror** live paths and partition by year: a daily note archives to `Archive/Daily/{YYYY}/`, a weekly note to `Archive/Weekly/{YYYY}/`, using the year the note belongs to.
-- **Year sweep (self-healing).** Whenever a routine touches `Weekly/`, archive any report whose `year` is earlier than the current year. Because the sweep runs on every touch, a missed year boundary is cleaned up on the next invocation.
+- **Year sweep (self-healing).** Whenever a routine touches `Weekly/`, run `year_sweep.py` to archive any report whose `year` is earlier than the current year. Because the sweep runs on every touch, a missed year boundary is cleaned up on the next invocation.
 - Archived content is **frozen**: move it as-is, don't rewrite links or frontmatter inside it.
 - An attachment is any non-markdown file a note depends on — embedded via `![[file]]` / `![](path)`, or living in a sibling folder named after the note. When archiving, move attachments into an `attachments/` subfolder of the same mirrored archive path.
 
@@ -101,7 +121,7 @@ Several routines lift knowledge out of a source (a capture, a report) and write 
 
 When a routine creates a note:
 
-- Follow the schema above, and any matching template the vault keeps (e.g. a `System/Templates/` folder) for that note type.
+- Follow the schema above for that note type.
 - Connect it: place it under the right section of the relevant MOC, or add at least one incoming `[[wikilink]]` from a related note so it isn't orphaned.
 - No decorative dividers, auto-generated TOCs, "Last updated by …" footers, or emojis (unless the user already uses them).
 - One concept per file. Don't create a near-duplicate of an existing note — enrich the existing one instead.
