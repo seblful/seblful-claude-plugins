@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
   "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -28,9 +28,9 @@
       "source": "./plugins/lenses"
     },
     {
-      "name": "issues",
-      "description": "Turn a session's failures and follow-ups into GitHub issues in the seblful-claude-plugins backlog repo — drafted from the conversation, dedup-checked, labeled from existing labels, and confirmed before anything is filed, no matter which project you're working in.",
-      "source": "./plugins/issues"
+      "name": "meta",
+      "description": "Meta-level tools that act across all your projects and on your Claude setup rather than one codebase — currently issue: capture bugs, features, tasks, and ideas from a session as GitHub issues in the backlog repo set by CLAUDE_ISSUES_REPO (no default), dedup-checked and confirmed before filing.",
+      "source": "./plugins/meta"
     }
   ]
 }
