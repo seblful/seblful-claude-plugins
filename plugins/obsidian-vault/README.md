@@ -49,9 +49,10 @@ The deterministic helpers in [`scripts/`](scripts) (stdlib-only Python, JSON out
 - **`check_links.py`** — broken wikilinks, and `--orphans`.
 - **`validate_frontmatter.py`** — schema violations per note.
 - **`check_footnotes.py`** — footnote reference/definition mismatches.
-- **`vault_clean.py`** — the universal file-cleaner: one command with composable operations (`--rename`, `--dedupe`, `--relink`, `--links`, `--attachments`, `--prune`, or `--all`) and shared modifiers (`--apply`, `--include-archive`, `--ext`, `--keep`). The single tool behind the `vault-cleanup` agent.
+- **`obsidian_config.py`** — central reader for the vault's own `.obsidian/*.json` settings (attachment location, link format, daily-notes folder/format). Routines read it instead of asking the user; importable, or run it to dump the resolved settings as JSON.
+- **`vault_clean.py`** — the universal file-cleaner: one command with composable operations (`--rename`, `--dedupe`, `--relink`, `--collocate`, `--links`, `--attachments`, `--prune`, or `--all`) and shared modifiers (`--apply`, `--include-archive`, `--ext`, `--keep`, `--config-dir`, `--layout`). The single tool behind the `vault-cleanup` agent. `--collocate` (which relocates files, reading the target folder from `obsidian_config`) is opt-in and not part of `--all`.
 
-They **report** (the routine decides and fixes); the mutating filesystem operations — `year_sweep`, and `vault_clean`'s `--rename`/`--dedupe`/`--relink`/`--links`/`--prune` — plan by default and act on `--apply`. Invoke from the plugin root with `--vault` pointing at the vault, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault /path/to/vault --orphans`.
+They **report** (the routine decides and fixes); the mutating filesystem operations — `year_sweep`, and `vault_clean`'s `--rename`/`--dedupe`/`--relink`/`--collocate`/`--links`/`--prune` — plan by default and act on `--apply`. Invoke from the plugin root with `--vault` pointing at the vault, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault /path/to/vault --orphans`.
 
 ## Conventions
 

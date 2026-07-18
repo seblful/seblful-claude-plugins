@@ -1,10 +1,10 @@
 """Universal, parameterized vault file-cleaner: one command, composable operations.
 
 Pick any combination of operations; they always run in a safe fixed order
-(rename -> dedupe -> relink -> links -> attachments -> prune) regardless of flag
-order, and emit a single JSON report keyed by operation. Every mutating operation
-**plans by default and changes nothing until --apply**. Archive/ is frozen and
-skipped unless --include-archive is given.
+(rename -> dedupe -> relink -> collocate -> links -> attachments -> prune)
+regardless of flag order, and emit a single JSON report keyed by operation.
+Every mutating operation **plans by default and changes nothing until --apply**.
+Archive/ is frozen and skipped unless --include-archive is given.
 
 Operations (choose one or more, or --all):
     --rename        Rename image attachments to `YYYY-MM-DD-<unix-ms>.<ext>` and
@@ -14,12 +14,16 @@ Operations (choose one or more, or --all):
                     flagged (left on disk), never deleted.
     --relink        Repair broken image embeds whose target file is missing but
                     whose basename resolves uniquely to a moved attachment.
+    --collocate     Move attachments to the vault's configured attachment folder
+                    (read from .obsidian/app.json via obsidian_config), rewriting
+                    embeds. Orphan and shared attachments are flagged, not moved.
+                    OPT-IN: relocates files, so it is NOT included in --all.
     --links         Convert internal `[markdown](links)` to `[[wikilinks]]`
                     (external URLs left alone).
     --attachments   Report orphan (unreferenced) and broken (missing-target)
                     image attachments. Report-only — never deletes.
     --prune         Remove empty folders, cascading bottom-up.
-    --all           All of the above.
+    --all           Every operation above except --collocate.
 
 Modifiers:
     --vault PATH        Vault root (default: cwd).
@@ -27,12 +31,16 @@ Modifiers:
     --include-archive   Also process notes/files under any Archive/ folder.
     --ext e1,e2         Extra attachment extensions for --rename / --attachments.
     --keep n1,n2        Folder names --prune must never remove, even if empty.
+    --config-dir DIR    Obsidian config dir for --collocate (default: .obsidian).
+    --layout SPEC       Override --collocate layout: root | same-folder |
+                        central:NAME | per-note:NAME (default: read app.json).
 
 Usage:
     python vault_clean.py --vault PATH --all
     python vault_clean.py --vault PATH --all --apply
     python vault_clean.py --vault PATH --rename --links --apply
-    python vault_clean.py --vault PATH --attachments --ext mp4,pdf
+    python vault_clean.py --vault PATH --collocate           # layout from app.json
+    python vault_clean.py --vault PATH --collocate --layout per-note:attachments
 
 Output (JSON to stdout): {"vault", "applied", "operations", <op>: {...}, ...}
 """
@@ -47,6 +55,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote
 
+import obsidian_config
 from _vault import iter_notes, link_target
 
 # ---------------------------------------------------------------------------
@@ -483,6 +492,20 @@ def _resolve_image(target: str, note_dir: Path, root: Path,
     return hits[0] if len(hits) == 1 else None
 
 
+def _iter_image_targets(text: str, ext: set[str]) -> list[str]:
+    """Every image link/embed target in a note's text (wiki and markdown)."""
+    out: list[str] = []
+    for _bang, raw in REF_WIKI_RE.findall(text):
+        if Path(link_target(raw)).suffix.lower() in ext:
+            out.append(raw)
+    for raw in REF_MD_RE.findall(text):
+        if URL_RE.match(raw):
+            continue
+        if Path(unquote(link_target(raw)).strip()).suffix.lower() in ext:
+            out.append(raw)
+    return out
+
+
 def op_attachments(root: Path, ext: set[str]) -> dict:
     files = [p for p in root.rglob("*")
              if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root)]
@@ -522,6 +545,83 @@ def op_attachments(root: Path, ext: set[str]) -> dict:
             seen.add(key)
             broken_unique.append(b)
     return {"orphans": orphans, "broken": broken_unique}
+
+
+# ---------------------------------------------------------------------------
+# Operation: co-locate attachments to the vault's configured location
+# ---------------------------------------------------------------------------
+
+def op_collocate(root: Path, apply: bool, include_archive: bool, ext: set[str],
+                 config_dir: str, layout_override: str) -> dict:
+    layout = (obsidian_config.parse_layout(layout_override) if layout_override
+              else obsidian_config.attachment_layout(root, config_dir))
+
+    files = [p for p in root.rglob("*")
+             if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root)
+             and (include_archive or not under_archive(p, root))]
+    basename_idx = _image_basename_index(root, ext)
+
+    # Which note(s) reference each attachment (ownership decides where it belongs).
+    owners: dict[Path, set[Path]] = {}
+    for note in iter_notes(root, include_archive=include_archive):
+        for raw in _iter_image_targets(note.text, ext):
+            hit = _resolve_image(raw, note.path.parent, root, basename_idx, ext)
+            if hit is not None:
+                owners.setdefault(hit, set()).add(note.path)
+
+    moved: list[dict[str, str]] = []
+    shared: list[dict[str, object]] = []
+    conflicts: list[dict[str, str]] = []
+    orphans = already = 0
+    move_map: dict[Path, Path] = {}
+    new_target: dict[Path, str] = {}
+
+    for f in sorted(files):
+        f_res = f.resolve()
+        notes = owners.get(f_res, set())
+        if not notes:
+            orphans += 1  # no owning note — leave it (check --attachments lists these)
+            continue
+        if len(notes) > 1:
+            shared.append({"attachment": rel(f, root),
+                           "notes": sorted(rel(n, root) for n in notes)})
+            continue
+        note = next(iter(notes))
+        dest = (layout.dest_dir(note, root) / f.name).resolve()
+        if dest == f_res:
+            already += 1
+            continue
+        if dest.exists():  # a different file already holds that name — never overwrite
+            conflicts.append({"attachment": rel(f, root), "dest": rel(dest, root)})
+            continue
+        move_map[f_res] = dest
+        unique = len(basename_idx.get(f.name, [])) == 1
+        new_target[f_res] = f.name if unique else dest.relative_to(root).as_posix()
+        moved.append({"from": rel(f, root), "to": rel(dest, root),
+                      "note": rel(note, root)})
+
+    def new_target_for(note_path: Path, target: str) -> str | None:
+        hit = _resolve_image(target, note_path.parent, root, basename_idx, ext)
+        return new_target.get(hit) if hit is not None else None
+
+    edits = _rewrite_image_targets(root, include_archive, ext, new_target_for)
+    if apply:
+        for note_path, new_text, _ in edits:  # rewrite links first, then move files
+            note_path.write_text(new_text, encoding="utf-8")
+        for src, dest in move_map.items():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            src.rename(dest)
+
+    return {
+        "layout": {"kind": layout.kind, "folder": layout.folder,
+                   "source": layout.source, "raw": layout.raw},
+        "moved": moved,
+        "already_placed": already,
+        "shared": shared,
+        "conflicts": conflicts,
+        "orphans": orphans,
+        "embeds_rewritten": sum(c for _, _, c in edits),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -578,6 +678,9 @@ def main() -> int:
                         help="Collapse byte-identical attachments, repoint embeds")
     parser.add_argument("--relink", action="store_true",
                         help="Repair broken image embeds by unique basename")
+    parser.add_argument("--collocate", action="store_true",
+                        help="Move attachments to the vault's configured location "
+                             "(opt-in; not part of --all)")
     parser.add_argument("--links", action="store_true", help="Convert md links to wikilinks")
     parser.add_argument("--attachments", action="store_true",
                         help="Report orphan/broken attachments")
@@ -590,17 +693,25 @@ def main() -> int:
                         help="Extra comma-separated attachment extensions")
     parser.add_argument("--keep", default="",
                         help="Comma-separated folder names --prune must never remove")
+    parser.add_argument("--config-dir", default=obsidian_config.DEFAULT_CONFIG_DIR,
+                        help="Obsidian config dir for --collocate (default: .obsidian)")
+    parser.add_argument("--layout", default="",
+                        help="Override --collocate layout: root | same-folder "
+                             "| central:NAME | per-note:NAME (default: read app.json)")
     args = parser.parse_args()
 
+    # --collocate relocates files, so it is opt-in and deliberately NOT in --all.
     do_rename = args.all or args.rename
     do_dedupe = args.all or args.dedupe
     do_relink = args.all or args.relink
+    do_collocate = args.collocate
     do_links = args.all or args.links
     do_attach = args.all or args.attachments
     do_prune = args.all or args.prune
-    if not (do_rename or do_dedupe or do_relink or do_links or do_attach or do_prune):
+    if not (do_rename or do_dedupe or do_relink or do_collocate
+            or do_links or do_attach or do_prune):
         parser.error("choose at least one operation (--rename / --dedupe / --relink "
-                     "/ --links / --attachments / --prune / --all)")
+                     "/ --collocate / --links / --attachments / --prune / --all)")
 
     root = Path(args.vault).resolve()
     if not root.is_dir():
@@ -625,6 +736,10 @@ def main() -> int:
     if do_relink:
         operations.append("relink")
         result["relink"] = op_relink(root, args.apply, args.include_archive, ext)
+    if do_collocate:
+        operations.append("collocate")
+        result["collocate"] = op_collocate(root, args.apply, args.include_archive,
+                                            ext, args.config_dir, args.layout)
     if do_links:
         operations.append("links")
         result["links"] = op_links(root, args.apply, args.include_archive)

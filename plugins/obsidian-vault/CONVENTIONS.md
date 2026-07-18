@@ -6,9 +6,10 @@ Shared reference for every `obsidian-vault` routine. Each routine states its own
 
 These routines run inside a live Obsidian vault, not a code repo. Before applying any default below, learn what the vault actually does:
 
-1. If the vault documents its own conventions (a `CLAUDE.md`, a `README`, a `System/`-style meta folder), that documentation wins over anything here.
-2. Otherwise, infer conventions from existing notes — open a few representative notes and mirror their frontmatter shape, link style, and folder layout.
-3. The structures below are the **defaults** to fall back on, and the shape these routines assume when they create or reorganize content.
+1. **Obsidian's own settings are authoritative for what they cover — read them, don't ask or guess.** The `obsidian_config.py` script resolves the vault's `.obsidian/*.json` into the settings routines keep needing: where new attachments go (`attachmentFolderPath`), whether internal links are wikilinks or markdown and in what path format (`useMarkdownLinks`, `newLinkFormat`), and the daily-notes folder and filename format. Run `python "$CLAUDE_PLUGIN_ROOT/scripts/obsidian_config.py" --vault VAULT` for the resolved JSON (or import it from a deterministic script). It is tolerant — a missing file or key yields the documented fallback — so it works on any vault. Prefer it over interrogating the user.
+2. If the vault documents its own conventions (a `CLAUDE.md`, a `README`, a `System/`-style meta folder), that documentation wins over anything here.
+3. Otherwise, infer conventions from existing notes — open a few representative notes and mirror their frontmatter shape, link style, and folder layout.
+4. The structures below are the **defaults** to fall back on, and the shape these routines assume when they create or reorganize content.
 
 When a vault's real convention and a default here disagree, follow the vault and do not "correct" it toward the default.
 
@@ -40,6 +41,7 @@ Invoke them from the plugin root, pointing `--vault` at the vault folder:
 | `check_links.py` | Broken wikilinks, and `--orphans` | `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault VAULT [--orphans]` |
 | `validate_frontmatter.py` | Schema violations per note | `python "$CLAUDE_PLUGIN_ROOT/scripts/validate_frontmatter.py" --vault VAULT` |
 | `check_footnotes.py` | Footnote reference/definition mismatches | `python "$CLAUDE_PLUGIN_ROOT/scripts/check_footnotes.py" (--file NOTE \| --vault VAULT)` |
+| `obsidian_config.py` | Resolve the vault's own settings from `.obsidian/*.json` (attachment location, link format, daily notes) | `python "$CLAUDE_PLUGIN_ROOT/scripts/obsidian_config.py" --vault VAULT` |
 | `vault_clean.py` | Universal file-cleaner — one command, composable operations | `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --vault VAULT [ops] [--apply]` |
 
 `vault_clean.py` is the single tool behind all mechanical, file-level hygiene. Select any combination of operations (they always run in a safe fixed order and emit one JSON report keyed by operation); mutating ones plan by default and act only on `--apply`:
@@ -49,12 +51,13 @@ Invoke them from the plugin root, pointing `--vault` at the vault folder:
 | `--rename` | Rename image attachments to `YYYY-MM-DD-<unix-ms>.<ext>` and rewrite links | yes (`--apply`) |
 | `--dedupe` | Collapse byte-identical attachments to one canonical file, repoint embeds; redundant copies flagged (left on disk), never deleted | yes (`--apply`) |
 | `--relink` | Repair broken image embeds whose stale path resolves uniquely by basename to a moved file | yes (`--apply`) |
+| `--collocate` | Move attachments to the vault's configured attachment folder (read via `obsidian_config`), rewriting embeds; orphan/shared attachments flagged, not moved. **Opt-in — not in `--all`.** | yes (`--apply`) |
 | `--links` | Convert internal `[md](links)` to `[[wikilinks]]` (external URLs untouched) | yes (`--apply`) |
 | `--attachments` | Report orphan (unreferenced) and broken (missing-target) attachments | no (report-only) |
 | `--prune` | Remove empty folders, cascading bottom-up | yes (`--apply`) |
-| `--all` | Every operation above (run in that fixed order) | — |
+| `--all` | Every operation above **except `--collocate`** (run in fixed order) | — |
 
-Shared modifiers: `--include-archive` (default: `Archive/` frozen), `--ext e1,e2` (extra attachment extensions for `--rename`/`--attachments`), `--keep n1,n2` (folder names `--prune` must never remove). Run `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --help` for the authoritative list.
+Shared modifiers: `--include-archive` (default: `Archive/` frozen), `--ext e1,e2` (extra attachment extensions for `--rename`/`--attachments`), `--keep n1,n2` (folder names `--prune` must never remove), `--config-dir DIR` and `--layout SPEC` (for `--collocate`; layout defaults to the vault's `app.json`). Run `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --help` for the authoritative list.
 
 `$CLAUDE_PLUGIN_ROOT` is the installed plugin directory; if it's unset, use the plugin folder's real path. The scripts are advisory — they flag candidates, and the routine applies judgment (a flagged orphan that's a standalone log is fine; see each routine's Judgment).
 

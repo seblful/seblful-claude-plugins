@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
   "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"

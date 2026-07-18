@@ -1,6 +1,6 @@
 {
   "name": "obsidian-vault",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Maintenance and authoring routines for Obsidian vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, file cleanup, inbox ingestion, building maps of content, and authoring or rewriting source-of-truth reference notes.",
   "author": {
     "name": "Aliaksei Chymba",

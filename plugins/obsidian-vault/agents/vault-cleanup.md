@@ -21,12 +21,15 @@ You maintain an Obsidian vault's **files and link syntax** according to the vaul
   | `--rename` | rename image attachments to convention + rewrite links | `--apply` |
   | `--dedupe` | collapse byte-identical attachments, repoint embeds (copies flagged, not deleted) | `--apply` |
   | `--relink` | repair broken image embeds by unique basename (moved files) | `--apply` |
+  | `--collocate` | move attachments to the vault's configured folder (from `app.json`), rewrite embeds; orphan/shared flagged. **Opt-in, not in `--all`.** | `--apply` |
   | `--links` | convert internal `[md](links)` → `[[wikilinks]]` (external URLs untouched) | `--apply` |
   | `--attachments` | report orphan + broken attachments | report-only |
   | `--prune` | remove empty folders (cascading) | `--apply` |
-  | `--all` | all of the above (run in that fixed order) | — |
+  | `--all` | every operation above **except `--collocate`** (run in fixed order) | — |
 
-  Shared modifiers: `--vault PATH`, `--apply`, `--include-archive`, `--ext e1,e2`, `--keep n1,n2`. Run it with `--help` for the authoritative list. Invoke as `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --vault VAULT …` (if `$CLAUDE_PLUGIN_ROOT` is unset, use this plugin folder's real path).
+  Shared modifiers: `--vault PATH`, `--apply`, `--include-archive`, `--ext e1,e2`, `--keep n1,n2`, `--config-dir DIR` and `--layout SPEC` (for `--collocate`). Run it with `--help` for the authoritative list. Invoke as `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --vault VAULT …` (if `$CLAUDE_PLUGIN_ROOT` is unset, use this plugin folder's real path).
+
+  For attachment location, link style, and daily-notes settings, don't ask the user — read them with **`obsidian_config.py`** (CONVENTIONS → Discovering a vault's conventions): `python "$CLAUDE_PLUGIN_ROOT/scripts/obsidian_config.py" --vault VAULT` dumps the resolved settings as JSON. `--collocate` already uses it for the target folder.
 
 - **The `obsidian` CLI** — for reading and searching the live vault (CONVENTIONS → Accessing the vault): `obsidian read`, `obsidian search`, `obsidian backlinks`. Use it to understand what a request refers to before acting.
 
