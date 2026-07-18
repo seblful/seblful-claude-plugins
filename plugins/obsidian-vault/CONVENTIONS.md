@@ -29,7 +29,7 @@ Prefer the CLI for content operations so the live index, daily-note configuratio
 
 ## Deterministic checks: use the scripts
 
-Whole-vault checks that are pure logic — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number — are done by the scripts in `scripts/`, not re-derived by reasoning each run. They are stdlib-only Python 3.9+, emit JSON, and **report rather than fix** (except `year_sweep --apply`): the routine reads the JSON and applies fixes through the CLI so the live index stays correct.
+Whole-vault checks that are pure logic — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number, attachment hygiene — are done by the scripts in `scripts/`, not re-derived by reasoning each run. They are stdlib-only Python 3.9+ and emit JSON. Most **report rather than fix**: the routine reads the JSON and applies fixes through the CLI so the live index stays correct. Those that perform filesystem operations the CLI can't (`year_sweep`, and the mutating operations of `vault_clean`) **plan by default and act only on `--apply`**.
 
 Invoke them from the plugin root, pointing `--vault` at the vault folder:
 
@@ -40,6 +40,21 @@ Invoke them from the plugin root, pointing `--vault` at the vault folder:
 | `check_links.py` | Broken wikilinks, and `--orphans` | `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault VAULT [--orphans]` |
 | `validate_frontmatter.py` | Schema violations per note | `python "$CLAUDE_PLUGIN_ROOT/scripts/validate_frontmatter.py" --vault VAULT` |
 | `check_footnotes.py` | Footnote reference/definition mismatches | `python "$CLAUDE_PLUGIN_ROOT/scripts/check_footnotes.py" (--file NOTE \| --vault VAULT)` |
+| `vault_clean.py` | Universal file-cleaner — one command, composable operations | `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --vault VAULT [ops] [--apply]` |
+
+`vault_clean.py` is the single tool behind all mechanical, file-level hygiene. Select any combination of operations (they always run in a safe fixed order and emit one JSON report keyed by operation); mutating ones plan by default and act only on `--apply`:
+
+| Operation flag | Does | Mutating? |
+|---|---|---|
+| `--rename` | Rename image attachments to `YYYY-MM-DD-<unix-ms>.<ext>` and rewrite links | yes (`--apply`) |
+| `--dedupe` | Collapse byte-identical attachments to one canonical file, repoint embeds; redundant copies flagged (left on disk), never deleted | yes (`--apply`) |
+| `--relink` | Repair broken image embeds whose stale path resolves uniquely by basename to a moved file | yes (`--apply`) |
+| `--links` | Convert internal `[md](links)` to `[[wikilinks]]` (external URLs untouched) | yes (`--apply`) |
+| `--attachments` | Report orphan (unreferenced) and broken (missing-target) attachments | no (report-only) |
+| `--prune` | Remove empty folders, cascading bottom-up | yes (`--apply`) |
+| `--all` | Every operation above (run in that fixed order) | — |
+
+Shared modifiers: `--include-archive` (default: `Archive/` frozen), `--ext e1,e2` (extra attachment extensions for `--rename`/`--attachments`), `--keep n1,n2` (folder names `--prune` must never remove). Run `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --help` for the authoritative list.
 
 `$CLAUDE_PLUGIN_ROOT` is the installed plugin directory; if it's unset, use the plugin folder's real path. The scripts are advisory — they flag candidates, and the routine applies judgment (a flagged orphan that's a standalone log is fine; see each routine's Judgment).
 
@@ -67,7 +82,7 @@ Rules:
 
 ## Links
 
-- Internal references are `[[wikilinks]]`, never `[markdown](links)`. Use `[[Note|display text]]` for custom text and `[[Note#Section]]` to point at a heading.
+- Internal references are `[[wikilinks]]`, never `[markdown](links)`. Use `[[Note|display text]]` for custom text and `[[Note#Section]]` to point at a heading. Stray `[markdown](links)` that resolve to a vault file are mechanically converted to wikilinks by `vault-cleanup` — external URLs are left alone (see below).
 - **Resolve the exact filename before linking — never guess or approximate.** A wikilink to a note that doesn't exist yet is fine *only* when deliberately marking a planned note; an accidental misspelling is a broken link.
 - **External URLs depend on note type:**
   - *Knowledge notes* (general/concept, reviewed, project) — move bare URLs to **footnotes**. Reference them with a superscript marker at the end of the sentence (`…as the docs explain.[^1]`) and put the definitions at the bottom of the note as `[^1]: https://…`, with no heading above them. Every reference must have a matching definition and vice versa (verify with `check_footnotes.py`). Markdown links already written as `[Title](https://…)` may stay inline.
@@ -86,6 +101,18 @@ Rules:
 - **Variable keys.** When an equation needs its variables explained, start the block with `where:`, then list each variable on its own line as `- $variable$ - **name** explanation starting in lower case` — the symbol in inline math, a hyphen, the bold readable name, then the explanation.
 - **Code.** Preserve fenced code blocks, their language tags, and their exact contents — never reformat code so it stops running or loses syntax.
 - **Images.** Fold a caption into the embed's alt text (`![[image|descriptive alt]]`) and delete the standalone caption line; infer brief, descriptive alt text when none is given.
+
+## Attachments
+
+An attachment is any non-markdown file a note depends on — embedded via `![[file]]` / `![](path)`, referenced by `[[file]]` / `[text](file)`, or named in an image-valued property. (This is the same definition as in Folder roles, stated in file terms.)
+
+- **Naming.** Image attachments are named `YYYY-MM-DD-<unix-ms>.<ext>` — the capture date, then the Unix epoch in **milliseconds**, then the extension (e.g. `2026-07-14-1784035374192.png`). The name is note-independent, chronologically sortable, and collision-free. Derive the timestamp from an `IMG-YYYYMMDDHHmmssSSS` filename when the file has one (preserving each image's original moment); otherwise from the file's modification time. Within a single folder, a clash gets a `-1`, `-2`, … suffix. Files already in this form are left untouched, so renaming is safe to re-run.
+- **Empty folders.** Directories left empty after files move — e.g. the nested skeleton an attachment plugin leaves behind when files return to a flat layout — carry no content and are pruned bottom-up (a parent emptied by pruning its children goes too). Never touch `.git`, `.obsidian`, or `.trash`.
+- **Orphan attachments** — a file no note references — are candidates for removal, but like orphan notes they are **flagged, never deleted unilaterally**: a file may be deliberately staged.
+- **Broken embeds** — an `![[…]]` / `![](…)` whose target file is missing — are flagged for review.
+- Archived attachments are frozen with the rest of the archive: leave their names and locations untouched.
+
+Renaming to the convention, pruning empty folders, converting stray markdown links, and reporting orphan/broken attachments are the mechanical, file-level job of the **`vault-cleanup`** agent, backed by the deterministic `vault_clean.py` tool. This is distinct from `vault-structural-scan`, which owns the *editorial* health of note **content** (frontmatter, note orphans, broken **wikilinks**, dead weight, MOCs).
 
 ## MOCs and index notes
 

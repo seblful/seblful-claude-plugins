@@ -1,10 +1,10 @@
 # obsidian-vault
 
-Maintenance and authoring routines for [Obsidian](https://obsidian.md) vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, inbox ingestion, and authoring or rewriting source-of-truth reference notes.
+Maintenance and authoring routines for [Obsidian](https://obsidian.md) vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, file cleanup, inbox ingestion, and authoring or rewriting source-of-truth reference notes.
 
 Every routine defers to [`CONVENTIONS.md`](CONVENTIONS.md) for the shared schema, link rules, heading rules, MOC detection, the folder/archive model, and the deterministic [`scripts/`](scripts). The two authoring routines additionally share [`AUTHORING.md`](AUTHORING.md) for audience, voice, technical standards, diagrams, document shape, and the plan-then-write workflow. The routines validate and edit notes *against* those conventions — and discover the vault's own conventions first when they differ from the defaults.
 
-Deterministic, repeatable checks — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number — are handled by small stdlib-only Python scripts in [`scripts/`](scripts) rather than re-reasoned each run. The routines read each script's JSON and apply judgment and fixes through the CLI.
+Deterministic, repeatable checks — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number, attachment hygiene — are handled by small stdlib-only Python scripts in [`scripts/`](scripts) rather than re-reasoned each run. The routines read each script's JSON and apply judgment and fixes through the CLI.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ Structural moves the CLI doesn't cover (archiving notes, relocating attachments,
 
 ## Routines
 
-Lighter, everyday operations are **skills** (auto-trigger on natural language); periodic whole-vault audits are **commands** (invoke deliberately).
+Lighter, everyday operations are **skills** (auto-trigger on natural language); periodic whole-vault audits are **commands** (invoke deliberately); the mechanical file-level cleanup runs as an **agent** (a subagent with its own context, delegated to on request).
 
 ### Skills
 
@@ -36,6 +36,10 @@ Lighter, everyday operations are **skills** (auto-trigger on natural language); 
 - **/vault-structural-scan** — Fix broken wikilinks, misplaced files, frontmatter errors, stale MOCs, plus dead weight (stubs, orphans, duplicates, empty notes).
 - **/vault-wikilink-sprint** — Add inline prose wikilinks between conceptually related notes, starting at the most-referenced hub notes.
 
+### Agent
+
+- **vault-cleanup** — Mechanical file-level hygiene, run as a subagent: rename image attachments to the naming convention and rewrite their links, convert stray markdown links to wikilinks, report orphan/broken attachments, and prune empty folders. The file-level counterpart to `/vault-structural-scan`; it orchestrates the attachment/link/folder scripts, planning before every apply and flagging deletions rather than making them.
+
 ## Scripts
 
 The deterministic helpers in [`scripts/`](scripts) (stdlib-only Python, JSON output) back the routines' repeatable checks:
@@ -45,8 +49,9 @@ The deterministic helpers in [`scripts/`](scripts) (stdlib-only Python, JSON out
 - **`check_links.py`** — broken wikilinks, and `--orphans`.
 - **`validate_frontmatter.py`** — schema violations per note.
 - **`check_footnotes.py`** — footnote reference/definition mismatches.
+- **`vault_clean.py`** — the universal file-cleaner: one command with composable operations (`--rename`, `--dedupe`, `--relink`, `--links`, `--attachments`, `--prune`, or `--all`) and shared modifiers (`--apply`, `--include-archive`, `--ext`, `--keep`). The single tool behind the `vault-cleanup` agent.
 
-They **report** (the routine decides and fixes), except `year_sweep --apply`. Invoke from the plugin root with `--vault` pointing at the vault, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault /path/to/vault --orphans`.
+They **report** (the routine decides and fixes); the mutating filesystem operations — `year_sweep`, and `vault_clean`'s `--rename`/`--dedupe`/`--relink`/`--links`/`--prune` — plan by default and act on `--apply`. Invoke from the plugin root with `--vault` pointing at the vault, e.g. `python "$CLAUDE_PLUGIN_ROOT/scripts/check_links.py" --vault /path/to/vault --orphans`.
 
 ## Conventions
 
