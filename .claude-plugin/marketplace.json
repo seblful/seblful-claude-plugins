@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
   "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -26,6 +26,11 @@
       "name": "lenses",
       "description": "Tools that act on you and the conversation rather than the code — a high-level code map (zoom-out), ultra-compressed caveman mode, one-question-at-a-time plan grilling, and a stateful multi-session teaching workspace.",
       "source": "./plugins/lenses"
+    },
+    {
+      "name": "issues",
+      "description": "Turn a session's failures and follow-ups into GitHub issues in the seblful-claude-plugins backlog repo — drafted from the conversation, dedup-checked, labeled from existing labels, and confirmed before anything is filed, no matter which project you're working in.",
+      "source": "./plugins/issues"
     }
   ]
 }
