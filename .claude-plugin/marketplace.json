@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
   "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "python",
-      "description": "Robust Python coding and testing practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, on top of the uv/ruff/ty/pytest stack.",
+      "description": "Robust Python coding, testing, and notebook practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, reproducible Jupyter notebooks, on top of the uv/ruff/ty/pytest stack.",
       "source": "./plugins/python"
     },
     {

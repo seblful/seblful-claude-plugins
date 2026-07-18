@@ -1,7 +1,7 @@
 {
   "name": "python",
-  "version": "0.4.3",
-  "description": "Robust Python coding and testing practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, on top of the uv/ruff/ty/pytest stack.",
+  "version": "0.5.0",
+  "description": "Robust Python coding, testing, and notebook practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, reproducible Jupyter notebooks, on top of the uv/ruff/ty/pytest stack.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["python", "pep8", "pytest", "type-hints", "uv", "ruff", "testing"]
+  "keywords": ["python", "pep8", "pytest", "type-hints", "uv", "ruff", "testing", "jupyter", "notebooks"]
 }

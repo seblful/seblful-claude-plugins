@@ -8,7 +8,7 @@ A curated marketplace of Claude Code plugins, grouped by **what they act on**: y
 
 Four plugins, grouped by their target:
 
-- **`/plugins/python`** — acts on Python code: coding and testing practices (type hints, pytest, the uv/ruff/ty stack)
+- **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack)
 - **`/plugins/code`** — acts on any codebase: review, bug diagnosis, and architectural deepening
 - **`/plugins/obsidian-vault`** — acts on your notes: maintenance routines for Obsidian vaults
 - **`/plugins/lenses`** — acts on you and the conversation: code maps, terse mode, plan grilling, and a teaching workspace
@@ -38,6 +38,7 @@ Or browse them in `/plugin > Discover`.
 
 - **python-patterns** (skill) — Robust Python idioms: intent-obvious code, illegal states unrepresentable, a type-driven safety net, on top of the uv/ruff/ty stack.
 - **python-testing** (skill) — Pytest, fixtures, parametrization, mocking, async, coverage.
+- **python-notebooks** (skill) — Reproducible Jupyter notebooks: Restart & Run All as the contract, hidden-state discipline, uv-managed kernels, promotion of stable code to modules, jupytext pairing for version control.
 
 ### code
 
