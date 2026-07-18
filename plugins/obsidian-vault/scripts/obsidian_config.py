@@ -142,6 +142,33 @@ def daily_notes(vault: Path, config_dir: str = DEFAULT_CONFIG_DIR) -> DailyNotes
     )
 
 
+# --- Templates -------------------------------------------------------------
+
+def template_folders(vault: Path, config_dir: str = DEFAULT_CONFIG_DIR) -> list[str]:
+    """Configured template folders, from the core Templates and Templater plugins.
+
+    Reads `templates.json` (`folder`) and, if present, the Templater community
+    plugin's `plugins/templater-obsidian/data.json` (`templates_folder`). Returns
+    the vault-relative folder paths (deduplicated), or [] if none are set. Their
+    files are placeholders, not real notes, so content scans skip them.
+    """
+    folders: list[str] = []
+    core = _load(vault, "templates.json", config_dir).get("folder")
+    if isinstance(core, str) and core.strip("/"):
+        folders.append(core.strip("/"))
+    templater = _load(vault, "plugins/templater-obsidian/data.json",
+                      config_dir).get("templates_folder")
+    if isinstance(templater, str) and templater.strip("/"):
+        folders.append(templater.strip("/"))
+    seen: set[str] = set()
+    out: list[str] = []
+    for f in folders:
+        if f.lower() not in seen:
+            seen.add(f.lower())
+            out.append(f)
+    return out
+
+
 def resolve_all(vault: Path, config_dir: str = DEFAULT_CONFIG_DIR) -> dict:
     """Everything above, resolved, as a plain dict (what the CLI prints)."""
     return {
@@ -150,6 +177,7 @@ def resolve_all(vault: Path, config_dir: str = DEFAULT_CONFIG_DIR) -> dict:
         "attachment_layout": asdict(attachment_layout(vault, config_dir)),
         "link_format": asdict(link_format(vault, config_dir)),
         "daily_notes": asdict(daily_notes(vault, config_dir)),
+        "template_folders": template_folders(vault, config_dir),
     }
 
 

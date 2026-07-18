@@ -48,22 +48,22 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import re
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote
 
 import obsidian_config
-from _vault import iter_notes, link_target
+from _vault import (emit_json, image_basename_index, is_ignored,
+                    iter_attachment_paths, iter_markdown_paths, iter_notes,
+                    link_target, require_vault_dir, resolve_attachment,
+                    under_archive)
 
 # ---------------------------------------------------------------------------
 # Shared constants and helpers
 # ---------------------------------------------------------------------------
 
 DEFAULT_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp", ".avif"}
-IGNORE_DIRS = {".git", ".obsidian", ".trash"}
 
 IMG_RE = re.compile(r"^IMG-(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{0,3})(?:-\d+)?$")
 TARGET_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{13}(?:-\d+)?$")
@@ -76,14 +76,6 @@ CONV_MD_RE = re.compile(r"(!?)\[([^\]]*)\]\(<?([^)\s>]+)>?\)")
 REF_WIKI_RE = re.compile(r"(!?)\[\[([^\[\]|]+)(?:\|[^\[\]]*)?\]\]")
 REF_MD_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)\)")
 URL_RE = re.compile(r"^([a-z][a-z0-9+.-]*:|//|#)", re.IGNORECASE)
-
-
-def is_ignored(path: Path, root: Path) -> bool:
-    return any(part in IGNORE_DIRS for part in path.relative_to(root).parts)
-
-
-def under_archive(path: Path, root: Path) -> bool:
-    return "archive" in {p.lower() for p in path.relative_to(root).parts}
 
 
 def rel(path: Path, root: Path) -> str:
@@ -111,10 +103,9 @@ def _plan_renames(images: list[Path], root: Path, ext: set[str]) -> dict[Path, P
     """physical file -> new physical path, with per-directory collision handling."""
     rename_set = set(images)
     used: dict[Path, set[str]] = {}
-    for p in root.rglob("*"):
-        if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root):
-            if p not in rename_set:
-                used.setdefault(p.parent, set()).add(p.name)
+    for p in iter_attachment_paths(root, ext, include_archive=True):
+        if p not in rename_set:
+            used.setdefault(p.parent, set()).add(p.name)
 
     mapping: dict[Path, Path] = {}
     for img in images:
@@ -131,36 +122,19 @@ def _plan_renames(images: list[Path], root: Path, ext: set[str]) -> dict[Path, P
     return mapping
 
 
-def _image_basename_index(root: Path, ext: set[str]) -> dict[str, list[Path]]:
-    idx: dict[str, list[Path]] = {}
-    for p in root.rglob("*"):
-        if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root):
-            idx.setdefault(p.name, []).append(p.resolve())
-    return idx
-
-
 def op_rename(root: Path, apply: bool, include_archive: bool, ext: set[str]) -> dict:
     images = []
-    for p in root.rglob("*"):
-        if not p.is_file() or p.suffix.lower() not in ext or is_ignored(p, root):
-            continue
-        if not include_archive and under_archive(p, root):
-            continue
+    for p in iter_attachment_paths(root, ext, include_archive=include_archive):
         if TARGET_RE.match(p.stem):  # already renamed
             continue
         images.append(p)
-    images.sort()
 
     mapping = _plan_renames(images, root, ext)
-    basename_idx = _image_basename_index(root, ext)
+    basename_idx = image_basename_index(root, ext)
     unresolved: list[dict[str, str]] = []
     edits: list[tuple[Path, str, int]] = []
 
-    for note in sorted(root.rglob("*.md")):
-        if is_ignored(note, root):
-            continue
-        if not include_archive and under_archive(note, root):
-            continue
+    for note in iter_markdown_paths(root, include_archive=include_archive):
         text = note.read_text(encoding="utf-8", errors="replace")
         changes = 0
 
@@ -234,11 +208,7 @@ def _rewrite_image_targets(root: Path, include_archive: bool, ext: set[str],
     Only image-extension targets are offered. Returns [(note, new_text, count)].
     """
     edits: list[tuple[Path, str, int]] = []
-    for note in sorted(root.rglob("*.md")):
-        if is_ignored(note, root):
-            continue
-        if not include_archive and under_archive(note, root):
-            continue
+    for note in iter_markdown_paths(root, include_archive=include_archive):
         text = note.read_text(encoding="utf-8", errors="replace")
         count = 0
 
@@ -280,10 +250,8 @@ def _sha256(path: Path) -> str:
 
 
 def op_dedupe(root: Path, apply: bool, include_archive: bool, ext: set[str]) -> dict:
-    files = [p for p in root.rglob("*")
-             if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root)
-             and (include_archive or not under_archive(p, root))]
-    basename_idx = _image_basename_index(root, ext)
+    files = list(iter_attachment_paths(root, ext, include_archive=include_archive))
+    basename_idx = image_basename_index(root, ext)
 
     by_hash: dict[str, list[Path]] = {}
     for f in files:
@@ -308,7 +276,7 @@ def op_dedupe(root: Path, apply: bool, include_archive: bool, ext: set[str]) -> 
                        "duplicates": sorted(rel(d, root) for d in dups)})
 
     def new_target_for(note: Path, target: str) -> str | None:
-        resolved = _resolve_image(target, note.parent, root, basename_idx, ext)
+        resolved = resolve_attachment(target, note.parent, root, basename_idx, ext)
         if resolved is not None and resolved in canon_target:
             return canon_target[resolved]
         return None
@@ -328,9 +296,7 @@ def op_dedupe(root: Path, apply: bool, include_archive: bool, ext: set[str]) -> 
 def op_relink(root: Path, apply: bool, include_archive: bool, ext: set[str]) -> dict:
     # Resolution targets: image files (excluding Archive unless asked) — indexed
     # by basename and by path-components, to mirror how Obsidian resolves a link.
-    files = [p for p in root.rglob("*")
-             if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root)
-             and (include_archive or not under_archive(p, root))]
+    files = list(iter_attachment_paths(root, ext, include_archive=include_archive))
     basename_idx: dict[str, list[Path]] = {}
     rel_parts: list[tuple[str, ...]] = []
     for f in files:
@@ -444,11 +410,7 @@ def op_links(root: Path, apply: bool, include_archive: bool) -> dict:
     converted: list[dict[str, object]] = []
     unresolved: list[dict[str, str]] = []
 
-    for note in sorted(root.rglob("*.md")):
-        if is_ignored(note, root):
-            continue
-        if not include_archive and under_archive(note, root):
-            continue
+    for note in iter_markdown_paths(root, include_archive=include_archive):
         text = note.read_text(encoding="utf-8", errors="replace")
         count = 0
 
@@ -480,18 +442,6 @@ def op_links(root: Path, apply: bool, include_archive: bool) -> dict:
 # Operation: report orphan and broken image attachments (report-only)
 # ---------------------------------------------------------------------------
 
-def _resolve_image(target: str, note_dir: Path, root: Path,
-                   basename_idx: dict[str, list[Path]], ext: set[str]) -> Path | None:
-    target = unquote(link_target(target).strip())
-    if not target or Path(target).suffix.lower() not in ext:
-        return None
-    for cand in ((note_dir / target), (root / target)):
-        if cand.exists() and cand.suffix.lower() in ext:
-            return cand.resolve()
-    hits = basename_idx.get(Path(target).name, [])
-    return hits[0] if len(hits) == 1 else None
-
-
 def _iter_image_targets(text: str, ext: set[str]) -> list[str]:
     """Every image link/embed target in a note's text (wiki and markdown)."""
     out: list[str] = []
@@ -507,28 +457,16 @@ def _iter_image_targets(text: str, ext: set[str]) -> list[str]:
 
 
 def op_attachments(root: Path, ext: set[str]) -> dict:
-    files = [p for p in root.rglob("*")
-             if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root)]
-    basename_idx: dict[str, list[Path]] = {}
-    for f in files:
-        basename_idx.setdefault(f.name, []).append(f.resolve())
+    files = list(iter_attachment_paths(root, ext, include_archive=True))
+    basename_idx = image_basename_index(root, ext)
 
     referenced: set[Path] = set()
     broken: list[dict[str, str]] = []
 
     for note in iter_notes(root, include_archive=True):
         note_archived = under_archive(note.path, root)
-        targets: list[str] = []
-        for _bang, raw in REF_WIKI_RE.findall(note.text):
-            if Path(link_target(raw)).suffix.lower() in ext:
-                targets.append(raw)
-        for raw in REF_MD_RE.findall(note.text):
-            if URL_RE.match(raw):
-                continue
-            if Path(unquote(link_target(raw)).strip()).suffix.lower() in ext:
-                targets.append(raw)
-        for raw in targets:
-            hit = _resolve_image(raw, note.path.parent, root, basename_idx, ext)
+        for raw in _iter_image_targets(note.text, ext):
+            hit = resolve_attachment(raw, note.path.parent, root, basename_idx, ext)
             if hit is not None:
                 referenced.add(hit)
             elif not note_archived:
@@ -556,16 +494,14 @@ def op_collocate(root: Path, apply: bool, include_archive: bool, ext: set[str],
     layout = (obsidian_config.parse_layout(layout_override) if layout_override
               else obsidian_config.attachment_layout(root, config_dir))
 
-    files = [p for p in root.rglob("*")
-             if p.is_file() and p.suffix.lower() in ext and not is_ignored(p, root)
-             and (include_archive or not under_archive(p, root))]
-    basename_idx = _image_basename_index(root, ext)
+    files = list(iter_attachment_paths(root, ext, include_archive=include_archive))
+    basename_idx = image_basename_index(root, ext)
 
     # Which note(s) reference each attachment (ownership decides where it belongs).
     owners: dict[Path, set[Path]] = {}
     for note in iter_notes(root, include_archive=include_archive):
         for raw in _iter_image_targets(note.text, ext):
-            hit = _resolve_image(raw, note.path.parent, root, basename_idx, ext)
+            hit = resolve_attachment(raw, note.path.parent, root, basename_idx, ext)
             if hit is not None:
                 owners.setdefault(hit, set()).add(note.path)
 
@@ -601,7 +537,7 @@ def op_collocate(root: Path, apply: bool, include_archive: bool, ext: set[str],
                       "note": rel(note, root)})
 
     def new_target_for(note_path: Path, target: str) -> str | None:
-        hit = _resolve_image(target, note_path.parent, root, basename_idx, ext)
+        hit = resolve_attachment(target, note_path.parent, root, basename_idx, ext)
         return new_target.get(hit) if hit is not None else None
 
     edits = _rewrite_image_targets(root, include_archive, ext, new_target_for)
@@ -713,10 +649,7 @@ def main() -> int:
         parser.error("choose at least one operation (--rename / --dedupe / --relink "
                      "/ --collocate / --links / --attachments / --prune / --all)")
 
-    root = Path(args.vault).resolve()
-    if not root.is_dir():
-        print(f"error: vault root not found: {root}", file=sys.stderr)
-        return 1
+    root = require_vault_dir(args.vault)
 
     ext = set(DEFAULT_EXT)
     ext.update("." + e.strip().lstrip(".").lower()
@@ -751,7 +684,7 @@ def main() -> int:
         result["prune"] = op_prune(root, args.apply, args.include_archive, keep)
 
     result["operations"] = operations
-    print(json.dumps(result, indent=2))
+    emit_json(result)
     return 0
 
 

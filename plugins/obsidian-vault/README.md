@@ -12,7 +12,7 @@ These routines run inside a **live Obsidian vault**, not a code repo, and reach 
 
 1. **Obsidian must be open** on the target vault while a routine runs (the CLI talks to the running app so the live index, daily-note config, and wikilink resolution stay correct).
 2. **The `obsidian` CLI must be installed.** It ships as the `obsidian-cli` skill from [`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills). Run `obsidian help` to confirm it's available and to see the authoritative command list.
-3. **Python 3.9+** must be on `PATH` for the deterministic [`scripts/`](scripts). They use the standard library only — nothing to `pip install`.
+3. **Python 3.12+** must be on `PATH` for the deterministic [`scripts/`](scripts). They use the standard library only — nothing to `pip install`.
 
 Structural moves the CLI doesn't cover (archiving notes, relocating attachments, deleting consumed captures) operate on the vault folder directly with the filesystem tools.
 

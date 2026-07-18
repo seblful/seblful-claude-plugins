@@ -11,14 +11,11 @@ Output (JSON to stdout):
     {"issues": [{"file", "undefined": [...], "unreferenced": [...]}]}
 """
 
-from __future__ import annotations
-
 import argparse
-import json
 from pathlib import Path
 
-from _vault import FOOTNOTE_DEF_RE, FOOTNOTE_REF_RE, iter_notes, load_note
-from _vault import Note
+from _vault import (FOOTNOTE_DEF_RE, FOOTNOTE_REF_RE, Note, emit_json,
+                    iter_notes, load_note, require_vault_dir, scan_exclude)
 
 
 def check_note(note: Note) -> dict[str, list[str]] | None:
@@ -41,13 +38,17 @@ def main() -> None:
     group.add_argument("--vault", help="Vault root to scan")
     args = parser.parse_args()
 
-    notes = [load_note(Path(args.file))] if args.file else iter_notes(Path(args.vault))
+    if args.file:
+        notes = [load_note(Path(args.file))]
+    else:
+        vault = require_vault_dir(args.vault)
+        notes = iter_notes(vault, exclude=scan_exclude(vault))
     issues: list[dict[str, object]] = []
     for note in notes:
         result = check_note(note)
         if result:
             issues.append({"file": str(note.path), **result})
-    print(json.dumps({"issues": issues}, indent=2))
+    emit_json({"issues": issues})
 
 
 if __name__ == "__main__":

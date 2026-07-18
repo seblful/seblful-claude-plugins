@@ -12,11 +12,10 @@ Output (JSON to stdout):
      "dates": ["2026-06-22", ..., "2026-06-28"]}
 """
 
-from __future__ import annotations
-
 import argparse
-import json
 from datetime import date, timedelta
+
+from _vault import emit_json
 
 
 def iso_week(target: date) -> dict[str, object]:
@@ -38,7 +37,7 @@ def main() -> None:
     parser.add_argument("--date", help="Target date YYYY-MM-DD (default: today)")
     args = parser.parse_args()
     target = date.fromisoformat(args.date) if args.date else date.today()
-    print(json.dumps(iso_week(target), indent=2))
+    emit_json(iso_week(target))
 
 
 if __name__ == "__main__":

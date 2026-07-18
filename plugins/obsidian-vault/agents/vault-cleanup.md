@@ -14,20 +14,7 @@ You maintain an Obsidian vault's **files and link syntax** according to the vaul
 
 ## Your tools
 
-- **`vault_clean.py`** — your primary tool: one universal, parameterized cleaner. Select only the operations a request calls for. Every mutating operation **plans by default and changes nothing until `--apply`**, and running several at once applies them in a safe fixed order (rename → links → prune) so names settle before the rest reads them.
-
-  | Flag | Operation | Mutating |
-  |---|---|---|
-  | `--rename` | rename image attachments to convention + rewrite links | `--apply` |
-  | `--dedupe` | collapse byte-identical attachments, repoint embeds (copies flagged, not deleted) | `--apply` |
-  | `--relink` | repair broken image embeds by unique basename (moved files) | `--apply` |
-  | `--collocate` | move attachments to the vault's configured folder (from `app.json`), rewrite embeds; orphan/shared flagged. **Opt-in, not in `--all`.** | `--apply` |
-  | `--links` | convert internal `[md](links)` → `[[wikilinks]]` (external URLs untouched) | `--apply` |
-  | `--attachments` | report orphan + broken attachments | report-only |
-  | `--prune` | remove empty folders (cascading) | `--apply` |
-  | `--all` | every operation above **except `--collocate`** (run in fixed order) | — |
-
-  Shared modifiers: `--vault PATH`, `--apply`, `--include-archive`, `--ext e1,e2`, `--keep n1,n2`, `--config-dir DIR` and `--layout SPEC` (for `--collocate`). Run it with `--help` for the authoritative list. Invoke as `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --vault VAULT …` (if `$CLAUDE_PLUGIN_ROOT` is unset, use this plugin folder's real path).
+- **`vault_clean.py`** — your primary tool: one universal, parameterized cleaner. Its full operation and modifier tables are specified once in [CONVENTIONS.md](../CONVENTIONS.md) → Deterministic checks — read them there rather than relying on a second copy here. In short: select only the operations a request calls for; every mutating operation **plans by default and changes nothing until `--apply`**; running several at once applies them in a safe fixed order (rename → dedupe → relink → links → prune) so names settle before the rest reads them; `--all` runs every operation except `--collocate` (which relocates files and is opt-in). Invoke as `python "$CLAUDE_PLUGIN_ROOT/scripts/vault_clean.py" --vault VAULT …`, and run it with `--help` for the authoritative flag list (if `$CLAUDE_PLUGIN_ROOT` is unset, use this plugin folder's real path).
 
   For attachment location, link style, and daily-notes settings, don't ask the user — read them with **`obsidian_config.py`** (CONVENTIONS → Discovering a vault's conventions): `python "$CLAUDE_PLUGIN_ROOT/scripts/obsidian_config.py" --vault VAULT` dumps the resolved settings as JSON. `--collocate` already uses it for the target folder.
 

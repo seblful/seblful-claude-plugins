@@ -30,7 +30,15 @@ Prefer the CLI for content operations so the live index, daily-note configuratio
 
 ## Deterministic checks: use the scripts
 
-Whole-vault checks that are pure logic — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number, attachment hygiene — are done by the scripts in `scripts/`, not re-derived by reasoning each run. They are stdlib-only Python 3.9+ and emit JSON. Most **report rather than fix**: the routine reads the JSON and applies fixes through the CLI so the live index stays correct. Those that perform filesystem operations the CLI can't (`year_sweep`, and the mutating operations of `vault_clean`) **plan by default and act only on `--apply`**.
+Whole-vault checks that are pure logic — broken links, frontmatter schema, footnote integrity, the year sweep, the ISO week number, attachment hygiene — are done by the scripts in `scripts/`, not re-derived by reasoning each run. They are stdlib-only Python 3.12+ and emit JSON. Most **report rather than fix**: the routine reads the JSON and applies fixes through the CLI so the live index stays correct. Those that perform filesystem operations the CLI can't (`year_sweep`, and the mutating operations of `vault_clean`) **plan by default and act only on `--apply`**.
+
+The scripts fail loudly on a missing `--vault` path rather than reporting a misleading empty ("all clean") result, and adapt to the vault's own conventions where they can:
+
+- the daily-note filename format is read from `obsidian_config`, so notes are classified by the vault's real daily format, not a hardcoded one;
+- `Archive/` and `Weekly/` are matched case-insensitively, so a vault that capitalizes them differently is still handled (and swept into its existing archive, never a forked one);
+- **template folders** (the core Templates plugin's `folder` and the Templater plugin's `templates_folder`) are discovered from config and skipped when scanning note *content* — their `{{date}}` / `<% tp… %>` placeholders are not real frontmatter or links;
+- frontmatter parsing accepts inline flow-style lists (`tags: [a, b]`) as well as block lists;
+- `check_links` matches a wikilink by its basename, so path-qualified and relative links (`[[../Area/Note]]`) resolve; links to non-note files (`[[image.png]]`, `[[data.base]]`) and wikilinks inside code are not reported as broken.
 
 Invoke them from the plugin root, pointing `--vault` at the vault folder:
 
@@ -107,7 +115,7 @@ Rules:
 
 ## Attachments
 
-An attachment is any non-markdown file a note depends on — embedded via `![[file]]` / `![](path)`, referenced by `[[file]]` / `[text](file)`, or named in an image-valued property. (This is the same definition as in Folder roles, stated in file terms.)
+An attachment is any non-markdown file a note depends on — embedded via `![[file]]` / `![](path)`, referenced by `[[file]]` / `[text](file)`, or named in an image-valued property.
 
 - **Naming.** Image attachments are named `YYYY-MM-DD-<unix-ms>.<ext>` — the capture date, then the Unix epoch in **milliseconds**, then the extension (e.g. `2026-07-14-1784035374192.png`). The name is note-independent, chronologically sortable, and collision-free. Derive the timestamp from an `IMG-YYYYMMDDHHmmssSSS` filename when the file has one (preserving each image's original moment); otherwise from the file's modification time. Within a single folder, a clash gets a `-1`, `-2`, … suffix. Files already in this form are left untouched, so renaming is safe to re-run.
 - **Empty folders.** Directories left empty after files move — e.g. the nested skeleton an attachment plugin leaves behind when files return to a flat layout — carry no content and are pruned bottom-up (a parent emptied by pruning its children goes too). Never touch `.git`, `.obsidian`, or `.trash`.
@@ -130,7 +138,7 @@ Mechanical upkeep of MOCs (fixing broken entries, adding obviously-missing notes
 - **`Archive/`** is a sibling of the daily and weekly folders. Archive paths **mirror** live paths and partition by year: a daily note archives to `Archive/Daily/{YYYY}/`, a weekly note to `Archive/Weekly/{YYYY}/`, using the year the note belongs to.
 - **Year sweep (self-healing).** Whenever a routine touches `Weekly/`, run `year_sweep.py` to archive any report whose `year` is earlier than the current year. Because the sweep runs on every touch, a missed year boundary is cleaned up on the next invocation.
 - Archived content is **frozen**: move it as-is, don't rewrite links or frontmatter inside it.
-- An attachment is any non-markdown file a note depends on — embedded via `![[file]]` / `![](path)`, or living in a sibling folder named after the note. When archiving, move attachments into an `attachments/` subfolder of the same mirrored archive path.
+- Attachments (defined under Attachments above) move with the notes they belong to: when archiving, move a note's attachments into an `attachments/` subfolder of the same mirrored archive path.
 
 ## Language and substance
 
