@@ -1,17 +1,18 @@
 # Seblful Claude Plugins Marketplace
 
-A curated marketplace of Claude Code plugins, grouped by **what they act on**: your Python code, any codebase, your Obsidian notes, and the conversation itself.
+A curated marketplace of Claude Code plugins, grouped by **what they act on**: your Python code, any codebase, your Obsidian notes, the conversation itself, and your Claude setup across projects.
 
 > **⚠️ Important:** Make sure you trust a plugin before installing, updating, or using it. Anthropic does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended or that they won't change. See each plugin's source for more information.
 
 ## Structure
 
-Four plugins, grouped by their target:
+Five plugins, grouped by their target:
 
 - **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack)
 - **`/plugins/code`** — acts on any codebase: review, bug diagnosis, and architectural deepening
 - **`/plugins/obsidian-vault`** — acts on your notes: maintenance routines for Obsidian vaults
 - **`/plugins/lenses`** — acts on you and the conversation: code maps, terse mode, plan grilling, and a teaching workspace
+- **`/plugins/meta`** — acts across all your projects and on your Claude setup: capturing bugs and ideas to a central GitHub backlog
 
 ## Installation
 
@@ -28,6 +29,7 @@ Then install plugins individually:
 /plugin install code@seblful-claude-plugins
 /plugin install obsidian-vault@seblful-claude-plugins
 /plugin install lenses@seblful-claude-plugins
+/plugin install meta@seblful-claude-plugins
 ```
 
 Or browse them in `/plugin > Discover`.
@@ -68,6 +70,12 @@ Or browse them in `/plugin > Discover`.
 - **caveman** (command) — Ultra-compressed terse communication mode (~75% token reduction).
 - **grill-me** (command) — Stress-test a plan through relentless one-question-at-a-time interview.
 - **teach** (skill) — Stateful, multi-session teaching workspace: grounds every lesson in a mission, gathers high-trust resources, and builds storage strength through beautiful interactive HTML lessons, glossaries, and learning records.
+
+### meta
+
+> Requires the **`gh` CLI**, authenticated (`gh auth status`), and a **`CLAUDE_ISSUES_REPO`** env var set to an `owner/name` backlog repo — there is no default, and the skill stops if it is unset.
+
+- **issue** (skill) — Capture a bug, feature, enhancement, task, or idea from a session as a GitHub issue in your central backlog repo. Classifies the item, checks for duplicates, uses only existing labels, and always drafts and confirms before filing — never files silently. Also offers itself proactively when one of your plugins or systems misbehaves.
 
 ## Plugin Structure
 
