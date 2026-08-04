@@ -9,7 +9,7 @@ A curated marketplace of Claude Code plugins, grouped by **what they act on**: y
 Five plugins, grouped by their target:
 
 - **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack)
-- **`/plugins/code`** — acts on any codebase: review, bug diagnosis, and architectural deepening
+- **`/plugins/code`** — acts on any codebase: review, bug diagnosis, refactoring, and architectural deepening
 - **`/plugins/obsidian-vault`** — acts on your notes: maintenance routines for Obsidian vaults
 - **`/plugins/lenses`** — acts on you and the conversation: code maps, terse mode, plan grilling, and a teaching workspace
 - **`/plugins/meta`** — acts across all your projects and on your Claude setup: capturing bugs and ideas to a central GitHub backlog
@@ -46,8 +46,17 @@ Or browse them in `/plugin > Discover`.
 
 - **code-reviewer** (agent) — Senior code reviewer that evaluates diffs across correctness, readability, architecture, security, and performance, with severity-labeled line-level suggestions.
 - **diagnosing-bugs** (skill) — A feedback-loop-first discipline for hard bugs and performance regressions: build a tight red-capable repro, minimise it, generate falsifiable hypotheses, instrument, fix with a regression test, then clean up.
+The two refactor commands are split by **what they change**, with one rule between them — *would the fix change what a caller must know?* No → `/refactor-code`. Yes → `/refactor-modules`. Each pairs a process command with a reference skill:
+
+|  | Reference layer (skill) | Process layer (command) |
+| --- | --- | --- |
+| **Implementations** — inside a body, callers unaffected | `code-smells` | `/refactor-code` |
+| **Interfaces & seams** — the shape callers see | `codebase-design` | `/refactor-modules` |
+
+- **code-smells** (skill) — Catalog of implementation-level smells across three lenses (correctness & robustness, bad practices & idiom, duplication/dead weight/complexity), each with its fix and — equally important — the false positives to suppress.
+- **refactor-code** (command) — Codebase-wide sweep against the `code-smells` catalog, every finding verified by hand and ranked into an Artifact defect report evidenced by before/after code — then applied in attributable batches against a baseline verification signal, behaviour changes never mixed with pure refactors, only on your approval.
 - **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
-- **improve-codebase-architecture** (command) — Surface deepening opportunities and reduce shallow modules, presented as a visual Artifact report.
+- **refactor-modules** (command) — Surface deepening opportunities and reduce shallow modules, presented as a diagram-led Artifact report, then worked through as a design conversation.
 
 ### obsidian-vault
 

@@ -1,7 +1,7 @@
 {
   "name": "code",
-  "version": "0.7.0",
-  "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, the codebase-design vocabulary, and an architecture-review command that surfaces deepening opportunities as a visual Artifact report.",
+  "version": "0.8.0",
+  "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired refactor commands split by what they change: /refactor-code for implementations (driven by the code-smells catalog) and /refactor-modules for interfaces and seams (driven by the codebase-design vocabulary), each auditing into a visual Artifact report before touching anything.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["code-review", "debugging", "bug-diagnosis", "feedback-loop", "regression-test", "performance", "refactoring", "architecture", "deepening", "codebase-design", "deep-modules"]
+  "keywords": ["code-review", "debugging", "bug-diagnosis", "feedback-loop", "regression-test", "performance", "refactoring", "refactor", "code-smells", "technical-debt", "bad-practices", "architecture", "deepening", "codebase-design", "deep-modules"]
 }
