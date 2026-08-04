@@ -47,7 +47,7 @@ Or browse them in `/plugin > Discover`.
 - **code-reviewer** (agent) — Senior code reviewer that evaluates diffs across correctness, readability, architecture, security, and performance, with severity-labeled line-level suggestions.
 - **diagnosing-bugs** (skill) — A feedback-loop-first discipline for hard bugs and performance regressions: build a tight red-capable repro, minimise it, generate falsifiable hypotheses, instrument, fix with a regression test, then clean up.
 - **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
-- **improve-codebase-architecture** (command) — Surface deepening opportunities and reduce shallow modules, presented as a visual HTML report.
+- **improve-codebase-architecture** (command) — Surface deepening opportunities and reduce shallow modules, presented as a visual Artifact report.
 
 ### obsidian-vault
 

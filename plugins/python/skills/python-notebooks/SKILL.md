@@ -38,6 +38,7 @@ A notebook executed on a schedule is a script in costume — promote it. If the 
 3. **Markdown headings** section the analysis — a short lead-in per section, not an essay. The code and its output carry the story; prose only frames it.
 4. **One logical step per cell** — cheap to re-run, meaningful on its own. Name intermediate results; don't chain everything into one uninspectable expression.
 5. **Findings stated in a line or two** next to the evidence. Skip meta-commentary — "now we will plot the trend" narrates what the next cell already shows.
+6. **Headings and plot titles name the topic or metric, never a finding** — "Cancel rate by market", not "Pittsburgh cancels 72%". A title that states a result dates the notebook to one run's data; the finding belongs in the prose next to the evidence, where a re-run can contradict it. Sibling headings and sibling figures follow the same convention as each other, so the outline and the figure set each read as one set rather than a pile of one-offs.
 
 Between setup and findings, follow the data's logical order — load → inspect → clean → transform → analyze — each step building on the one before, nothing used before it's introduced. The same order holds inside each step: within a section, derive before you display. A reader scrolling top to bottom follows the reasoning without jumping around.
 
@@ -95,6 +96,7 @@ Notebooks that must stay green get a CI smoke run: `uv run pytest --nbmake noteb
 - Imports scattered mid-notebook → consolidate into the setup cell.
 - Absolute or cwd-dependent paths → `pathlib` from project root.
 - Unseeded randomness under stated conclusions → seed in setup.
+- Section or plot title baking in a specific finding, or inconsistent with its siblings → generic, parallel names matching the notebook's other titles.
 - Giant do-everything notebook → split by question.
 - `.ipynb` with outputs committed → pair with `jupytext`, gitignore the `.ipynb`.
 - `.ipynb` edited as raw JSON → notebook-aware tooling (in Claude Code: `NotebookEdit`); the format corrupts easily.

@@ -1,6 +1,6 @@
 {
   "name": "python",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Robust Python coding, testing, and notebook practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, reproducible Jupyter notebooks, on top of the uv/ruff/ty/pytest stack.",
   "author": {
     "name": "Aliaksei Chymba",

@@ -1,6 +1,6 @@
 ---
-description: Scan a codebase for deepening opportunities, present them as a visual HTML report, then work through whichever one you pick.
-allowed-tools: Read, Glob, Grep, Agent, Write, Bash
+description: Scan a codebase for deepening opportunities, present them as a visual Artifact report, then work through whichever one you pick.
+allowed-tools: Read, Glob, Grep, Agent, Write, Skill, Artifact
 ---
 
 # Improve Codebase Architecture
@@ -26,28 +26,33 @@ Use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't foll
 
 Apply the **deletion test** to anything you suspect is shallow: would deleting it concentrate complexity, or just move it? A "yes, concentrates" is the signal you want.
 
-### 2. Present candidates as an HTML report
+### 2. Present candidates as an Artifact report
 
-Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), and write to `<tmpdir>/architecture-review-<timestamp>.html` so each run gets a fresh file. Open it for the user — `xdg-open <path>` on Linux, `open <path>` on macOS, `start <path>` on Windows — and tell them the absolute path.
+Publish the review as a **Claude Artifact** so the user gets a clickable, shareable URL and nothing lands in the repo. Load the `artifact-design` skill first — the Artifact contract requires it, and it owns how the page looks. Everything below is about what the report *says*. Write the report to the session scratchpad as `architecture-review.html`, then call `Artifact` with that path, a `title`, a one-sentence `description`, and a `favicon`. Give the user the returned URL, not a filesystem path. Re-reviewing the same repo republishes from the same filename, which redeploys to the same URL.
 
-The report uses **Tailwind via CDN** for layout and styling, and **Mermaid via CDN** for diagrams where a graph/flow/sequence reliably communicates the structure. Mix Mermaid with hand-crafted CSS/SVG visuals — use Mermaid when relationships are graph-shaped (call graphs, dependencies, sequences), and hand-built divs/SVG when you want something more editorial (mass diagrams, cross-sections, collapse animations). Each candidate gets a **before/after visualisation**. Be visual.
+The report is a header, one card per candidate, and a closing **Top recommendation** — which candidate you'd tackle first, one sentence on why, linked to its card. The header is repo name, date, and a compact legend (solid box = module, dashed line = seam, red arrow = leakage, thick inverted box = deep module). No introduction paragraph — straight into the candidates.
 
-For each candidate, render a card with:
+Each candidate card carries:
 
-- **Files** — which files/modules are involved
-- **Problem** — why the current architecture is causing friction
-- **Solution** — plain English description of what would change
-- **Benefits** — explained in terms of locality and leverage, and how tests would improve
-- **Before / After diagram** — side-by-side, custom-drawn, illustrating the shallowness and the deepening
-- **Recommendation strength** — one of `Strong`, `Worth exploring`, `Speculative`, rendered as a badge
+- **Title** — short, names the deepening (e.g. "Collapse the Order intake pipeline")
+- **Recommendation strength** — `Strong`, `Worth exploring`, or `Speculative`, as a badge, plus a tag for the dependency category (`in-process`, `local-substitutable`, `ports & adapters`, `mock`)
+- **Files** — monospaced list of the files/modules involved
+- **Before / After diagram** — the centrepiece, side by side, illustrating the shallowness and the deepening
+- **Problem** — one sentence. What hurts.
+- **Solution** — one sentence. What changes.
+- **Wins** — bullets, ≤6 words, named in glossary terms: "locality: bugs concentrate in one module", "leverage: one interface, N call sites", "delete 4 shallow wrappers". Never "easier to maintain" or "cleaner code".
 
-End the report with a **Top recommendation** section: which candidate you'd tackle first and why.
+The diagrams carry the weight; prose stays sparse. If a diagram needs a paragraph to be understood, redraw the diagram. Be visual, and vary the pattern — don't let every candidate look the same:
 
-**Use the codebase's own vocabulary for the domain, and the `/codebase-design` vocabulary for the architecture.** If the domain calls it "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
+- **Mermaid flowchart or sequence** — the workhorse for "X calls Y calls Z, and look at the mess" and "before: 6 round-trips; after: 1". Artifacts render `<pre class="mermaid">` natively, so there's no library to load — but Mermaid's palette comes from its own theme rather than the page's, so pin `theme: neutral` in the diagram's config frontmatter and colour leakage explicitly with `classDef`.
+- **Hand-built boxes and arrows** — bordered divs, arrows as inline SVG. Reach for this when the "after" should feel like one thick-bordered deep module with greyed-out internals, and whenever the visual has to read exactly right in both light and dark.
+- **Cross-section** — stacked horizontal bands for the layers a call passes through. Before: 6 thin layers each doing nothing. After: 1 thick band.
+- **Mass diagram** — interface rectangle against implementation rectangle. Shallow: near-equal. Deep: short interface, tall implementation.
+- **Call-graph collapse** — a tree of nested call boxes, collapsed in the "after" into one box with the now-internal calls faded inside.
 
-See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
+**Use the codebase's own vocabulary for the domain, and the `/codebase-design` vocabulary for the architecture.** If the domain calls it "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service." No hedging, no throat-clearing: if a sentence could be a bullet, make it a bullet.
 
-Do NOT propose interfaces yet. After the file is written, ask the user: "Which of these would you like to explore?"
+Do NOT propose interfaces yet. After the report is published, ask the user: "Which of these would you like to explore?"
 
 ### 3. Work through the chosen candidate
 

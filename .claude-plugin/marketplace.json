@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
   "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -14,7 +14,7 @@
     },
     {
       "name": "code",
-      "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, the codebase-design vocabulary, and an architecture-review command that surfaces deepening opportunities as a visual HTML report.",
+      "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, the codebase-design vocabulary, and an architecture-review command that surfaces deepening opportunities as a visual Artifact report.",
       "source": "./plugins/code"
     },
     {
