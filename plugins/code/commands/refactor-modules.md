@@ -16,7 +16,7 @@ This command changes **interfaces** and where they live. Its sibling `/refactor-
 
 So splitting a god object, deleting a wrapper callers go through, moving a seam, and reshaping a signature are all in scope. Fixing a swallowed exception, flattening nesting, deleting dead code, and renaming a local are not — a caller's view is unchanged, so they belong to `/refactor-code` and its `code-smells` catalog. When the sweep turns those up, close with one line pointing at `/refactor-code`; don't fix them here, and don't give them cards.
 
-The two reports are deliberately different in shape, so they never read as the same document: `/refactor-code` produces a numbered defect list evidenced by before/after **code**, and ends by applying fixes in batches. This one is **diagram-led**, and ends in a design conversation.
+The two outputs are deliberately different in shape, so they never read as the same document: `/refactor-code` just lists its findings — a numbered defect list, tiered by severity and evidenced by before/after **code** — and ends by applying fixes in batches. This one is a **diagram-led Artifact**, and ends in a design conversation.
 
 This command is built on a shared design vocabulary:
 

@@ -1,6 +1,6 @@
 ---
-description: Sweep a codebase for bad practices, latent bugs, and bad implementations, publish a ranked audit as a visual Artifact report, then apply only the fixes you approve.
-allowed-tools: Read, Glob, Grep, Bash, Edit, Write, Agent, Skill, Artifact
+description: Sweep a codebase for bad practices, latent bugs, and bad implementations, list the findings ranked by severity, then apply only the fixes you approve.
+allowed-tools: Read, Glob, Grep, Bash, Edit, Write, Agent, Skill
 ---
 
 # Refactor Code
@@ -71,27 +71,34 @@ Then classify each survivor by **kind** — this distinction drives everything d
 
 And by **severity**: `High` (wrong results, data loss, silent failure), `Medium` (will bite on the next change, or actively misleads), `Low` (dead weight, noise).
 
-## Phase 3 — Publish the audit, then stop
+## Phase 3 — List the findings, then stop
 
-Load the `artifact-design` skill first — the Artifact contract requires it and it owns how the page looks. Everything here is about what the report *says*.
+**Just list them — no Artifact, no report file.** That is also what keeps this command distinct from `/refactor-modules`, which publishes a diagram-led page. Here the *code* is the evidence and the output is a scannable defect list.
 
-Write to the session scratchpad as `refactor-code-audit.html`, then call `Artifact` with that path, a title, a one-sentence description, and a favicon. Give the user the URL, never a filesystem path. Re-running on the same repo republishes the same filename, which redeploys to the same URL.
+Thirty findings cannot all carry equal weight, so **detail scales with severity**. Three tiers, in this order, each numbered in one continuous sequence so the user can answer "do 3, 7, 12":
 
-**The report is a defect list, not a design document** — that is what keeps it visually distinct from `/refactor-modules`, whose report is diagram-led. Here the *code* is the evidence: every card shows real before/after, and there are no diagrams.
+Open with a two-line preamble, no introduction paragraph: scope (dirs swept / excluded) and the **baseline strip** — each verification command with its status, plus the untested-area count. Then the counts per tier.
 
-- **Header** — repo, date, scope (dirs swept, dirs excluded), and a **baseline strip**: each verification command with its status, plus untested-area count. No introduction paragraph.
-- **Finding cards**, `High` → `Low`, each numbered so the user can answer "do 3, 7, 12":
-  - **Title** — names the fix, imperative: "Stop swallowing the parse error in `load_config`"
-  - **Badges** — severity, and kind (`Refactor` / `Behaviour change`)
-  - **Files** — monospaced `path:line` list
-  - **Before / After** — real code, side by side, minimal but syntactically complete. The centrepiece.
-  - **Smell** — one sentence. What is wrong.
-  - **Consequence** — one sentence. What it costs. For a behaviour change, the explicit old → new semantics.
-  - **Blast radius** — call sites touched, and whether the verification signal covers them
+**Tier 1 — `High` (wrong results, data loss, silent failure).** Full treatment, one block each:
+
+- **Title** — names the fix, imperative: "Stop swallowing the parse error in `load_config`"
+- **Kind** — `Refactor` or `Behaviour change`, on the title line
+- **Files** — `path:line` list
+- **Before / After** — real code in two fenced blocks, minimal but syntactically complete. The centrepiece. Keep each side under ~12 lines; trim to the changed region rather than pasting the function.
+- **Smell** — one sentence. What is wrong.
+- **Consequence** — one sentence. What it costs. For a behaviour change, the explicit old → new semantics.
+- **Blast radius** — call sites touched, and whether the verification signal covers them.
+
+**Tier 2 — `Medium` (will bite on the next change, or actively misleads).** One tight entry each, no code blocks: numbered title, kind, `path:line`, then a single line of smell → consequence. Add a one-line `before → after` inline only where the fix is not obvious from the title.
+
+**Tier 3 — `Low` (dead weight, noise).** A table, one row per finding: number, `path:line`, and the fix in a few words. No prose.
+
+Close with:
+
 - **Recommended batch** — which findings to take first and why, in one sentence. Bias toward high severity with tight blast radius.
 - **Handed off** — the table above, with what was found and where it goes. Listed, not fixed.
 
-Prose stays sparse; the before/after carries the weight. Never write "cleaner code" or "easier to maintain" — say what changes.
+Prose stays sparse; the before/after carries the weight. Never write "cleaner code" or "easier to maintain" — say what changes. If the sweep produced more than ~10 `Low` findings, keep the table and say the count rather than padding it out.
 
 **Then stop and ask which findings to apply.** Do not edit anything before an answer.
 
@@ -111,7 +118,7 @@ Where a batch has no verification coverage, say so as you apply it, and lean har
 
 ## Phase 5 — Report
 
-Terminal summary, no Artifact needed:
+Close with a short summary:
 
 - [ ] Batches applied, with the verification result after each
 - [ ] **Behaviour changes**, listed separately, each as old → new semantics

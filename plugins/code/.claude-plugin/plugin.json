@@ -1,7 +1,7 @@
 {
   "name": "code",
-  "version": "0.8.0",
-  "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired refactor commands split by what they change: /refactor-code for implementations (driven by the code-smells catalog) and /refactor-modules for interfaces and seams (driven by the codebase-design vocabulary), each auditing into a visual Artifact report before touching anything.",
+  "version": "0.9.0",
+  "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired refactor commands split by what they change: /refactor-code for implementations (driven by the code-smells catalog) and /refactor-modules for interfaces and seams (driven by the codebase-design vocabulary), each auditing before touching anything — /refactor-code into a severity-tiered defect list, /refactor-modules into a visual Artifact report.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"

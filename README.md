@@ -54,7 +54,7 @@ The two refactor commands are split by **what they change**, with one rule betwe
 | **Interfaces & seams** — the shape callers see | `codebase-design` | `/refactor-modules` |
 
 - **code-smells** (skill) — Catalog of implementation-level smells across three lenses (correctness & robustness, bad practices & idiom, duplication/dead weight/complexity), each with its fix and — equally important — the false positives to suppress.
-- **refactor-code** (command) — Codebase-wide sweep against the `code-smells` catalog, every finding verified by hand and ranked into an Artifact defect report evidenced by before/after code — then applied in attributable batches against a baseline verification signal, behaviour changes never mixed with pure refactors, only on your approval.
+- **refactor-code** (command) — Codebase-wide sweep against the `code-smells` catalog, every finding verified by hand and listed as a defect list tiered by severity and evidenced by before/after code — then applied in attributable batches against a baseline verification signal, behaviour changes never mixed with pure refactors, only on your approval.
 - **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
 - **refactor-modules** (command) — Surface deepening opportunities and reduce shallow modules, presented as a diagram-led Artifact report, then worked through as a design conversation.
 
