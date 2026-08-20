@@ -82,9 +82,9 @@ The two refactor commands are split by **what they change**, with one rule betwe
 
 ### meta
 
-> Requires the **`gh` CLI**, authenticated (`gh auth status`), and a **`CLAUDE_ISSUES_REPO`** env var set to an `owner/name` backlog repo — there is no default, and the skill stops if it is unset.
+> Requires the **`gh` CLI**, authenticated (`gh auth status`), and a **`CLAUDE_ISSUES_REPO`** env var set to an `owner/name` backlog repo — there is no default, and the command stops if it is unset.
 
-- **issue** (skill) — Capture a bug, feature, enhancement, task, or idea from a session as a GitHub issue in your central backlog repo. Classifies the item, checks for duplicates, uses only existing labels, and always drafts and confirms before filing — never files silently. Also offers itself proactively when one of your plugins or systems misbehaves.
+- **issue** (command) — Capture a bug, feature, enhancement, task, or idea from a session as a GitHub issue in your central backlog repo. Takes what to capture as an argument, or falls back to what the session just landed on. Classifies the item, checks for duplicates, uses only existing labels, and always drafts and confirms before filing — never files silently.
 
 ## Plugin Structure
 

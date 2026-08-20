@@ -1,7 +1,7 @@
 {
   "name": "meta",
-  "version": "0.2.0",
-  "description": "Meta-level tools that act across all your projects and on your Claude Code setup itself, rather than on one codebase. Currently: issue — capture bugs, features, tasks, and ideas from a session as GitHub issues in the backlog repo set by CLAUDE_ISSUES_REPO (no default), dedup-checked and confirmed before filing.",
+  "version": "0.3.0",
+  "description": "Meta-level tools that act across all your projects and on your Claude Code setup itself, rather than on one codebase. Currently: /issue — capture bugs, features, tasks, and ideas from a session as GitHub issues in the backlog repo set by CLAUDE_ISSUES_REPO (no default), dedup-checked and confirmed before filing.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"

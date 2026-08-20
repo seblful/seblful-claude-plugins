@@ -1,13 +1,16 @@
 ---
-name: issue
-description: Capture a bug, feature, enhancement, task, or idea as a GitHub issue in the backlog repo set by the CLAUDE_ISSUES_REPO env var (no default — stops if it is unset). Use when the user says /issue or asks to "file/open/log an issue", "track this", "add a bug/feature", "capture this idea" — and proactively when one of the user's plugins or systems misbehaves and the failure would otherwise be lost. Drafts and confirms before filing; never files silently.
+description: Capture a bug, feature, enhancement, task, or idea as a GitHub issue in the backlog repo set by the CLAUDE_ISSUES_REPO env var (no default — stops if it is unset). Classifies the item, checks for duplicates, uses only existing labels, and always drafts and confirms before filing.
+argument-hint: [what to capture — omit to use what just happened in this session]
+allowed-tools: Bash, Read, Write, Grep
 ---
 
 # File Issue
 
 Capture a **bug, feature request, enhancement, task, or idea** as a GitHub issue in a **backlog repo you configure**, so it is remembered instead of lost when the session ends. Nothing here is tied to a specific project — point it at any repo and reuse it for any current or future system or skill.
 
-**Core rule — draft, then confirm.** Filing or commenting is outward-facing. Always show the full draft and get an explicit "yes" before running `gh issue create`, including when you offer proactively. Never file silently.
+`$ARGUMENTS`, if given, is what to capture. If it is empty, capture what the conversation was just about — the failure you observed, the idea the user floated — and name what you picked before drafting. If nothing in the session is capturable, ask rather than inventing an item.
+
+**Core rule — draft, then confirm.** Filing or commenting is outward-facing. Always show the full draft and get an explicit "yes" before running `gh issue create` — including when you reached this command by offering it yourself. Never file silently.
 
 ## Prerequisites
 
@@ -25,10 +28,10 @@ gh repo view "$CLAUDE_ISSUES_REPO" --json nameWithOwner -q .nameWithOwner
 
 If `$CLAUDE_ISSUES_REPO` is empty this errors — treat that as "not configured" and stop. Otherwise pass `--repo <that value>` to **every** `gh` command below, so the working directory never decides where the issue lands. If the repo is inaccessible, say so and stop.
 
-## When to use
+## What gets captured
 
-- **On request** — the user types `/issue` or asks to "file/open/log an issue", "track this", "add a bug", "file a feature request", "capture this idea". Capture whatever they point at.
-- **Proactively** — when one of the user's plugins or systems misbehaves during a session (a skill, command, agent, or hook triggering when it should not, doing the wrong thing, or failing), even while working in an unrelated project. Offer it, e.g. *"Want me to file that as an issue?"*, then draft on agreement. Do not let a real failure evaporate just because the user did not think to ask.
+- **What the user points at** — whatever `$ARGUMENTS` names, or the thing the conversation just landed on.
+- **A misbehaving plugin or system** — a skill, command, agent, or hook that triggered when it should not, did the wrong thing, or failed, even while working in an unrelated project. This is the case most likely to evaporate unrecorded, so capture the failure while the evidence is still in the session: the exact error, the trigger, what you expected instead. If you noticed such a failure and the user has not asked yet, offer — *"Want me to file that as an issue?"* — and run this command on agreement.
 
 ## Steps
 
