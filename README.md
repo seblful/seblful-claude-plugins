@@ -46,17 +46,17 @@ Or browse them in `/plugin > Discover`.
 
 - **code-reviewer** (agent) — Senior code reviewer that evaluates diffs across correctness, readability, architecture, security, and performance, with severity-labeled line-level suggestions.
 - **diagnosing-bugs** (skill) — A feedback-loop-first discipline for hard bugs and performance regressions: build a tight red-capable repro, minimise it, generate falsifiable hypotheses, instrument, fix with a regression test, then clean up.
-The two refactor commands are split by **what they change**, with one rule between them — *would the fix change what a caller must know?* No → `/refactor-code`. Yes → `/refactor-modules`. Each pairs a process command with a reference skill:
+The two codebase commands are split by **what they change**, with one rule between them — *would the fix change what a caller must know?* No → `/code-sweep`. Yes → `/refactor-interfaces`. Each pairs a process command with a reference skill:
 
 |  | Reference layer (skill) | Process layer (command) |
 | --- | --- | --- |
-| **Implementations** — inside a body, callers unaffected | `code-smells` | `/refactor-code` |
-| **Interfaces & seams** — the shape callers see | `codebase-design` | `/refactor-modules` |
+| **Implementations** — inside a body, callers unaffected | `code-smells` | `/code-sweep` |
+| **Interfaces & seams** — the shape callers see | `codebase-design` | `/refactor-interfaces` |
 
 - **code-smells** (skill) — Catalog of implementation-level smells across three lenses (correctness & robustness, bad practices & idiom, duplication/dead weight/complexity), each with its fix and — equally important — the false positives to suppress.
-- **refactor-code** (command) — Codebase-wide sweep against the `code-smells` catalog, every finding verified by hand and listed as a defect list tiered by severity and evidenced by before/after code — then applied in attributable batches against a baseline verification signal, behaviour changes never mixed with pure refactors, only on your approval.
+- **code-sweep** (command) — Codebase-wide sweep against the `code-smells` catalog, every finding verified by hand and listed as a defect list tiered by severity and evidenced by before/after code — then applied in attributable batches against a baseline verification signal, behaviour changes never mixed with pure refactors, only on your approval.
 - **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
-- **refactor-modules** (command) — Surface deepening opportunities and reduce shallow modules, presented as a diagram-led Artifact report, then worked through as a design conversation.
+- **refactor-interfaces** (command) — Surface deepening opportunities and reduce shallow modules, presented as a diagram-led Artifact report, then worked through as a design conversation.
 
 ### obsidian-vault
 

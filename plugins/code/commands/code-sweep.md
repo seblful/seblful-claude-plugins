@@ -3,7 +3,7 @@ description: Sweep a codebase for bad practices, latent bugs, and bad implementa
 allowed-tools: Read, Glob, Grep, Bash, Edit, Write, Agent, Skill
 ---
 
-# Refactor Code
+# Code Sweep
 
 Find what is wrong with code that already works, then fix it — **audit first, apply only on approval**.
 
@@ -11,10 +11,10 @@ Sweep the whole codebase. `$ARGUMENTS`, if given, narrows it to that subtree; it
 
 ## Scope: implementations, not interfaces
 
-This command changes **implementations** and leaves every **interface** where it is. Its sibling `/refactor-modules` changes interfaces and seams. One rule decides:
+This command changes **implementations** and leaves every **interface** where it is. Its sibling `/refactor-interfaces` changes interfaces and seams. One rule decides:
 
 > **Would the fix change what a caller must know?**
-> **No** → it belongs here. **Yes** → hand it to `/refactor-modules`.
+> **No** → it belongs here. **Yes** → hand it to `/refactor-interfaces`.
 
 So renaming a local, collapsing nesting, fixing a swallowed exception, and deleting dead code are all in scope — a caller's view is unchanged. Splitting a god object, removing a wrapper callers go through, and reshaping a signature are not: those move a seam.
 
@@ -24,7 +24,7 @@ Two further handoffs. When the sweep turns one up, **list it in the report's han
 | --- | --- |
 | Security hazard — injection, unsafe deserialization, hardcoded secret, missing input validation | `/security-review` |
 | Performance problem — N+1 query, hot-path O(n²), unbounded growth | `/diagnosing-bugs` (measure first) |
-| Shallow module, wrong seam, interface redesign | `/refactor-modules` |
+| Shallow module, wrong seam, interface redesign | `/refactor-interfaces` |
 
 ## Phase 0 — Bound the sweep and take a baseline
 
@@ -73,7 +73,7 @@ And by **severity**: `High` (wrong results, data loss, silent failure), `Medium`
 
 ## Phase 3 — List the findings, then stop
 
-**Just list them — no Artifact, no report file.** That is also what keeps this command distinct from `/refactor-modules`, which publishes a diagram-led page. Here the *code* is the evidence and the output is a scannable defect list.
+**Just list them — no Artifact, no report file.** That is also what keeps this command distinct from `/refactor-interfaces`, which publishes a diagram-led page. Here the *code* is the evidence and the output is a scannable defect list.
 
 Thirty findings cannot all carry equal weight, so **detail scales with severity**. Three tiers, in this order, each numbered in one continuous sequence so the user can answer "do 3, 7, 12":
 
@@ -124,6 +124,6 @@ Close with a short summary:
 - [ ] **Behaviour changes**, listed separately, each as old → new semantics
 - [ ] Findings approved but **not** applied, and why
 - [ ] Files changed without verification coverage — the standing risk
-- [ ] Follow-ups spotted mid-flight, and anything handed to `/refactor-modules`, `/security-review`, or `/diagnosing-bugs`
+- [ ] Follow-ups spotted mid-flight, and anything handed to `/refactor-interfaces`, `/security-review`, or `/diagnosing-bugs`
 
 Do not commit unless asked.

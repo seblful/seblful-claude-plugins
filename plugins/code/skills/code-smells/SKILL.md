@@ -1,13 +1,13 @@
 ---
 name: code-smells
-description: Catalog of code-level smells with their fixes and, equally important, the false positives to suppress — correctness and robustness defects, bad practices and non-idiomatic constructs, duplication, dead weight, and complexity. Use when /refactor-code runs its sweep, when reviewing code for defects or bad practice, or when the user asks what to look for in a file. Covers implementations only — for interface, seam, and module-shape smells see codebase-design.
+description: Catalog of code-level smells with their fixes and, equally important, the false positives to suppress — correctness and robustness defects, bad practices and non-idiomatic constructs, duplication, dead weight, and complexity. Use when /code-sweep runs, when reviewing code for defects or bad practice, or when the user asks what to look for in a file. Covers implementations only — for interface, seam, and module-shape smells see codebase-design.
 ---
 
 # Code Smells
 
 Three lenses for finding what is wrong with code that already works. Each bucket lists **signals** (what to look for, and the fix) and **not a finding** (what to suppress).
 
-**Scope: implementations.** Everything here lives inside a function body or a class's internals and is fixable without changing any caller's view of the module. The moment a fix would alter an **interface** — what callers must know — it belongs to `codebase-design` and `/refactor-modules`, not here.
+**Scope: implementations.** Everything here lives inside a function body or a class's internals and is fixable without changing any caller's view of the module. The moment a fix would alter an **interface** — what callers must know — it belongs to `codebase-design` and `/refactor-interfaces`, not here.
 
 The suppression lists matter as much as the signals. A sweep that reports 200 nitpicks gets ignored wholesale, and the false-positive rate is what decides whether the next sweep gets trusted.
 
@@ -108,7 +108,7 @@ Code that should not exist, or that costs too much to read. Behaviour-preserving
 - **Commented-out code** — delete it. Git has it.
 - **Stale TODO/FIXME** — one referencing a shipped ticket, a resolved condition, or a person who has left. Resolve or delete; do not leave archaeology.
 - **Unused imports, variables, assignments** — including a variable assigned then reassigned before any read. *(Skip if the linter already enforces this — no point reporting what CI reports.)*
-- **Vestigial abstraction** — a config option nothing sets, a branch for a mode that no longer exists, a helper that forwards its arguments unchanged. When the fix is to delete a wrapper that callers go through, that changes an interface → hand to `/refactor-modules`.
+- **Vestigial abstraction** — a config option nothing sets, a branch for a mode that no longer exists, a helper that forwards its arguments unchanged. When the fix is to delete a wrapper that callers go through, that changes an interface → hand to `/refactor-interfaces`.
 
 **Duplication** — only report duplication that is genuinely the *same decision* expressed twice.
 
@@ -120,7 +120,7 @@ Code that should not exist, or that costs too much to read. Behaviour-preserving
 
 - **Long function** — one needing a scroll and a mental stack. Judge by number of distinct responsibilities, not line count. → Extract named steps.
 - **Deep nesting** — three or more levels of conditional or loop, especially with the happy path innermost. → Guard clauses / early return to flatten.
-- **Long parameter list** — many positional parameters, several of the same type, easy to transpose at a call site. → Group the ones that travel together. *(Changes the signature → check whether this is a `/refactor-modules` finding.)*
+- **Long parameter list** — many positional parameters, several of the same type, easy to transpose at a call site. → Group the ones that travel together. *(Changes the signature → check whether this is a `/refactor-interfaces` finding.)*
 - **Feature envy** — a function reaching deep into another object's internals (`a.b.c.d`) to compute something that object should compute itself. → Move the behaviour to the data.
 - **Misleading name** — a `get_*` that writes, a `validate_*` that mutates, a plural holding one item, a name whose stated unit or type is wrong. Rename **and update every call site**.
 - **Temporal coupling** — two calls that must happen in a fixed order with nothing enforcing it. → One call that does both, or make the order impossible to get wrong.
@@ -133,4 +133,4 @@ Code that should not exist, or that costs too much to read. Behaviour-preserving
 - A long function that is genuinely one linear sequence with no reusable middle — a parser, a state machine, a config assembler. Length alone is not a finding.
 - Nesting inside a hot loop where flattening would change performance characteristics — measure first, or hand it off.
 - Code that is verbose because it is **explicit**, and reads correctly at the point of use.
-- A god object or grab-bag `utils.py`. Real, but splitting it moves seams → `/refactor-modules`.
+- A god object or grab-bag `utils.py`. Real, but splitting it moves seams → `/refactor-interfaces`.

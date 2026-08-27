@@ -1,7 +1,7 @@
 {
   "name": "code",
-  "version": "0.9.0",
-  "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired refactor commands split by what they change: /refactor-code for implementations (driven by the code-smells catalog) and /refactor-modules for interfaces and seams (driven by the codebase-design vocabulary), each auditing before touching anything — /refactor-code into a severity-tiered defect list, /refactor-modules into a visual Artifact report.",
+  "version": "0.10.0",
+  "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired codebase commands split by what they change: /code-sweep for implementations (driven by the code-smells catalog) and /refactor-interfaces for interfaces and seams (driven by the codebase-design vocabulary), each auditing before touching anything — /code-sweep into a severity-tiered defect list, /refactor-interfaces into a visual Artifact report.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/seblful/seblful-claude-plugins",
   "repository": "https://github.com/seblful/seblful-claude-plugins",
   "license": "MIT",
-  "keywords": ["code-review", "debugging", "bug-diagnosis", "feedback-loop", "regression-test", "performance", "refactoring", "refactor", "code-smells", "technical-debt", "bad-practices", "architecture", "deepening", "codebase-design", "deep-modules"]
+  "keywords": ["code-review", "code-sweep", "refactor-interfaces", "debugging", "bug-diagnosis", "feedback-loop", "regression-test", "performance", "refactoring", "code-smells", "technical-debt", "bad-practices", "architecture", "seams", "deepening", "codebase-design", "deep-modules"]
 }

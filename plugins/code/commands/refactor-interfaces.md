@@ -3,20 +3,20 @@ description: Scan a codebase for deepening opportunities — shallow modules, wr
 allowed-tools: Read, Glob, Grep, Agent, Write, Skill, Artifact
 ---
 
-# Refactor Modules
+# Refactor Interfaces
 
 Surface architectural friction and propose **deepening opportunities** — refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
 
 ## Scope: interfaces and seams, not implementations
 
-This command changes **interfaces** and where they live. Its sibling `/refactor-code` changes implementations and leaves every interface intact. One rule decides:
+This command changes **interfaces** and where they live. Its sibling `/code-sweep` changes implementations and leaves every interface intact. One rule decides:
 
 > **Would the fix change what a caller must know?**
-> **Yes** → it belongs here. **No** → hand it to `/refactor-code`.
+> **Yes** → it belongs here. **No** → hand it to `/code-sweep`.
 
-So splitting a god object, deleting a wrapper callers go through, moving a seam, and reshaping a signature are all in scope. Fixing a swallowed exception, flattening nesting, deleting dead code, and renaming a local are not — a caller's view is unchanged, so they belong to `/refactor-code` and its `code-smells` catalog. When the sweep turns those up, close with one line pointing at `/refactor-code`; don't fix them here, and don't give them cards.
+So splitting a god object, deleting a wrapper callers go through, moving a seam, and reshaping a signature are all in scope. Fixing a swallowed exception, flattening nesting, deleting dead code, and renaming a local are not — a caller's view is unchanged, so they belong to `/code-sweep` and its `code-smells` catalog. When the scan turns those up, close with one line pointing at `/code-sweep`; don't fix them here, and don't give them cards.
 
-The two outputs are deliberately different in shape, so they never read as the same document: `/refactor-code` just lists its findings — a numbered defect list, tiered by severity and evidenced by before/after **code** — and ends by applying fixes in batches. This one is a **diagram-led Artifact**, and ends in a design conversation.
+The two outputs are deliberately different in shape, so they never read as the same document: `/code-sweep` just lists its findings — a numbered defect list, tiered by severity and evidenced by before/after **code** — and ends by applying fixes in batches. This one is a **diagram-led Artifact**, and ends in a design conversation.
 
 This command is built on a shared design vocabulary:
 
@@ -39,7 +39,7 @@ Apply the **deletion test** to anything you suspect is shallow: would deleting i
 
 ### 2. Present candidates as an Artifact report
 
-Publish the review as a **Claude Artifact** so the user gets a clickable, shareable URL and nothing lands in the repo. Load the `artifact-design` skill first — the Artifact contract requires it, and it owns how the page looks. Everything below is about what the report *says*. Write the report to the session scratchpad as `refactor-modules-audit.html`, then call `Artifact` with that path, a `title`, a one-sentence `description`, and a `favicon`. Give the user the returned URL, not a filesystem path. Re-reviewing the same repo republishes from the same filename, which redeploys to the same URL.
+Publish the review as a **Claude Artifact** so the user gets a clickable, shareable URL and nothing lands in the repo. Load the `artifact-design` skill first — the Artifact contract requires it, and it owns how the page looks. Everything below is about what the report *says*. Write the report to the session scratchpad as `refactor-interfaces-audit.html`, then call `Artifact` with that path, a `title`, a one-sentence `description`, and a `favicon`. Give the user the returned URL, not a filesystem path. Re-reviewing the same repo republishes from the same filename, which redeploys to the same URL.
 
 The report is a header, one card per candidate, and a closing **Top recommendation** — which candidate you'd tackle first, one sentence on why, linked to its card. The header is repo name, date, and a compact legend (solid box = module, dashed line = seam, red arrow = leakage, thick inverted box = deep module). No introduction paragraph — straight into the candidates.
 
