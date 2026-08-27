@@ -40,7 +40,7 @@ Or browse them in `/plugin > Discover`.
 
 - **python-patterns** (skill) — Robust Python idioms: intent-obvious code, illegal states unrepresentable, a type-driven safety net, on top of the uv/ruff/ty stack.
 - **python-testing** (skill) — Pytest, fixtures, parametrization, mocking, async, coverage.
-- **python-notebooks** (skill) — Reproducible Jupyter notebooks: Restart & Run All as the contract, hidden-state discipline, uv-managed kernels, promotion of stable code to modules, jupytext pairing for version control.
+- **python-notebooks** (skill) — Reproducible Jupyter notebooks: Restart & Run All as the contract, hidden-state discipline, uv-managed kernels, promotion of stable code to modules, jupytext pairing for version control, and restraint in figures and prose.
 
 ### code
 
@@ -105,6 +105,14 @@ plugins/
     ├── scripts/             # Deterministic helpers shared by routines (optional)
     └── hooks/               # Lifecycle hooks (optional)
 ```
+
+## Versioning
+
+Every change bumps two versions: the touched plugin's `version` in `plugins/<name>/.claude-plugin/plugin.json`, and the marketplace `version` in `.claude-plugin/marketplace.json`.
+
+**Unless a specific bump is requested, patch-bump both** — `0.5.1 → 0.5.2` and `0.13.0 → 0.13.1`. That is the default for the usual work: refining a skill, rewording guidance, fixing a command, updating a description.
+
+Larger bumps happen only when asked for: minor for a new skill, command, or plugin, or a change in what an existing one does; major for a breaking rename or removal.
 
 ## Contributing
 

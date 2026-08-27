@@ -44,6 +44,15 @@ Between setup and findings, follow the data's logical order — load → inspect
 
 Keep notebooks self-descriptive and low-text. One notebook answers one clear question; when a second moves in, split.
 
+## Restraint
+
+Notebooks bloat in two directions — figures that cover every angle and prose that re-derives every result. Fewer is the default for both; the reader pays for each panel, series, and paragraph on the way to the conclusion.
+
+- **Every figure carries a point** — how many figures that takes is the analysis's call, not a quota. Often one focused chart does it; subplots are right when the panels are the same chart across a facet (one metric, small multiples, a shared axis the eye can sweep) or when the side-by-side comparison *is* the finding; two separate figures are right when a point genuinely has two sides. What never earns a figure is a cut of the data shown because it exists.
+- **The plainest encoding that shows the effect** — a bar, a line, a scatter. Dual axes, stacked series, and layered annotations cost the reader more than they return; an effect that needs that much scaffolding to appear is better stated in a sentence.
+- **No galleries.** A section that takes five plots to land one point hasn't found the point yet — narrow the question or split the section.
+- **Prose states the claim, not the derivation.** "Cancels concentrate in the last 48 hours" earns its line; the significance test that got you there is already in the code above it.
+
 ## Hidden-state discipline
 
 The kernel remembers everything ever executed; the file shows only what's currently there. Keep the two in sync:
@@ -97,6 +106,8 @@ Notebooks that must stay green get a CI smoke run: `uv run pytest --nbmake noteb
 - Absolute or cwd-dependent paths → `pathlib` from project root.
 - Unseeded randomness under stated conclusions → seed in setup.
 - Section or plot title baking in a specific finding, or inconsistent with its siblings → generic, parallel names matching the notebook's other titles.
+- Subplot grid of unrelated cuts, or a figure carrying no point of its own → split the panels out, or cut the figure.
+- Paragraphs re-deriving a result beneath the chart that already shows it → the claim in a line.
 - Giant do-everything notebook → split by question.
 - `.ipynb` with outputs committed → pair with `jupytext`, gitignore the `.ipynb`.
 - `.ipynb` edited as raw JSON → notebook-aware tooling (in Claude Code: `NotebookEdit`); the format corrupts easily.
