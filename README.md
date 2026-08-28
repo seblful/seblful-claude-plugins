@@ -9,7 +9,7 @@ A curated marketplace of Claude Code plugins, grouped by **what they act on**: y
 Five plugins, grouped by their target:
 
 - **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack)
-- **`/plugins/code`** — acts on any codebase: review, bug diagnosis, refactoring, and architectural deepening
+- **`/plugins/code`** — acts on any codebase: review, bug diagnosis, refactoring, architectural deepening, and keeping a project in sync with the template it came from
 - **`/plugins/obsidian-vault`** — acts on your notes: maintenance routines for Obsidian vaults
 - **`/plugins/lenses`** — acts on you and the conversation: code maps, terse mode, plan grilling, and a teaching workspace
 - **`/plugins/meta`** — acts across all your projects and on your Claude setup: capturing bugs and ideas to a central GitHub backlog
@@ -58,6 +58,10 @@ The two codebase commands are split by **what they change**, with one rule betwe
 - **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
 - **refactor-interfaces** (command) — Surface deepening opportunities and reduce shallow modules, presented as a diagram-led Artifact report, then worked through as a design conversation.
 
+Alongside the pair, one command changes the codebase's *baseline* rather than its code:
+
+- **update-from-template** (command) — Pull the latest [Copier](https://copier.readthedocs.io/) template changes into a project. Requires **`uv`** (Copier runs through `uvx --with jinja2-time copier`) and a git repo with a clean tree. Previews the template diff and takes a gate baseline, branches, runs `copier update`, then owns what Copier could not decide: every conflict marker and `.rej` hunk resolved by intent under one rule — *the project wins on content, the template wins on shape* — ambiguities surfaced rather than guessed, and the result proven against the project's own `uv sync` / `ruff` / `ty` / `pytest` / `pre-commit` gates. Adopts a template retroactively in a project with no answers file, by rendering a baseline to scratch and merging it in.
+
 ### obsidian-vault
 
 > Requires a **running Obsidian** instance, the **`obsidian` CLI** ([`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills)), and **Python 3.12+** for the deterministic scripts (stdlib only). See the [plugin README](plugins/obsidian-vault/README.md).
@@ -105,14 +109,6 @@ plugins/
     ├── scripts/             # Deterministic helpers shared by routines (optional)
     └── hooks/               # Lifecycle hooks (optional)
 ```
-
-## Versioning
-
-Every change bumps two versions: the touched plugin's `version` in `plugins/<name>/.claude-plugin/plugin.json`, and the marketplace `version` in `.claude-plugin/marketplace.json`.
-
-**Unless a specific bump is requested, patch-bump both** — `0.5.1 → 0.5.2` and `0.13.0 → 0.13.1`. That is the default for the usual work: refining a skill, rewording guidance, fixing a command, updating a description.
-
-Larger bumps happen only when asked for: minor for a new skill, command, or plugin, or a change in what an existing one does; major for a breaking rename or removal.
 
 ## Contributing
 

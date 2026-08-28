@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
   "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -14,7 +14,7 @@
     },
     {
       "name": "code",
-      "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired codebase commands split by what they change: /code-sweep for implementations (driven by the code-smells catalog) and /refactor-interfaces for interfaces and seams (driven by the codebase-design vocabulary), each auditing before touching anything — /code-sweep into a severity-tiered defect list, /refactor-interfaces into a visual Artifact report.",
+      "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired codebase commands split by what they change: /code-sweep for implementations (driven by the code-smells catalog) and /refactor-interfaces for interfaces and seams (driven by the codebase-design vocabulary), each auditing before touching anything — /code-sweep into a severity-tiered defect list, /refactor-interfaces into a visual Artifact report. Plus /update-from-template, which pulls the latest Copier template changes into a project and resolves the merge conflicts Copier could not, by intent, against the project's own gates.",
       "source": "./plugins/code"
     },
     {
