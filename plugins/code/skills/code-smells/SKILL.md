@@ -9,6 +9,8 @@ Three lenses for finding what is wrong with code that already works. Each bucket
 
 **Scope: implementations.** Everything here lives inside a function body or a class's internals and is fixable without changing any caller's view of the module. The moment a fix would alter an **interface** — what callers must know — it belongs to `codebase-design` and `/refactor-interfaces`, not here.
 
+Prose splits the same way: **comments and docstrings live with the code and are judged here; markdown a human reads belongs to `writing-docs` and `/docs-sweep`.**
+
 The suppression lists matter as much as the signals. A sweep that reports 200 nitpicks gets ignored wholesale, and the false-positive rate is what decides whether the next sweep gets trusted.
 
 A finding must be **real** (you read the code), **consequential** (you can name what goes wrong), **not already handled** (you checked the callers), and **not a lateral move** (the fix is clearly better, not differently-shaped).

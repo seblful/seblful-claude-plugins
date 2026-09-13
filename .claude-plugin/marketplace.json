@@ -1,7 +1,7 @@
 {
   "name": "seblful-claude-plugins",
-  "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, and the conversation itself.",
-  "version": "0.14.1",
+  "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, your projects, and the conversation itself.",
+  "version": "0.14.3",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
@@ -9,27 +9,27 @@
   "plugins": [
     {
       "name": "python",
-      "description": "Robust Python coding, testing, and notebook practices — intent-obvious code, illegal states unrepresentable, type-driven safety net, reproducible Jupyter notebooks, on top of the uv/ruff/ty/pytest stack.",
+      "description": "Robust Python practice — intent-obvious code, illegal states unrepresentable, a type-driven safety net, disciplined tests, and reproducible notebooks. Opinionated defaults for a greenfield project; a project's own stack always outranks them.",
       "source": "./plugins/python"
     },
     {
       "name": "code",
-      "description": "Tools that act on a codebase — a senior code-reviewer agent, a feedback-loop-first diagnosing-bugs skill, and two paired codebase commands split by what they change: /code-sweep for implementations (driven by the code-smells catalog) and /refactor-interfaces for interfaces and seams (driven by the codebase-design vocabulary), each auditing before touching anything — /code-sweep into a severity-tiered defect list, /refactor-interfaces into a visual Artifact report. Plus /update-from-template, which pulls the latest Copier template changes into a project and resolves the merge conflicts Copier could not, by intent, against the project's own gates.",
+      "description": "Language-agnostic tools for working on a codebase that already exists — reviewing a change, diagnosing a hard bug, sweeping implementations for defects, deepening shallow interfaces, correcting documentation the code has outgrown, and re-syncing a project with the template it came from. Every routine audits before it touches anything, and each process command pairs with the reference skill that defines its vocabulary.",
       "source": "./plugins/code"
     },
     {
       "name": "obsidian-vault",
-      "description": "Maintenance and authoring routines for Obsidian vaults — formatting, knowledge harvesting into projects, weekly reports by project, structural scanning, accuracy review, wikilink connectivity, file cleanup, inbox ingestion, building maps of content, and authoring or rewriting source-of-truth reference notes.",
+      "description": "Maintenance and authoring routines for Obsidian vaults — log formatting, inbox ingestion, knowledge harvesting, structural and accuracy audits, wikilink connectivity, file hygiene, maps of content, and deep reference notes. Every routine discovers the vault's own conventions before applying a default, and is backed by deterministic stdlib-only scripts.",
       "source": "./plugins/obsidian-vault"
     },
     {
       "name": "lenses",
-      "description": "Tools that act on you and the conversation rather than the code — a high-level code map (zoom-out), ultra-compressed caveman mode, one-question-at-a-time plan grilling, and a stateful multi-session teaching workspace.",
+      "description": "Tools that change how you and Claude work rather than what the code says — a high-level map of an unfamiliar area, an ultra-compressed terse mode, a one-question-at-a-time plan interview, and a stateful multi-session teaching workspace.",
       "source": "./plugins/lenses"
     },
     {
       "name": "meta",
-      "description": "Meta-level tools that act across all your projects and on your Claude setup rather than one codebase — currently /issue: capture bugs, features, tasks, and ideas from a session as GitHub issues in the backlog repo set by CLAUDE_ISSUES_REPO (no default), dedup-checked and confirmed before filing.",
+      "description": "Tools that act across all your projects and on your Claude setup rather than inside one codebase — capturing bugs, features, tasks, and ideas from any session into a central backlog repo you configure.",
       "source": "./plugins/meta"
     }
   ]

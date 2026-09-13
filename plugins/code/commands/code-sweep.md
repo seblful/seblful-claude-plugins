@@ -1,5 +1,6 @@
 ---
 description: Sweep a codebase for bad practices, latent bugs, and bad implementations, list the findings ranked by severity, then apply only the fixes you approve.
+argument-hint: [subtree to narrow the sweep to — omit to sweep the whole codebase]
 allowed-tools: Read, Glob, Grep, Bash, Edit, Write, Agent, Skill
 ---
 
@@ -18,13 +19,14 @@ This command changes **implementations** and leaves every **interface** where it
 
 So renaming a local, collapsing nesting, fixing a swallowed exception, and deleting dead code are all in scope — a caller's view is unchanged. Splitting a god object, removing a wrapper callers go through, and reshaping a signature are not: those move a seam.
 
-Two further handoffs. When the sweep turns one up, **list it in the report's handoff section and do not fix it here**:
+Further handoffs. When the sweep turns one up, **list it in the report's handoff section and do not fix it here**:
 
 | Finding | Belongs to |
 | --- | --- |
 | Security hazard — injection, unsafe deserialization, hardcoded secret, missing input validation | `/security-review` |
-| Performance problem — N+1 query, hot-path O(n²), unbounded growth | `/diagnosing-bugs` (measure first) |
+| Performance problem — N+1 query, hot-path O(n²), unbounded growth | the `diagnosing-bugs` skill (measure first) |
 | Shallow module, wrong seam, interface redesign | `/refactor-interfaces` |
+| Stale or contradictory **markdown** — a README, guide, or design note the code has outgrown | `/docs-sweep` |
 
 ## Phase 0 — Bound the sweep and take a baseline
 
@@ -112,7 +114,7 @@ Rules, in order of importance:
 2. **Red after a batch → revert that batch and diagnose.** Do not pile the next batch on a broken signal. If it was already red at baseline, confirm you did not make it *worse* rather than trying to make it green.
 3. **Update every call site.** No compatibility shim unless the user asks — a shim is a new shallow module.
 4. **One finding, one fix.** Do not opportunistically improve code the approved finding did not name. Anything new you spot goes in the final report as a follow-up.
-5. **Language specifics.** For Python, load `python-patterns`; if the batch touches tests, also `python-testing`.
+5. **Language specifics.** If a skill covers the batch's language or stack, load it — and load its testing counterpart when the batch touches tests. (In this marketplace, Python's are `python-patterns` and `python-testing`.) Where no such skill exists, follow the conventions of the surrounding code.
 
 Where a batch has no verification coverage, say so as you apply it, and lean harder on reading the callers.
 
@@ -124,6 +126,6 @@ Close with a short summary:
 - [ ] **Behaviour changes**, listed separately, each as old → new semantics
 - [ ] Findings approved but **not** applied, and why
 - [ ] Files changed without verification coverage — the standing risk
-- [ ] Follow-ups spotted mid-flight, and anything handed to `/refactor-interfaces`, `/security-review`, or `/diagnosing-bugs`
+- [ ] Follow-ups spotted mid-flight, and anything handed to `/refactor-interfaces`, `/security-review`, or `diagnosing-bugs`
 
 Do not commit unless asked.

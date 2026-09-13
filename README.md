@@ -8,8 +8,8 @@ A curated marketplace of Claude Code plugins, grouped by **what they act on**: y
 
 Five plugins, grouped by their target:
 
-- **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack)
-- **`/plugins/code`** — acts on any codebase: review, bug diagnosis, refactoring, architectural deepening, and keeping a project in sync with the template it came from
+- **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack as the greenfield default)
+- **`/plugins/code`** — acts on any codebase, in any language: review, bug diagnosis, refactoring, architectural deepening, and keeping a project in sync with the template it came from
 - **`/plugins/obsidian-vault`** — acts on your notes: maintenance routines for Obsidian vaults
 - **`/plugins/lenses`** — acts on you and the conversation: code maps, terse mode, plan grilling, and a teaching workspace
 - **`/plugins/meta`** — acts across all your projects and on your Claude setup: capturing bugs and ideas to a central GitHub backlog
@@ -46,21 +46,24 @@ Or browse them in `/plugin > Discover`.
 
 - **code-reviewer** (agent) — Senior code reviewer that evaluates diffs across correctness, readability, architecture, security, and performance, with severity-labeled line-level suggestions.
 - **diagnosing-bugs** (skill) — A feedback-loop-first discipline for hard bugs and performance regressions: build a tight red-capable repro, minimise it, generate falsifiable hypotheses, instrument, fix with a regression test, then clean up.
-The two codebase commands are split by **what they change**, with one rule between them — *would the fix change what a caller must know?* No → `/code-sweep`. Yes → `/refactor-interfaces`. Each pairs a process command with a reference skill:
+The codebase routines are split by **what they change**, each pairing a process command with the reference skill that defines its vocabulary. One rule separates the first two — *would the fix change what a caller must know?* No → `/code-sweep`. Yes → `/refactor-interfaces`. The third changes no code at all:
 
 |  | Reference layer (skill) | Process layer (command) |
 | --- | --- | --- |
 | **Implementations** — inside a body, callers unaffected | `code-smells` | `/code-sweep` |
 | **Interfaces & seams** — the shape callers see | `codebase-design` | `/refactor-interfaces` |
+| **Docs** — the markdown a human reads | `writing-docs` | `/docs-sweep` |
 
 - **code-smells** (skill) — Catalog of implementation-level smells across three lenses (correctness & robustness, bad practices & idiom, duplication/dead weight/complexity), each with its fix and — equally important — the false positives to suppress.
 - **code-sweep** (command) — Codebase-wide sweep against the `code-smells` catalog, every finding verified by hand and listed as a defect list tiered by severity and evidenced by before/after code — then applied in attributable batches against a baseline verification signal, behaviour changes never mixed with pure refactors, only on your approval.
 - **codebase-design** (skill) — Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality, plus the deepening and design-it-twice patterns.
+- **docs-sweep** (command) — Sweep of every markdown doc a human reads, against the `writing-docs` catalog. Claims are cross-checked statically against the repo's own manifests, paths, versions, and links — never by running a README's commands — with git churn used only as read-first triage. Findings are tiered by severity and evidenced by the doc's claim beside the repo fact, then applied one document at a time so each diff reads as a revision, only on your approval.
 - **refactor-interfaces** (command) — Surface deepening opportunities and reduce shallow modules, presented as a diagram-led Artifact report, then worked through as a design conversation.
+- **writing-docs** (skill) — Four laws for a doc worth reading, a cut test for concision, and a doc-smell catalog across three lenses (truth, orientation, weight), each signal with its fix and the false positives to suppress. Carries the rule for when a doc and the code disagree: the code is truth, unless the doc states intent — and then the code is the bug.
 
 Alongside the pair, one command changes the codebase's *baseline* rather than its code:
 
-- **update-from-template** (command) — Pull the latest [Copier](https://copier.readthedocs.io/) template changes into a project. Requires **`uv`** (Copier runs through `uvx --with jinja2-time copier`) and a git repo with a clean tree. Previews the template diff and takes a gate baseline, branches, runs `copier update`, then owns what Copier could not decide: every conflict marker and `.rej` hunk resolved by intent under one rule — *the project wins on content, the template wins on shape* — ambiguities surfaced rather than guessed, and the result proven against the project's own `uv sync` / `ruff` / `ty` / `pytest` / `pre-commit` gates. Adopts a template retroactively in a project with no answers file, by rendering a baseline to scratch and merging it in.
+- **update-from-template** (command) — Pull the latest [Copier](https://copier.readthedocs.io/) template changes into a project, in any language. Requires a way to run Copier (`uvx --with jinja2-time copier`, `pipx run copier`, or a global install) and a git repo with a clean tree. Previews the template diff and takes a baseline from the project's *own* gates — discovered, not assumed — then branches, runs `copier update`, and owns what Copier could not decide: every conflict marker and `.rej` hunk resolved by intent under one rule — *the project wins on content, the template wins on shape* — with the resolution table keyed by what each file does (manifest, lockfile, hook config, assistant instructions, source skeleton) rather than what it is called. Ambiguities are surfaced rather than guessed. Adopts a template retroactively in a project with no answers file, by rendering a baseline to scratch and merging it in.
 
 ### obsidian-vault
 
@@ -82,7 +85,7 @@ Alongside the pair, one command changes the codebase's *baseline* rather than it
 - **zoom-out** (command) — Map the surrounding modules and callers when unfamiliar with an area.
 - **caveman** (command) — Ultra-compressed terse communication mode (~75% token reduction).
 - **grill-me** (command) — Stress-test a plan through relentless one-question-at-a-time interview.
-- **teach** (skill) — Stateful, multi-session teaching workspace: grounds every lesson in a mission, gathers high-trust resources, and builds storage strength through beautiful interactive HTML lessons, glossaries, and learning records.
+- **teach** (command) — Stateful, multi-session teaching workspace: grounds every lesson in a mission, gathers high-trust resources, and builds storage strength through beautiful interactive HTML lessons, glossaries, and learning records. Its workspace file formats live in [`plugins/lenses/teach/`](plugins/lenses/teach).
 
 ### meta
 
@@ -107,7 +110,8 @@ plugins/
     ├── agents/              # Subagents (optional)
     │   └── <agent>.md
     ├── scripts/             # Deterministic helpers shared by routines (optional)
-    └── hooks/               # Lifecycle hooks (optional)
+    ├── hooks/               # Lifecycle hooks (optional)
+    └── <reference>/         # Shared reference docs several routines defer to (optional)
 ```
 
 ## Contributing
