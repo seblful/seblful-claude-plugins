@@ -1,6 +1,6 @@
 {
   "name": "code",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Language-agnostic tools for working on a codebase that already exists — reviewing a change, diagnosing a hard bug, sweeping implementations for defects, deepening shallow interfaces, correcting documentation the code has outgrown, and re-syncing a project with the template it came from. Every routine audits before it touches anything, and each process command pairs with the reference skill that defines its vocabulary.",
   "author": {
     "name": "Aliaksei Chymba",

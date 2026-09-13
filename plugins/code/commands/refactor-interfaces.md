@@ -39,9 +39,21 @@ Apply the **deletion test** to anything you suspect is shallow: would deleting i
 
 ### 2. Present candidates as an Artifact report
 
-Publish the review as a **Claude Artifact** so the user gets a clickable, shareable URL and nothing lands in the repo. Load the `artifact-design` skill first — the Artifact contract requires it, and it owns how the page looks. Everything below is about what the report *says*. Write the report to the session scratchpad as `refactor-interfaces-audit.html`, then call `Artifact` with that path, a `title`, a one-sentence `description`, and a `favicon`. Give the user the returned URL, not a filesystem path. Re-reviewing the same repo republishes from the same filename, which redeploys to the same URL.
+Publish the review as a **Claude Artifact** so the user gets a clickable, shareable URL and nothing lands in the repo.
 
-The report is a header, one card per candidate, and a closing **Top recommendation** — which candidate you'd tackle first, one sentence on why, linked to its card. The header is repo name, date, and a compact legend (solid box = module, dashed line = seam, red arrow = leakage, thick inverted box = deep module). No introduction paragraph — straight into the candidates.
+**The page design is already decided.** The report is `$CLAUDE_PLUGIN_ROOT/skills/codebase-design/REPORT-TEMPLATE.html` — a complete, publishable page with one worked candidate in it (if `$CLAUDE_PLUGIN_ROOT` is unset, use this plugin folder's real path). Copy it to the session scratchpad as `refactor-interfaces-audit.html` and fill the slots. Three rules make every run of this command produce the same document:
+
+> **Fill slots, never restyle.** Don't touch the `<style>` block, don't add a class the template doesn't define, don't introduce a font, a colour, or a section. A candidate is added by duplicating the `<article class="candidate">` block whole and rewriting its contents.
+> **One diagram form.** Every diagram is a mermaid `flowchart LR`, in a before/after pair, carrying the template's `classDef` block unchanged — that block is what makes the legend true.
+> **Fixed identity.** Title `Interface Audit — <repo>` (already in the template), `favicon` 🧱, `icon` `report`, filename `refactor-interfaces-audit.html`. Same repo, same filename, same URL on a re-review.
+
+Load the `artifact-design` skill before publishing — the Artifact contract requires it — but read it for the publishing mechanics only. **The template owns the look**; a design idea it doesn't already contain is out of scope for this command.
+
+Then call `Artifact` with the scratchpad path, that `favicon` and `icon`, and a one-sentence `description` naming this repo and the count. Give the user the returned URL, not a filesystem path.
+
+#### What fills the slots
+
+Header: repo name, date, candidate count. **Rank the cards `Strong`, then `Worth exploring`, then `Speculative`**, and number them in that order — the rank is the reading order, not the order you found them. **Six candidates maximum**; a seventh means the cut isn't sharp enough.
 
 Each candidate card carries:
 
@@ -53,13 +65,18 @@ Each candidate card carries:
 - **Solution** — one sentence. What changes.
 - **Wins** — bullets, ≤6 words, named in glossary terms: "locality: bugs concentrate in one module", "leverage: one interface, N call sites", "delete 4 shallow wrappers". Never "easier to maintain" or "cleaner code".
 
-The diagrams carry the weight; prose stays sparse. If a diagram needs a paragraph to be understood, redraw the diagram. Be visual, and vary the pattern — don't let every candidate look the same:
+The diagrams carry the weight; prose stays sparse. If a diagram needs a paragraph to be understood, redraw the diagram. What varies between candidates is the **shape of the graph, never the styling** — the template's four node classes are the whole vocabulary:
 
-- **Mermaid flowchart or sequence** — the workhorse for "X calls Y calls Z, and look at the mess" and "before: 6 round-trips; after: 1". Artifacts render `<pre class="mermaid">` natively, so there's no library to load — but Mermaid's palette comes from its own theme rather than the page's, so pin `theme: neutral` in the diagram's config frontmatter and colour leakage explicitly with `classDef`.
-- **Hand-built boxes and arrows** — bordered divs, arrows as inline SVG. Reach for this when the "after" should feel like one thick-bordered deep module with greyed-out internals, and whenever the visual has to read exactly right in both light and dark.
-- **Cross-section** — stacked horizontal bands for the layers a call passes through. Before: 6 thin layers each doing nothing. After: 1 thick band.
-- **Mass diagram** — interface rectangle against implementation rectangle. Shallow: near-equal. Deep: short interface, tall implementation.
-- **Call-graph collapse** — a tree of nested call boxes, collapsed in the "after" into one box with the now-internal calls faded inside.
+| Class | Means | Use it for |
+| --- | --- | --- |
+| `:::module` | an ordinary module | anything with an interface and an implementation |
+| `:::deep` | a deep module, thick border | the one module the "after" collapses into |
+| `:::faded` | now internal | calls that stopped being a caller's problem, inside the "after" subgraph |
+| `:::leak` | leaking across a seam | a module callers reach past its seam to touch |
+
+A dashed link (`-.->`) is a seam; leakage is a red link, coloured with an explicit `linkStyle`. Artifacts render `<pre class="mermaid">` natively, so there is no library to load — and the `theme: neutral` frontmatter already in the template's diagrams stays, because Mermaid takes its palette from its own theme rather than the page's.
+
+**Not diagrams you draw here:** sequence diagrams, hand-built SVG boxes, stacked layer cross-sections, interface-vs-implementation mass rectangles, anything with a measured axis. Each is a fine picture in isolation; each also turns the report into a different document than the last one.
 
 **Use the codebase's own vocabulary for the domain, and the `codebase-design` vocabulary for the architecture.** If the domain calls it "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service." No hedging, no throat-clearing: if a sentence could be a bullet, make it a bullet.
 
