@@ -9,6 +9,8 @@ A notebook interleaves code, results, and prose — its value is the narrative, 
 
 **Restart kernel → Run All must succeed top-to-bottom and reproduce the results the prose claims.**
 
+The contract, the structure, and the hidden-state discipline hold for any notebook. The commands below assume a `uv`-managed project because that is this plugin's default stack; **in a project that already uses conda, poetry, or plain pip, keep its manager and translate the commands** — what matters is that dependencies are declared in a file, not installed from inside a cell.
+
 A notebook that only works when cells run in a secret order is a broken build that renders green. Verify the contract headless before calling any notebook work done:
 
 ```bash
@@ -20,7 +22,7 @@ uv run jupyter nbconvert --to notebook --execute --inplace notebook.ipynb    # r
 
 Notebooks are for exploration, analysis, experiments, reports, teaching — anywhere the narrative is the product. Logic that stabilizes or gets reused belongs in a module.
 
-**The promotion loop:** explore in the notebook → a function stabilizes → move it to `src/` with types and tests ([[python-patterns]], [[python-testing]]) → import it back. The notebook keeps the story; the package keeps the logic. A helper copy-pasted into a second notebook is already overdue for promotion.
+**The promotion loop:** explore in the notebook → a function stabilizes → move it to `src/` with types and tests (`python-patterns`, `python-testing`) → import it back. The notebook keeps the story; the package keeps the logic. A helper copy-pasted into a second notebook is already overdue for promotion.
 
 When importing local code, put this in the setup cell so module edits apply without kernel restarts:
 

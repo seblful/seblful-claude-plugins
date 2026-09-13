@@ -20,7 +20,7 @@ The two outputs are deliberately different in shape, so they never read as the s
 
 This command is built on a shared design vocabulary:
 
-- Run the `/codebase-design` skill for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion — don't drift into "component," "service," "API," or "boundary."
+- Load the `codebase-design` skill for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion — don't drift into "component," "service," "API," or "boundary."
 - Use the codebase's own domain terms for the modules — not generic names like "FooBarHandler" or "the Order service."
 
 ## Process
@@ -61,7 +61,7 @@ The diagrams carry the weight; prose stays sparse. If a diagram needs a paragrap
 - **Mass diagram** — interface rectangle against implementation rectangle. Shallow: near-equal. Deep: short interface, tall implementation.
 - **Call-graph collapse** — a tree of nested call boxes, collapsed in the "after" into one box with the now-internal calls faded inside.
 
-**Use the codebase's own vocabulary for the domain, and the `/codebase-design` vocabulary for the architecture.** If the domain calls it "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service." No hedging, no throat-clearing: if a sentence could be a bullet, make it a bullet.
+**Use the codebase's own vocabulary for the domain, and the `codebase-design` vocabulary for the architecture.** If the domain calls it "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service." No hedging, no throat-clearing: if a sentence could be a bullet, make it a bullet.
 
 Do NOT propose interfaces yet. After the report is published, ask the user: "Which of these would you like to explore?"
 
@@ -69,4 +69,4 @@ Do NOT propose interfaces yet. After the report is published, ask the user: "Whi
 
 Once the user picks a candidate, walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive. Choose whatever approach fits the candidate and the conversation: a one-question-at-a-time interview, a written design sketch, or a direct proposal you refine together.
 
-**Want to explore alternative interfaces for the deepened module?** Run the `/codebase-design` skill and use its design-it-twice parallel sub-agent pattern.
+**Want to explore alternative interfaces for the deepened module?** Load the `codebase-design` skill and use its design-it-twice parallel sub-agent pattern.

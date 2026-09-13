@@ -13,6 +13,8 @@ Code is asynchronous communication with the next maintainer. Three commitments:
 
 Apply these defaults silently. Don't lecture — write the code this way. Mention a principle only when the user asks "why?" or when deliberately deviating.
 
+**The project's existing choices outrank every default below.** The three commitments are universal; the specific tools, layout, and libraries named here are what to reach for in a greenfield project or where the project has not already chosen. In a project that uses `poetry`, `argparse`, or stdlib `logging`, match it — a codebase that is half one stack and half another is worse than either. Propose a migration if one is warranted; never perform one as a side effect of an unrelated change.
+
 ## Principles
 
 - **Readable > clever.** Names carry meaning; structure carries intent.
@@ -30,7 +32,7 @@ Apply these defaults silently. Don't lecture — write the code this way. Mentio
 | [uv](https://docs.astral.sh/uv/) | Packages and envs — never `pip`, `venv`, `poetry` |
 | [Ruff](https://docs.astral.sh/ruff/) | Lint and format — single source of style truth |
 | [ty](https://github.com/astral-sh/ty) | Type checker — hard gate in CI, not a suggestion |
-| [pytest](https://pytest.org/) | Tests — see [[python-testing]] |
+| [pytest](https://pytest.org/) | Tests — see `python-testing` |
 
 Strict type-check config, complexity limit (≤10), and `bandit` security scans belong in `pyproject.toml` from day one. Wire to pre-commit and CI.
 
@@ -120,18 +122,22 @@ Reach for tricks only after `cProfile` / `timeit` justifies it: `"".join(...)` o
 
 ## Package layout
 
+`src/` layout, tests outside the package. Give the cross-cutting concerns a module each — entry point, logging setup, settings — so they have one home instead of being scattered:
+
 ```
 src/{package}/
 ├── __init__.py        # __version__, public exports, __all__
-├── cli.py             # Typer entry point
-├── logging.py         # structlog setup
-├── settings.py        # Pydantic settings
+├── cli.py             # entry point
+├── logging.py         # logging setup
+├── settings.py        # configuration
 ├── py.typed           # PEP 561 marker
 └── ...
 tests/
 ├── conftest.py
 └── test_*.py
 ```
+
+Mirror an existing project's layout rather than imposing this one.
 
 ## Anti-patterns to flag and rewrite
 

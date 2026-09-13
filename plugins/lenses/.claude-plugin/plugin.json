@@ -1,7 +1,7 @@
 {
   "name": "lenses",
-  "version": "0.3.0",
-  "description": "Tools that act on you and the conversation rather than the code — zoom out for a high-level code map, switch to ultra-compressed caveman mode, grill a plan one question at a time, or run a stateful multi-session teaching workspace.",
+  "version": "0.3.1",
+  "description": "Tools that change how you and Claude work rather than what the code says — a high-level map of an unfamiliar area, an ultra-compressed terse mode, a one-question-at-a-time plan interview, and a stateful multi-session teaching workspace.",
   "author": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
