@@ -1,138 +1,135 @@
 ---
 name: code-smells
-description: Catalog of code-level smells with their fixes and, equally important, the false positives to suppress — correctness and robustness defects, bad practices and non-idiomatic constructs, duplication, dead weight, and complexity. Use when /code-sweep runs, when reviewing code for defects or bad practice, or when the user asks what to look for in a file. Covers implementations only — for interface, seam, and module-shape smells see codebase-design.
+description: Language-agnostic catalog of implementation smells with their fixes and, equally important, the false positives to suppress — correctness and robustness defects, bad practices and non-idiomatic constructs, duplication, dead weight, and complexity. Use when /code-sweep runs, when reviewing code for defects or bad practice, or when the user asks what to look for in a file. Covers implementations only — interface, seam, and module-shape smells belong to codebase-design; markdown docs to writing-docs.
 ---
 
 # Code Smells
 
-Three lenses for finding what is wrong with code that already works. Each bucket lists **signals** (what to look for, and the fix) and **not a finding** (what to suppress).
+Three lenses for finding what is wrong with code that already works. Each lists **signals** (what to look for, and the fix) and **not a finding** (what to suppress). The signals are named by what the code does, not by syntax — map each to the language in front of you.
 
-**Scope: implementations.** Everything here lives inside a function body or a class's internals and is fixable without changing any caller's view of the module. The moment a fix would alter an **interface** — what callers must know — it belongs to `codebase-design` and `/refactor-interfaces`, not here.
+**Scope: implementations.** Everything here is fixable without changing what any caller must know. A fix that alters an **interface** belongs to `codebase-design` and `/refactor-interfaces`. Comments and docstrings live with the code and are judged here; markdown belongs to `writing-docs`.
 
-Prose splits the same way: **comments and docstrings live with the code and are judged here; markdown a human reads belongs to `writing-docs` and `/docs-sweep`.**
+**The suppression lists matter as much as the signals.** A sweep that reports 200 nitpicks is ignored wholesale; the false-positive rate decides whether the next one is trusted.
 
-The suppression lists matter as much as the signals. A sweep that reports 200 nitpicks gets ignored wholesale, and the false-positive rate is what decides whether the next sweep gets trusted.
-
-A finding must be **real** (you read the code), **consequential** (you can name what goes wrong), **not already handled** (you checked the callers), and **not a lateral move** (the fix is clearly better, not differently-shaped).
+A finding must be **real** (you read the code), **consequential** (you can name what goes wrong), **not already handled** (you checked the callers), and **not a lateral move** (clearly better, not differently shaped).
 
 ---
 
 ## 1. Correctness & robustness
 
-Code that already misbehaves, or will on plausible input. **Highest severity bucket** — findings here usually change behaviour.
+Code that misbehaves now, or will on plausible input. **Highest severity** — fixes here usually change behaviour.
 
 ### Signals
 
-**Error handling**
+**Errors**
 
-- **Swallowed exception** — `except Exception: pass`, empty `catch {}`, an error logged at debug and then execution continues as if nothing happened. → Handle it, re-raise it, or let it propagate. If suppression is deliberate, narrow the exception type and comment *why*.
-- **Over-broad catch** — a bare `except:` / `catch (e)` around a wide block, so a `KeyboardInterrupt`, typo-`AttributeError`, or unrelated failure is absorbed by handling written for one expected error. → Narrow the type; shrink the guarded block to the line that actually throws.
-- **Wrong error semantics** — returning `None`, `-1`, `False`, or an empty collection to signal failure where the caller cannot distinguish it from a legitimate empty result. → Raise, or return an explicit result type.
-- **Error message loses the cause** — re-raising without chaining (`raise ValueError("bad config")` discarding the original), or stringifying an exception into a log with no traceback. → Chain (`raise ... from e`), log with the exception attached.
+- **Swallowed error** — an empty catch, or an error logged quietly and execution continuing as if nothing happened. → Handle, propagate, or narrow it and say *why* it is safe to ignore.
+- **Over-broad catch** — a catch-all around a wide block, so unrelated failures and programming mistakes are absorbed by handling written for one expected error. → Narrow the type; shrink the guarded block to what actually fails.
+- **Ambiguous failure value** — a null, `-1`, `false`, or empty collection signalling failure where the caller cannot tell it from a legitimate result. → Fail explicitly, or return a result type.
+- **Lost cause** — re-throwing a new error without the original attached, or logging an error with no stack or context. → Chain the cause; log the error object, not its string.
 
-**Absent-value and boundary handling**
+**Absence and boundaries**
 
-- **Unchecked absence** — dereferencing something a documented path can leave `None`/`null`/absent; `dict[key]` where the key is optional; indexing a possibly-empty sequence. → Guard, or make absence unrepresentable at the type level.
-- **Off-by-one / wrong bound** — `<` where `<=` is meant, `range(len(x) - 1)`, slice endpoints that silently drop the last element. → Fix, and name the input that exposes it.
-- **Ignored partial failure** — a loop that continues after an item fails without recording which ones did, so callers see "success". → Collect and surface failures.
+- **Unchecked absence** — using a value a real path can leave null or missing; looking up an optional key as if required; indexing a possibly empty collection. → Guard it, or make absence unrepresentable in the type.
+- **Off-by-one** — the wrong comparison, a loop or slice bound that silently drops the first or last element. → Fix, and name the input that exposes it.
+- **Ignored partial failure** — a loop that continues past failed items without recording them, so callers see success. → Collect and surface the failures.
 
 **Resources and state**
 
-- **Unreleased resource** — file, socket, cursor, lock, or subprocess opened without `with` / `try…finally` / `defer`, so an exception leaks it. → Context manager or equivalent.
-- **Mutable default argument** — `def f(items=[])` / `def f(cfg={})`. The default is created once and accumulates across calls. → `None` sentinel, build inside.
-- **Mutable shared state** — module-level or class-level mutable containers mutated by instance methods or request handlers; a cached object handed to callers who mutate it. → Per-instance state, or hand out copies / immutable views.
-- **Mutation during iteration** — adding to or deleting from a collection being iterated. → Iterate a copy, or build a new collection.
-- **Time-of-check to time-of-use** — `if exists(p): open(p)`, `if not locked: lock()`. → Act and handle the failure, or use an atomic primitive.
-- **Sync call in an async path** — blocking I/O or `time.sleep` inside a coroutine, stalling the event loop. → Async equivalent, or push to a thread/executor.
+- **Unreleased resource** — a file, connection, lock, or process acquired without the language's guaranteed-release construct, so an error leaks it. → Scoped acquisition.
+- **Shared mutable state** — a default value, module-level container, or cached object created once and mutated across calls or requests. → Per-call or per-instance state; hand out copies or read-only views.
+- **Mutation during iteration** — adding to or removing from a collection while iterating it. → Iterate a copy, or build a new collection.
+- **Check-then-act race** — testing a condition (exists, unlocked, not taken) and acting on it as a separate step. → Act and handle the failure, or use an atomic operation.
+- **Blocking in a non-blocking context** — synchronous I/O or sleep on an event loop, UI thread, or other path that must not stall. → The non-blocking equivalent, or move the work off that path.
 
 **Silent divergence**
 
-- **Comment or docstring contradicts the code** — documented range, unit, return type, or raised exception that no longer matches. One of the two is a bug; find out which. → Correct whichever is wrong; never "fix" the comment without confirming intent.
-- **Dead branch** — a condition that cannot be true (subsumed by an earlier check, comparing incompatible types, `if x is not None` after an unconditional assignment). → Delete, or fix the condition it was supposed to be.
+- **Comment contradicts the code** — a documented range, unit, return, or error that no longer matches. One of the two is a bug. → Find out which before changing either.
+- **Dead branch** — a condition that cannot be true: subsumed by an earlier check, comparing incompatible types, testing what was just assigned. → Delete it, or fix the condition it was meant to be.
 
 ### Not a finding
 
-- A missing absence-check where **every call site** provably guarantees presence — check the callers before reporting.
-- A broad `except` at a genuine top-level boundary (request handler, CLI entry point, worker loop) that **logs with traceback and reports failure** — that is the correct pattern.
-- Defensive validation in a public API that looks redundant from inside the module.
-- Anything requiring behaviour you cannot demonstrate from the code — if you must guess what a dependency does, say so or drop it.
+- A missing absence check where **every caller** provably guarantees presence.
+- A catch-all at a genuine top-level boundary — request handler, entry point, worker loop — that **logs with context and reports failure**. That is the correct pattern.
+- Defensive validation in a public entry point that looks redundant from inside.
+- Anything that depends on guessing what a dependency does — say so, or drop it.
 
 ---
 
 ## 2. Bad practices & idiom
 
-Code that works but misleads readers, fights the language, or makes the next change harder. Behaviour-preserving.
+Code that works but misleads, fights the language, or makes the next change harder. Behaviour-preserving.
 
 ### Signals
 
 **Types and data shape**
 
-- **Missing or lying annotations** — an un-annotated public function; `Any` used to silence a checker; an annotation that disagrees with what the body returns. A wrong annotation is worse than none. → Annotate honestly; if the real type is ugly, that is a design signal worth reporting.
-- **Stringly-typed data** — statuses, kinds, keys, and modes as raw strings compared with `==` across many files; state packed into a delimited string and re-split downstream. → Enum, literal union, or a small type.
-- **Primitive obsession** — a triple of `(x, y, unit)` or `(amount, currency)` threaded through many signatures; raw `dict` passed between layers as an implicit record. → A named type that keeps the fields together and validates once.
-- **Boolean-flag parameter** — `f(data, True)` at the call site, or a flag selecting between two largely unrelated code paths inside the body. → Keyword-only at minimum; two functions when the paths barely overlap.
-- **Illegal states representable** — several optional fields where only certain combinations are valid, enforced by scattered `if` checks. → Restructure so the invalid combination cannot be constructed.
+- **Lying types** — a declared type, cast, or type-checker escape hatch that disagrees with what the value really is. A wrong type is worse than none. → Make it true; if the true type is ugly, that is a design signal.
+- **Stringly-typed data** — states, kinds, and modes as raw strings compared across files; structure packed into a delimited string and re-split downstream. → An enum or a small type.
+- **Primitive obsession** — values that belong together (amount and currency, a coordinate and its unit) threaded separately through many signatures; untyped maps passed between layers as implicit records. → One named type that validates once.
+- **Boolean-flag parameter** — an unexplained `true` at the call site, or a flag switching between two mostly unrelated paths. → A named argument or enum at minimum; two functions when the paths barely overlap.
+- **Illegal states representable** — optional fields where only some combinations are valid, enforced by scattered checks. → Restructure so the invalid combination cannot be built.
 
 **Language and stack idiom**
 
-- **Reinvented stdlib / framework** — a hand-rolled grouping loop where the language has one call; manual retry/backoff, path joining, date parsing, or deep-merge the stack already provides. → Use the provided one.
-- **Index-based iteration** over a collection whose items are all that is used; manual accumulator where a comprehension or fold reads better. → Idiomatic form, but only when genuinely clearer, not just shorter.
-- **Print instead of logging** in library or application code; unstructured logging in a project that uses structured logging. → The project's logger, right level, context as fields.
-- **String-built structured output** — SQL, JSON, HTML, shell commands, or paths assembled with `+` or f-strings. → Parameterized queries, serializers, `Path`, argument lists. *(If it is injection-prone it is also a security handoff — note both.)*
-- **Bare magic value** — an unexplained numeric or string literal used in a decision, especially the same one in several places. → Named constant at the level that owns the meaning. A `0`, `1`, or `""` whose meaning is obvious needs no name.
-- **Configuration read mid-logic** — `os.environ` reached deep inside a function, making the code untestable and its dependencies invisible. → Read at the edge, pass it in.
+- **Reinvented standard library** — hand-rolled grouping, retry, path handling, date parsing, or merging the language or framework already provides. → Use the provided one.
+- **Unidiomatic iteration** — index bookkeeping where only the items are used; a manual accumulator where the language's collection operations read better. → The idiomatic form, only when genuinely clearer.
+- **Ad-hoc output instead of logging** — printing to the console in library or service code; unstructured logs in a project that logs structurally. → The project's logger, the right level, context as fields.
+- **String-built structured output** — queries, markup, serialized data, shell commands, or paths assembled by concatenation. → Parameterized queries, serializers, path APIs, argument lists. *(If injection-prone, also a security handoff.)*
+- **Magic value** — an unexplained literal in a decision, especially repeated. → A named constant where the meaning lives. Obvious values need no name.
+- **Configuration read mid-logic** — environment or global config reached deep inside a function, hiding a dependency and blocking tests. → Read at the edge, pass it in.
 
 **Structure of the body**
 
-- **Mixed levels of abstraction** — one function doing byte-fiddling and orchestration in the same twenty lines. → Extract the low level behind a name.
-- **Output parameter / hidden mutation** — a function that mutates an argument and returns nothing, where its name suggests a computation. → Return the result, or rename so the mutation is expected.
-- **Flag-then-act at a distance** — setting a variable in one branch and acting on it far below. → Act where the decision is made.
+- **Mixed levels of abstraction** — low-level detail and orchestration interleaved in one body. → Extract the low level behind a name.
+- **Hidden mutation** — a function that mutates an argument and returns nothing, where its name promises a computation. → Return the result, or rename it.
+- **Flag-then-act at a distance** — a variable set in one branch and acted on far below. → Act where the decision is made.
 
 ### Not a finding
 
-- An established convention of **this** codebase, even if you would write it differently. Check `CONTEXT.md`, `CLAUDE.md`, ADRs, and neighbouring files first — consistency beats your preference.
-- Idiom differences with no consequence: `%` vs `.format()` vs f-string in a log line, quote style, import ordering, anything the project's formatter or linter owns.
-- Missing annotations in tests, scripts, or explicitly-throwaway code, unless the project types those too.
-- Naming you merely dislike. Misleading is a finding; not-your-taste is not.
-- A "magic number" in a well-named function whose whole purpose explains it.
+- An established convention of **this** codebase you would have written differently — consistency beats preference. Check its instructions, decision records, and neighbouring files first.
+- Idiom differences with no consequence, and anything the project's formatter or linter owns.
+- Missing types in tests, scripts, or throwaway code, unless the project types those too.
+- Naming you merely dislike. **Misleading is a finding; not-your-taste is not.**
+- A literal inside a well-named function whose purpose explains it.
 
 ---
 
 ## 3. Duplication, dead weight & complexity
 
-Code that should not exist, or that costs too much to read. Behaviour-preserving, usually lower severity — **but the highest volume, so suppression discipline matters most here.**
+Code that should not exist, or costs too much to read. Behaviour-preserving, usually lower severity — **highest volume, so suppression discipline matters most.**
 
 ### Signals
 
-**Dead weight** — verify before deleting: grep the whole repo, and check for dynamic references (reflection, string-keyed dispatch, entry points, plugin registries, template lookups).
+**Dead weight** — before deleting, search the whole repo and check for dynamic references: reflection, string-keyed dispatch, entry points, plugin registries, template lookups.
 
-- **Unreachable or unused code** — a function, class, branch, or module with no callers; a parameter no caller passes and the body ignores; `if False`; code after an unconditional `return`.
-- **Commented-out code** — delete it. Git has it.
-- **Stale TODO/FIXME** — one referencing a shipped ticket, a resolved condition, or a person who has left. Resolve or delete; do not leave archaeology.
-- **Unused imports, variables, assignments** — including a variable assigned then reassigned before any read. *(Skip if the linter already enforces this — no point reporting what CI reports.)*
-- **Vestigial abstraction** — a config option nothing sets, a branch for a mode that no longer exists, a helper that forwards its arguments unchanged. When the fix is to delete a wrapper that callers go through, that changes an interface → hand to `/refactor-interfaces`.
+- **Unused code** — a function, type, branch, or module with no callers; a parameter nobody passes and the body ignores; code after an unconditional return.
+- **Commented-out code** — delete it; version control has it.
+- **Stale TODO** — referencing shipped work, a resolved condition, or someone long gone. Resolve or delete.
+- **Unused imports, variables, assignments** — including a value overwritten before any read. *(Skip if the linter enforces it.)*
+- **Vestigial abstraction** — an option nothing sets, a branch for a removed mode, a helper forwarding its arguments unchanged. Deleting a wrapper callers go through changes an interface → `/refactor-interfaces`.
 
-**Duplication** — only report duplication that is genuinely the *same decision* expressed twice.
+**Duplication** — only the *same decision* expressed twice.
 
-- **Copy-paste clone** — the same logic in two or more places, especially where the copies have already drifted (one was fixed, the others were not — that drift is the consequence to report). → Extract to one place.
-- **Parallel maintenance burden** — adding a case requires editing several matching lists, switches, or mappings that must stay in sync. → Single source of truth.
-- **Duplicated knowledge, not duplicated text** — the same regex, threshold, format string, or default repeated in code that otherwise looks different. → Shared constant.
+- **Clone** — the same logic in several places, especially where copies have drifted (one fixed, others not — the drift is the consequence). → One place.
+- **Parallel lists** — adding a case means editing several lists, switches, or maps that must stay in sync. → One source of truth.
+- **Duplicated knowledge** — the same pattern, threshold, format, or default repeated in otherwise different code. → A shared constant.
 
 **Complexity**
 
-- **Long function** — one needing a scroll and a mental stack. Judge by number of distinct responsibilities, not line count. → Extract named steps.
-- **Deep nesting** — three or more levels of conditional or loop, especially with the happy path innermost. → Guard clauses / early return to flatten.
-- **Long parameter list** — many positional parameters, several of the same type, easy to transpose at a call site. → Group the ones that travel together. *(Changes the signature → check whether this is a `/refactor-interfaces` finding.)*
-- **Feature envy** — a function reaching deep into another object's internals (`a.b.c.d`) to compute something that object should compute itself. → Move the behaviour to the data.
-- **Misleading name** — a `get_*` that writes, a `validate_*` that mutates, a plural holding one item, a name whose stated unit or type is wrong. Rename **and update every call site**.
-- **Temporal coupling** — two calls that must happen in a fixed order with nothing enforcing it. → One call that does both, or make the order impossible to get wrong.
+- **Long function** — many distinct responsibilities, not many lines. → Extract named steps.
+- **Deep nesting** — three or more levels, happy path innermost. → Guard clauses, early return.
+- **Long parameter list** — many positional parameters of the same type, easy to transpose. → Group what travels together. *(Changes the signature → possibly `/refactor-interfaces`.)*
+- **Feature envy** — reaching deep into another object's internals to compute what it should compute itself. → Move the behaviour to the data.
+- **Misleading name** — a getter that writes, a validator that mutates, a plural holding one item, a wrong unit. → Rename **and update every call site**.
+- **Temporal coupling** — calls that must happen in a fixed order with nothing enforcing it. → One call, or make the wrong order impossible.
 
 ### Not a finding
 
-- **Coincidental similarity.** Two blocks that look alike but encode different decisions that will diverge. Merging these is the classic bad refactor — the wrong abstraction costs more than the duplication.
-- **Duplication across a deliberate seam** — a test fixture mirroring production shape, a DTO mirroring a model, a vendored copy pinned on purpose.
-- Two or three lines repeated twice, where extraction costs a name, an indirection, and a jump for the reader.
-- A long function that is genuinely one linear sequence with no reusable middle — a parser, a state machine, a config assembler. Length alone is not a finding.
-- Nesting inside a hot loop where flattening would change performance characteristics — measure first, or hand it off.
-- Code that is verbose because it is **explicit**, and reads correctly at the point of use.
-- A god object or grab-bag `utils.py`. Real, but splitting it moves seams → `/refactor-interfaces`.
+- **Coincidental similarity** — blocks that look alike but encode decisions that will diverge. Merging them is the classic bad refactor.
+- **Duplication across a deliberate seam** — a test fixture mirroring production shape, a transfer object mirroring a model, a vendored copy pinned on purpose.
+- Two or three lines repeated twice, where extraction costs a name and a jump.
+- A long function that is one linear sequence — a parser, a state machine, a config assembler. **Length alone is not a finding.**
+- Nesting in a hot loop where flattening changes performance — measure first.
+- Verbosity that is **explicitness** and reads correctly at the point of use.
+- A god object or grab-bag utilities module — real, but splitting it moves seams → `/refactor-interfaces`.

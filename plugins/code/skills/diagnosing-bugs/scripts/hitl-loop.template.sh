@@ -28,14 +28,14 @@ capture() {
 
 # --- edit below ---------------------------------------------------------
 
-step "Open the app at http://localhost:3000 and sign in."
+step "Start the system and get to the point just before the bug."
 
-capture ERRORED "Click the 'Export' button. Did it throw an error? (y/n)"
+capture REPRODUCED "Perform the action that triggers the bug. Did it happen? (y/n)"
 
-capture ERROR_MSG "Paste the error message (or 'none'):"
+capture SYMPTOM "Paste the exact error or wrong output (or 'none'):"
 
 # --- edit above ---------------------------------------------------------
 
 printf '\n--- Captured ---\n'
-printf 'ERRORED=%s\n' "$ERRORED"
-printf 'ERROR_MSG=%s\n' "$ERROR_MSG"
+printf 'REPRODUCED=%s\n' "$REPRODUCED"
+printf 'SYMPTOM=%s\n' "$SYMPTOM"
