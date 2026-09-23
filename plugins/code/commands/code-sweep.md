@@ -26,7 +26,7 @@ Further handoffs. When the sweep turns one up, **list it in the report's handoff
 | Security hazard — injection, unsafe deserialization, hardcoded secret, missing input validation | `/security-review` |
 | Performance problem — N+1 query, hot-path O(n²), unbounded growth | the `diagnosing-bugs` skill (measure first) |
 | Shallow module, wrong seam, interface redesign | `/refactor-interfaces` |
-| Stale or contradictory **markdown** — a README, guide, or design note the code has outgrown | `/docs-sweep` |
+| Bloated, sprawling, or outdated **markdown** — a README, guide, or design note | `/docs-sweep` |
 
 ## Phase 0 — Bound the sweep and take a baseline
 
