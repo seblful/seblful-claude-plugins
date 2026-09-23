@@ -1,16 +1,16 @@
 {
   "name": "seblful-claude-plugins",
-  "description": "Curated Claude Code plugins grouped by what they act on — Python code, any codebase, your notes, your projects, and the conversation itself.",
-  "version": "0.14.7",
+  "description": "Curated Claude Code plugins grouped by what they act on — code in one language, any codebase, your notes, your projects, and the conversation itself.",
+  "version": "0.14.8",
   "owner": {
     "name": "Aliaksei Chymba",
     "email": "alesha.chimba@gmail.com"
   },
   "plugins": [
     {
-      "name": "python",
-      "description": "Robust Python practice — intent-obvious code, illegal states unrepresentable, a type-driven safety net, disciplined tests, and reproducible notebooks. Opinionated defaults for a greenfield project; a project's own stack always outranks them.",
-      "source": "./plugins/python"
+      "name": "languages",
+      "description": "Per-language practice for Python and TypeScript — how the general principles are spelled in each language (types, boundaries, errors, async, tests), the traps easy to miss in it, and reproducible Jupyter notebooks. Opinionated defaults for a greenfield project; a project's own stack always outranks them.",
+      "source": "./plugins/languages"
     },
     {
       "name": "code",

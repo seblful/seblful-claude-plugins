@@ -1,6 +1,6 @@
 # Seblful Claude Plugins Marketplace
 
-A curated marketplace of Claude Code plugins, grouped by **what they act on**: your Python code, any codebase, your Obsidian notes, the conversation itself, and your Claude setup across projects.
+A curated marketplace of Claude Code plugins, grouped by **what they act on**: your code in one language, any codebase, your Obsidian notes, the conversation itself, and your Claude setup across projects.
 
 > **⚠️ Important:** Make sure you trust a plugin before installing, updating, or using it. Anthropic does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended or that they won't change. See each plugin's source for more information.
 
@@ -8,7 +8,7 @@ A curated marketplace of Claude Code plugins, grouped by **what they act on**: y
 
 Five plugins, grouped by their target:
 
-- **`/plugins/python`** — acts on Python code: coding, testing, and notebook practices (type hints, pytest, Jupyter, the uv/ruff/ty stack as the greenfield default)
+- **`/plugins/languages`** — acts on code in one language: Python and TypeScript practice, testing included, plus reproducible Jupyter notebooks — each the language layer over `code`'s language-agnostic skills
 - **`/plugins/code`** — acts on any codebase, in any language: review, bug diagnosis, refactoring, architectural deepening, and keeping a project in sync with the template it came from
 - **`/plugins/obsidian-vault`** — acts on your notes: maintenance routines for Obsidian vaults
 - **`/plugins/lenses`** — acts on you and the conversation: code maps, terse mode, plan grilling, and a teaching workspace
@@ -25,7 +25,7 @@ Add this marketplace to Claude Code:
 Then install plugins individually:
 
 ```
-/plugin install python@seblful-claude-plugins
+/plugin install languages@seblful-claude-plugins
 /plugin install code@seblful-claude-plugins
 /plugin install obsidian-vault@seblful-claude-plugins
 /plugin install lenses@seblful-claude-plugins
@@ -36,10 +36,12 @@ Or browse them in `/plugin > Discover`.
 
 ## Plugins
 
-### python
+### languages
 
-- **python-patterns** (skill) — Robust Python idioms: intent-obvious code, illegal states unrepresentable, a type-driven safety net, on top of the uv/ruff/ty stack.
-- **python-testing** (skill) — Pytest, fixtures, parametrization, mocking, async, coverage.
+Each language skill is the layer over `code-smells` and `codebase-design`: how their principles are spelled in that language, the traps easy to miss in it, how to test it, and what is not a finding. The named stack is the greenfield default only — a project's own choices outrank it.
+
+- **python-code** (skill) — Python: principles mapped to types, dataclasses, pydantic, `with`, and structured async; Python-only traps; pytest practice; on the uv/ruff/ty stack.
+- **typescript-code** (skill) — TypeScript: strict compiler baseline, discriminated unions, `unknown` parsed at the boundary, handled promises; TypeScript-only traps; Vitest practice.
 - **python-notebooks** (skill) — Reproducible Jupyter notebooks: Restart & Run All as the contract, hidden-state discipline, uv-managed kernels, promotion of stable code to modules, jupytext pairing for version control, and restraint in figures and prose.
 
 ### code
